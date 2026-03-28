@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "maxConcurrent": 5,
+  "maxSpawnsPerHour": 20,
+  "tokenBudgetPerHour": 500000,
+  "hardTimeoutSeconds": 900,
+  "modelRouting": {
+    "coding": "bailian/qwen3-coder-next",
+    "code_review": "bailian/qwen3-coder-plus",
+    "analysis": "bailian/qwen3-max-2026-01-23",
+    "research": "bailian/qwen3.5-plus",
+    "long_context": "bailian/kimi-k2.5",
+    "logic": "bailian/glm-5",
+    "default": "bailian/qwen3.5-plus"
+  },
+  "tokenLimits": {
+    "bailian/qwen3.5-plus": 50000,
+    "bailian/qwen3-max-2026-01-23": 30000,
+    "bailian/qwen3-coder-next": 40000,
+    "bailian/qwen3-coder-plus": 40000,
+    "bailian/kimi-k2.5": 100000,
+    "bailian/glm-5": 40000
+  },
+  "loopDetection": {
+    "enabled": true,
+    "similarityThreshold": 0.9,
+    "maxRepetitions": 3
+  }
+}
