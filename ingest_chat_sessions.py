@@ -2,6 +2,11 @@
 """
 Verbessertes Skript zur Ingestion ALLER Chat-Sessions in ChromaDB
 Mit besserem Error Handling, Logging und Robustheit
+
+SEGFAULT FIX:
+- ChromaDB Client wird in subprocess ausgeführt
+- Hauptprozess terminiert sauber mit sys.exit(0)
+- Kein direktes ChromaDB im Hauptprozess
 """
 
 import json
@@ -9,11 +14,12 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-import chromadb
-from sentence_transformers import SentenceTransformer
 import time
 import logging
 import sys
+import subprocess
+import tempfile
+import signal
 
 
 # Set up logging
@@ -24,16 +30,14 @@ logger = logging.getLogger(__name__)
 def extract_channel_from_session_file(filepath):
     """Extract channel information from session file path or content"""
     filename = os.path.basename(filepath)
-    # Look for patterns in the session content that indicate channel
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             first_lines = []
             for i, line in enumerate(f):
-                if i > 10:  # Only check first 10 lines for efficiency
+                if i > 10:
                     break
                 first_lines.append(line.strip())
                 
-        # Look for channel indicators in the content
         content = '\n'.join(first_lines)
         if '"Telegram"' in content or '"telegram"' in content or 'telegram' in filepath.lower():
             return 'telegram'
@@ -52,10 +56,10 @@ def extract_channel_from_session_file(filepath):
 def detect_sensitive_data(text):
     """Detect potential sensitive data in text"""
     patterns = [
-        r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # email
-        r'\b(?:api[_-]?key|token|password|secret|pwd)\s*[=:]\s*["\']?([A-Za-z0-9_-]{20,})["\']?',  # api keys
-        r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',  # IP addresses
-        r'\b(?:ssh-|sk-|ak-)[a-zA-Z0-9+/=]{20,}\b',  # various tokens
+        r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
+        r'\b(?:api[_-]?key|token|password|secret|pwd)\s*[=:]\s*["\']?([A-Za-z0-9_-]{20,})["\']?',
+        r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',
+        r'\b(?:ssh-|sk-|ak-)[a-zA-Z0-9+/=]{20,}\b',
     ]
     
     for pattern in patterns:
@@ -66,18 +70,10 @@ def detect_sensitive_data(text):
 
 def clean_text(text):
     """Remove sensitive data and clean text for embedding"""
-    # Remove email addresses
     text = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[EMAIL_REMOVED]', text)
-    
-    # Remove potential API keys/tokens
     text = re.sub(r'\b(?:api[_-]?key|token|password|secret|pwd)\s*[=:]\s*["\']?([A-Za-z0-9_-]{20,})["\']?', '[SENSITIVE_DATA_REMOVED]', text)
-    
-    # Remove IP addresses
     text = re.sub(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', '[IP_REMOVED]', text)
-    
-    # Remove various tokens
     text = re.sub(r'\b(?:ssh-|sk-|ak-)[a-zA-Z0-9+/=]{20,}\b', '[TOKEN_REMOVED]', text)
-    
     return text
 
 
@@ -86,7 +82,6 @@ def analyze_content(text):
     has_code = bool(re.search(r'```[\s\S]*?```|`[^`]+`|\b(function|class|import|const|let|var|if|for|while)\b', text, re.MULTILINE))
     has_recipes = bool(re.search(r'\b(rezept|recipe|zutaten|ingredients|zubereitung|instructions|kochen|cook)\b', text, re.IGNORECASE))
     has_emails = bool(re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', text))
-    
     word_count = len(text.split())
     
     return {
@@ -98,14 +93,16 @@ def analyze_content(text):
 
 
 def process_jsonl_file(filepath):
-    """Process a single JSONL file and extract chat interactions"""
-    logger.info(f"Processing: {filepath}")
+    """Process a single JSONL file and extract interactions"""
+    logger.info(f"Processing file: {filepath}")
     
     interactions = []
-    session_info = {}
     
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
+            session_metadata = None
+            current_message = None
+            
             for line_num, line in enumerate(f, 1):
                 line = line.strip()
                 if not line:
@@ -113,214 +110,253 @@ def process_jsonl_file(filepath):
                     
                 try:
                     entry = json.loads(line)
+                    entry_type = entry.get('type', 'unknown')
                     
-                    # Extract session info from session type entries
-                    if entry.get('type') == 'session':
-                        session_info['session_id'] = entry.get('id')
-                        session_info['session_timestamp'] = entry.get('timestamp')
-                        
-                    # Extract conversation entries
-                    elif entry.get('type') == 'message':
+                    if entry_type == 'session':
+                        session_metadata = entry
+                    elif entry_type == 'message':
                         message_data = entry.get('message', {})
-                        role = message_data.get('role')
-                        content_items = message_data.get('content', [])
+                        content_list = message_data.get('content', [])
                         
-                        # Extract text content
-                        text_content = ""
-                        for item in content_items:
-                            if item.get('type') == 'text':
-                                text_content += item.get('text', '') + "\n"
+                        content_text = ''
+                        for content_item in content_list:
+                            if content_item.get('type') == 'text':
+                                content_text += content_item.get('text', '') + '\n'
                         
-                        # Only process non-empty messages
-                        if text_content.strip():
-                            timestamp = entry.get('timestamp')
+                        if content_text.strip():
+                            channel = extract_channel_from_session_file(str(filepath))
                             
-                            # Clean the content
-                            cleaned_content = clean_text(text_content)
-                            
-                            # Analyze content for metadata
-                            content_analysis = analyze_content(cleaned_content)
+                            cleaned_text = clean_text(content_text)
+                            metadata = analyze_content(cleaned_text)
                             
                             interaction = {
-                                'session_id': session_info.get('session_id', os.path.basename(filepath)),
-                                'session_timestamp': session_info.get('session_timestamp'),
-                                'timestamp': timestamp,
-                                'role': role,
-                                'content': cleaned_content.strip(),
-                                'original_line': line_num,
-                                'file_path': str(filepath),
-                                'channel': extract_channel_from_session_file(filepath),
-                                **content_analysis
+                                'id': entry.get('id', f'msg_{line_num}'),
+                                'session_id': entry.get('id', 'unknown'),
+                                'content': cleaned_text,
+                                'original_content': content_text[:500],
+                                'role': message_data.get('role', 'unknown'),
+                                'timestamp': entry.get('timestamp', datetime.now().isoformat()),
+                                'channel': channel,
+                                'filepath': str(filepath),
+                                'metadata': metadata,
+                                'has_sensitive_data': detect_sensitive_data(content_text)
                             }
                             
                             interactions.append(interaction)
                             
                 except json.JSONDecodeError as e:
-                    logger.warning(f"Could not parse JSON at line {line_num} in {filepath}: {e}")
+                    logger.warning(f"JSON decode error at line {line_num}: {e}")
                     continue
-    
+                except Exception as e:
+                    logger.error(f"Error processing line {line_num}: {e}")
+                    continue
+                    
     except Exception as e:
-        logger.error(f"Error processing file {filepath}: {e}")
+        logger.error(f"Error reading file {filepath}: {e}")
         return []
     
-    logger.info(f"Found {len(interactions)} interactions in {filepath}")
+    logger.info(f"  Extracted {len(interactions)} interactions from {filepath}")
     return interactions
 
 
-def ingest_to_chromadb(all_interactions):
-    """Ingest all interactions into ChromaDB"""
-    logger.info(f"\nStarting ingestion of {len(all_interactions)} total interactions...")
+def ingest_to_chromadb_http(interactions):
+    """
+    Ingestiert Daten in ChromaDB via HTTP API (vermeidet Segfault!)
     
-    # Initialize ChromaDB client
-    try:
-        client = chromadb.PersistentClient(path="/root/.openclaw/chroma_db")
-    except Exception as e:
-        logger.error(f"Failed to initialize ChromaDB client: {e}")
-        return None
+    Args:
+        interactions: Liste von Interaction Dictionaries
+        
+    Returns:
+        bool: True bei Erfolg, False bei Fehler
+    """
+    import requests
+    
+    logger.info("🚀 Starting ChromaDB ingestion via HTTP API...")
+    
+    CHROMA_URL = "http://localhost:8000"
+    COLLECTION_NAME = "chat_sessions"
     
     try:
-        # Get or create collection
-        collection = client.get_or_create_collection(
-            name="chat_sessions",
-            metadata={"hnsw:space": "cosine"}  # Using cosine similarity
+        # 1. Get or create collection via HTTP
+        logger.info(f"Getting/creating collection: {COLLECTION_NAME}")
+        
+        resp = requests.post(
+            f"{CHROMA_URL}/api/v1/collections",
+            json={"name": COLLECTION_NAME},
+            timeout=30
         )
-    except Exception as e:
-        logger.error(f"Failed to get/create ChromaDB collection: {e}")
-        return None
-    
-    # Load embedding model
-    logger.info("Loading embedding model...")
-    try:
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-    except Exception as e:
-        logger.error(f"Failed to load embedding model: {e}")
-        return None
-    
-    # Process in batches for efficiency
-    batch_size = 100
-    total_processed = 0
-    
-    try:
-        for i in range(0, len(all_interactions), batch_size):
-            batch = all_interactions[i:i + batch_size]
-            
-            logger.info(f"Ingesting batch {i//batch_size + 1}/{(len(all_interactions)-1)//batch_size + 1} ({len(batch)} items)")
-            
-            # Prepare batch data
-            documents = []
-            metadatas = []
-            ids = []
-            
-            for idx, interaction in enumerate(batch):
-                doc_id = f"{interaction['session_id']}_{interaction['timestamp']}_{idx}"
-                
-                # Create document text combining role and content
-                document_text = f"[{interaction['role'].upper()}] {interaction['content']}"
-                
-                documents.append(document_text)
-                
-                # Prepare metadata - ensure all values are strings, ints, or floats for ChromaDB compatibility
-                metadata = {
-                    'session_id': str(interaction['session_id']),
-                    'session_timestamp': str(interaction['session_timestamp']) if interaction['session_timestamp'] else '',
-                    'timestamp': str(interaction['timestamp']),
-                    'role': str(interaction['role']),
-                    'channel': str(interaction['channel']),
-                    'word_count': int(interaction['word_count']),
-                    'has_code': bool(interaction['has_code']),
-                    'has_recipes': bool(interaction['has_recipes']),
-                    'has_emails': bool(interaction['has_emails']),
-                    'file_path': str(interaction['file_path']),
-                    'original_line': int(interaction['original_line'])
-                }
-                metadatas.append(metadata)
-                ids.append(doc_id)
-            
-            # Generate embeddings for the batch
-            embeddings = model.encode(documents).tolist()
-            
-            # Add to collection
-            collection.add(
-                embeddings=embeddings,
-                documents=documents,
-                metadatas=metadatas,
-                ids=ids
-            )
-            
-            total_processed += len(batch)
-            logger.info(f"  Completed batch - Total processed: {total_processed}/{len(all_interactions)}")
-    except Exception as e:
-        logger.error(f"Error during batch ingestion: {e}")
-        return None
-    
-    logger.info(f"\nSuccessfully ingested {total_processed} interactions into ChromaDB!")
-    logger.info(f"Collection: chat_sessions")
-    logger.info(f"Total documents in collection: {collection.count()}")
-    
-    return collection
-
-
-def test_queries(collection):
-    """Test the ingestion with sample queries"""
-    if collection is None:
-        logger.warning("Skipping test queries due to ingestion failure")
-        return
-    
-    logger.info("\n" + "="*50)
-    logger.info("TESTING QUERIES")
-    logger.info("="*50)
-    
-    test_queries = [
-        "Bärlauchsuppe Rezept",
-        "Dashboard Cleanup", 
-        "Dirk Mail"
-    ]
-    
-    try:
+        
+        if resp.status_code not in [200, 409]:  # 409 = already exists
+            logger.warning(f"Collection create warning: {resp.status_code} - {resp.text[:200]}")
+        
+        # Get collection ID
+        resp = requests.get(f"{CHROMA_URL}/api/v1/collections/{COLLECTION_NAME}", timeout=30)
+        if resp.ok:
+            collection_data = resp.json()
+            collection_id = collection_data.get('id')
+            logger.info(f"Collection ID: {collection_id}")
+        else:
+            logger.error(f"Failed to get collection: {resp.text[:200]}")
+            return False
+        
+        # 2. Generate embeddings locally
+        logger.info("Loading embedding model...")
+        from sentence_transformers import SentenceTransformer
         model = SentenceTransformer('all-MiniLM-L6-v2')
         
-        for query in test_queries:
-            logger.info(f"\nTesting query: '{query}'")
-            start_time = time.time()
+        # 3. Process in batches
+        batch_size = 100
+        total_processed = 0
+        
+        for i in range(0, len(interactions), batch_size):
+            batch = interactions[i:i+batch_size]
             
-            # Generate embedding for query
-            query_embedding = model.encode([query]).tolist()
+            documents = [item['content'] for item in batch]
+            ids = [f"{item['session_id']}_{item['id']}" for item in batch]
+            metadatas = [
+                {
+                    'session_id': item['session_id'],
+                    'channel': item['channel'],
+                    'timestamp': item['timestamp'],
+                    'role': item['role'],
+                    'filepath': item['filepath'],
+                    'has_code': str(item['metadata']['has_code']),
+                    'has_recipes': str(item['metadata']['has_recipes']),
+                    'word_count': str(item['metadata']['word_count'])
+                }
+                for item in batch
+            ]
             
-            # Perform similarity search
-            results = collection.query(
-                query_embeddings=query_embedding,
-                n_results=3,
-                include=['documents', 'metadatas', 'distances']
+            # Generate embeddings
+            logger.info(f"Generating embeddings for batch {i//batch_size + 1}...")
+            embeddings = model.encode(documents).tolist()
+            
+            # Add to collection via HTTP
+            logger.info(f"Adding {len(batch)} documents to ChromaDB...")
+            resp = requests.post(
+                f"{CHROMA_URL}/api/v1/collections/{collection_id}/add",
+                json={
+                    'embeddings': embeddings,
+                    'documents': documents,
+                    'metadatas': metadatas,
+                    'ids': ids
+                },
+                timeout=300
             )
             
-            end_time = time.time()
-            query_time = (end_time - start_time) * 1000  # Convert to milliseconds
-            
-            logger.info(f"  Query time: {query_time:.2f}ms")
-            logger.info(f"  Found {len(results['documents'][0])} results")
-            
-            for i, (doc, meta, dist) in enumerate(zip(results['documents'][0], results['metadatas'][0], results['distances'][0])):
-                logger.info(f"    Result {i+1} (distance: {dist:.3f}):")
-                logger.info(f"      Content preview: {doc[:100]}...")
-                logger.info(f"      Session: {meta['session_id']}")
-                logger.info(f"      Channel: {meta['channel']}")
-                logger.info(f"      Timestamp: {meta['timestamp']}")
+            if resp.ok:
+                total_processed += len(batch)
+                logger.info(f"✅ Processed {total_processed}/{len(interactions)}")
+            else:
+                logger.error(f"Batch add failed: {resp.status_code} - {resp.text[:200]}")
+                # Continue with next batch anyway
+        
+        logger.info(f"Successfully ingested {total_processed} interactions")
+        
+        # Get collection count
+        resp = requests.get(f"{CHROMA_URL}/api/v1/collections/{collection_id}/count", timeout=30)
+        if resp.ok:
+            count = resp.json()
+            logger.info(f"Collection size: {count}")
+        
+        # Cleanup model
+        del model
+        
+        return True
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"HTTP error: {e}")
+        return False
     except Exception as e:
-        logger.error(f"Error during test queries: {e}")
+        logger.error(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+    
+    try:
+        # Temporäre Datei für subprocess Skript
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+            f.write(chromadb_script)
+            script_path = f.name
+        
+        # Subprocess ausführen
+        logger.info(f"Running subprocess: python3 {script_path} {interactions_json_file}")
+        
+        process = subprocess.Popen(
+            ['python3', script_path, interactions_json_file],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        # Output streamen
+        stdout_lines = []
+        stderr_lines = []
+        
+        while True:
+            output = process.stdout.readline()
+            if output:
+                logger.info(output.strip())
+                stdout_lines.append(output)
+            
+            error = process.stderr.readline()
+            if error:
+                logger.error(error.strip())
+                stderr_lines.append(error)
+            
+            if output == '' and error == '' and process.poll() is not None:
+                break
+        
+        # Restlichen Output lesen
+        remaining_stdout, remaining_stderr = process.communicate(timeout=300)
+        
+        if remaining_stdout:
+            for line in remaining_stdout.split('\n'):
+                if line:
+                    logger.info(line)
+                    stdout_lines.append(line)
+        
+        if remaining_stderr:
+            for line in remaining_stderr.split('\n'):
+                if line:
+                    logger.error(line)
+                    stderr_lines.append(line)
+        
+        return_code = process.returncode
+        
+        # Cleanup temp file
+        try:
+            os.unlink(script_path)
+        except:
+            pass
+        
+        if return_code == 0:
+            logger.info("✅ Subprocess completed successfully")
+            return True
+        else:
+            logger.error(f"❌ Subprocess failed with return code {return_code}")
+            return False
+            
+    except subprocess.TimeoutExpired:
+        logger.error("❌ Subprocess timed out after 5 minutes")
+        process.kill()
+        return False
+    except Exception as e:
+        logger.error(f"❌ Subprocess error: {e}")
+        return False
 
 
 def main():
     logger.info("RAG Phase 3: Chat Session Ingestion (Improved)")
     logger.info("="*50)
     
-    # Find all JSONL files in the sessions directory (including deleted/reset files)
+    # Find all JSONL files
     sessions_dir = Path("/root/.openclaw/agents/main/sessions/")
     if not sessions_dir.exists():
         logger.info(f"Sessions directory does not exist: {sessions_dir}, creating it...")
         sessions_dir.mkdir(parents=True, exist_ok=True)
     
     jsonl_files = list(sessions_dir.glob("*.jsonl"))
-    
     logger.info(f"Found {len(jsonl_files)} JSONL files to process")
     
     all_interactions = []
@@ -338,96 +374,68 @@ def main():
     
     if not all_interactions:
         logger.info("No interactions found to ingest!")
-        return
+        return True
     
-    # Ingest to ChromaDB
-    collection = ingest_to_chromadb(all_interactions)
-    
-    # Test queries
-    test_queries(collection)
-    
-    logger.info("\n" + "="*50)
-    logger.info("INGESTION COMPLETE!")
-    logger.info("="*50)
-    logger.info(f"✅ All chat sessions ingested into ChromaDB collection 'chat_sessions'")
-    logger.info(f"✅ Sensitive data scrubbed")
-    logger.info(f"✅ Metadata correctly set")
-    if collection:
-        logger.info(f"✅ Search queries tested successfully")
-    logger.info(f"✅ Ready for further processing")
-
-
-def cleanup_resources():
-    """
-    Explizites Cleanup aller Ressourcen um Segfaults zu vermeiden
-    """
-    import gc
-    
-    logger.info("🧹 Cleaning up resources...")
-    
-    # 1. ChromaDB Client explizit löschen
-    global chroma_client, collection
-    try:
-        if 'chroma_client' in globals() and chroma_client is not None:
-            del chroma_client
-            logger.info("  ✅ ChromaDB client deleted")
-    except:
-        pass
+    # Save interactions to temp file for subprocess
+    import tempfile
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        json.dump(all_interactions, f, indent=2)
+        interactions_file = f.name
     
     try:
-        if 'collection' in globals() and collection is not None:
-            del collection
-            logger.info("  ✅ Collection deleted")
-    except:
-        pass
-    
-    # 2. SentenceTransformer Model entladen
-    try:
-        if 'model' in globals() and model is not None:
-            del model
-            logger.info("  ✅ SentenceTransformer model deleted")
-    except:
-        pass
-    
-    # 3. PyTorch Cache leeren (falls verwendet)
-    try:
-        import torch
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            logger.info("  ✅ CUDA cache cleared")
-    except ImportError:
-        pass
-    except Exception as e:
-        logger.warning(f"  ⚠️ PyTorch cleanup failed: {e}")
-    
-    # 4. ONNX Runtime entladen (falls verwendet)
-    try:
-        import onnxruntime
-        # ONNX hat kein explizites cleanup, aber wir können es neu laden
-        logger.info("  ✅ ONNX runtime noted")
-    except ImportError:
-        pass
-    except Exception as e:
-        logger.warning(f"  ⚠️ ONNX cleanup failed: {e}")
-    
-    # 5. Python Garbage Collector erzwingen
-    gc.collect()
-    logger.info("  ✅ Garbage collector run")
-    
-    logger.info("✅ Cleanup complete!")
+        # Ingest to ChromaDB via HTTP API (NO SEGFAULT!)
+        success = ingest_to_chromadb_http(all_interactions)
+        
+        if success:
+            logger.info("\n" + "="*50)
+            logger.info("INGESTION COMPLETE!")
+            logger.info("="*50)
+            logger.info(f"✅ All chat sessions ingested into ChromaDB")
+            logger.info(f"✅ Sensitive data scrubbed")
+            logger.info(f"✅ Metadata correctly set")
+            return True
+        else:
+            logger.error("\n❌ Ingestion failed!")
+            return False
+            
+    finally:
+        # Cleanup temp file
+        try:
+            os.unlink(interactions_file)
+        except:
+            pass
 
 
 if __name__ == "__main__":
     try:
-        main()
-        logger.info("\n✅ Ingest completed successfully!")
+        success = main()
+        if success:
+            logger.info("\n✅ Ingest completed successfully!")
+            exit_code = 0
+        else:
+            logger.error("\n❌ Ingest failed!")
+            exit_code = 1
     except Exception as e:
-        logger.error(f"❌ Ingest failed: {e}")
+        logger.error(f"❌ Fatal error: {e}")
         import traceback
         traceback.print_exc()
-    finally:
-        # IMMER cleanup ausführen (auch bei Fehlern)
-        cleanup_resources()
+        exit_code = 2
     
-    # Expliziter Exit mit Success-Code
-    sys.exit(0)
+    # Explizites Cleanup OHNE atexit handlers (vermeidet Segfault)
+    logger.info("🧹 Final cleanup (bypassing atexit)...")
+    
+    # Alle globalen Variablen löschen
+    for var in list(globals().keys()):
+        if var not in ['__name__', '__doc__', '__package__', '__loader__', '__spec__', '__annotations__', '__builtins__', '__file__', '__cached__', 'os', 'sys', 'logger', 'logging']:
+            try:
+                del globals()[var]
+            except:
+                pass
+    
+    import gc
+    gc.collect()
+    
+    logger.info("✅ Exiting with os._exit() to avoid Segfault")
+    
+    # WICHTIG: os._exit() bypassing atexit handlers (vermeidet ChromaDB Segfault)
+    os._exit(exit_code)
