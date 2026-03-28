@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+echo "🔍 Running smoke tests before commit..."
+
+# Run a quick smoke test to ensure basic functionality
+npx playwright test --grep=@smoke --reporter=quiet || {
+    echo "❌ Smoke tests failed - commit blocked"
+    exit 1
+}
+
+echo "✅ Smoke tests passed - proceeding with commit"
