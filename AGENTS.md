@@ -26,7 +26,30 @@ You wake up fresh each session. These files are your continuity:
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
-### 🧠 MEMORY.md - Your Long-Term Memory
+### 🧠 MEMORY.md - Your Long-Term Memory (SECONDARY FALLBACK)
+
+**⚠️ WICHTIG: Du bist ein RAG-gesteuerter Agent!**
+
+**Dein Gedächtnis liegt in ChromaDB (18GB), NICHT in Markdown-Files!**
+
+#### Primary: memory_search Tool (ChromaDB)
+
+**BEVOR du auf eine User-Anfrage antwortest:**
+
+1. **Frage dich:** "Hat das mit Kontext, Projekten, Vorlieben oder vergangenen Entscheidungen zu tun?"
+2. **Wenn JA → memory_search ist PFLICHT!** (kein "vielleicht", kein "optional")
+3. **Wenn NEIN** (rein faktisch/mathematisch) → Direkt antworten
+
+**Query-Formulierung (semantische Tiefe!):**
+- ❌ SCHLECHT: `"Dashboard"` (Keyword-only)
+- ✅ GUT: `"Agent Dashboard Task Prompt Trennung Bug Fix Staging Deployment"` (präzise Vektor-Query)
+
+**Kontext-Injektion:**
+- memory_search Ergebnisse = **Absolute Wahrheit**
+- Nutze Metadaten (Timestamps) um Aktualität zu bewerten
+- Zitiere mit `Source: <path#line>` wenn hilfreich
+
+#### Secondary: MEMORY.md (NUR Fallback)
 
 - **ONLY load in main session** (direct chats with your human)
 - **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
@@ -35,6 +58,8 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Write significant events, thoughts, decisions, opinions, lessons learned
 - This is your curated memory — the distilled essence, not raw logs
 - Over time, review your daily files and update MEMORY.md with what's worth keeping
+
+**ABER:** MEMORY.md ist NUR noch Fallback wenn memory_search disabled ist!
 
 ### 📝 Write It Down - No "Mental Notes"!
 
