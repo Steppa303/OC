@@ -1,0 +1,15 @@
+#!/bin/bash
+# Log Agent Start
+# Usage: log-agent-start "Label" "Task" "Model"
+
+LABEL="$1"
+TASK="$2"
+MODEL="$3"
+SESSION_KEY="agent:main:subagent:${LABEL,,}-${RANDOM}"
+PARENT="agent:main:telegram:direct:1400987471"
+
+curl -s -X POST http://localhost:3002/api/agents/start \
+  -H "Content-Type: application/json" \
+  -d "{\"sessionKey\":\"${SESSION_KEY}\",\"label\":\"${LABEL}\",\"task\":\"${TASK}\",\"model\":\"${MODEL}\",\"parentSession\":\"${PARENT}\"}"
+
+echo "${SESSION_KEY}"

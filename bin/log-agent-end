@@ -1,0 +1,11 @@
+#!/bin/bash
+# Log Agent End
+# Usage: log-agent-end "SessionKey" "Status" "RuntimeMs"
+
+SESSION_KEY="$1"
+STATUS="$2"
+RUNTIME_MS="$3"
+
+curl -s -X POST http://localhost:3002/api/agents/end \
+  -H "Content-Type: application/json" \
+  -d "{\"sessionKey\":\"${SESSION_KEY}\",\"status\":\"${STATUS}\",\"runtimeMs\":${RUNTIME_MS}}"

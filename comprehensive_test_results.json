@@ -1,0 +1,29 @@
+{
+  "pageInfo": {
+    "canvasExists": true,
+    "canvasWidth": 1280,
+    "canvasHeight": 150,
+    "bodyBackgroundColor": "rgb(0, 0, 0)",
+    "sceneElementsCount": 1,
+    "sceneElementSelectors": [
+      {
+        "tagName": "CANVAS",
+        "id": "",
+        "className": "",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      }
+    ],
+    "url": "http://185.217.126.72/threejs-blob-engine/",
+    "title": "Three.js Blob Engine - React 3D Experience"
+  },
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "timestamp": "2026-03-22T07:23:42.931Z",
+  "testSteps": [
+    "Navigation successful",
+    "Canvas detected",
+    "3D scene rendered",
+    "Screenshot captured",
+    "Interaction test performed"
+  ]
+}

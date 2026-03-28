@@ -1,0 +1,380 @@
+/* Modernes CSS für den Melody Generator */
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #10b981;
+    --dark: #1e293b;
+    --darker: #0f172a;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--darker), #1a202c);
+    color: var(--light);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+header p {
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+}
+
+.controls {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.control-group h2 {
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.input-row label {
+    min-width: 150px;
+    color: var(--light);
+}
+
+input[type="range"], select {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+    color: white;
+}
+
+input[type="number"] {
+    width: 80px;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+    color: white;
+    text-align: center;
+}
+
+input[type="range"] {
+    height: 6px;
+    -webkit-appearance: none;
+    background: rgba(100, 116, 139, 0.3);
+    border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: none;
+}
+
+#bpm-value, #noteDensity-value, #repetitionFactor-value {
+    min-width: 30px;
+    text-align: center;
+    background: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+details {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+summary {
+    cursor: pointer;
+    padding: 0.5rem;
+    background: rgba(79, 70, 229, 0.2);
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+summary:hover {
+    background: rgba(79, 70, 229, 0.3);
+}
+
+.structure-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.section-control {
+    background: rgba(30, 41, 59, 0.6);
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-control h3 {
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.control-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+#generate-btn {
+    background: var(--primary);
+    color: white;
+}
+
+#generate-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+#play-btn {
+    background: var(--secondary);
+    color: white;
+}
+
+#play-btn:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+#stop-btn {
+    background: var(--danger);
+    color: white;
+}
+
+#stop-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.visualization {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.visualization h2 {
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#visual-container {
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#piano-roll {
+    width: 100%;
+    height: 100%;
+    background: #1a202c;
+    border-radius: 4px;
+}
+
+#composition-info {
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: var(--radius);
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#composition-info h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+#composition-data {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-playing {
+    background: var(--secondary);
+    box-shadow: 0 0 10px var(--secondary);
+}
+
+.status-stopped {
+    background: var(--gray);
+}
+
+.status-generating {
+    background: var(--warning);
+    box-shadow: 0 0 10px var(--warning);
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    cursor: help;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

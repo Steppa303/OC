@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja Mixer Shake: Das Wiener Schnitzel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .recipe-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #667eea;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #764ba2;
+      margin: 30px 0 15px 0;
+      font-size: 1.5em;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+    h3 {
+      color: #667eea;
+      margin: 20px 0 10px 0;
+      font-size: 1.2em;
+    }
+    .ingredients, .steps {
+      background: #f8f9ff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    ul, ol {
+      margin-left: 25px;
+    }
+    li {
+      margin: 8px 0;
+      line-height: 1.8;
+    }
+    .highlight {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .nutrition-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .nutrition-table th, .nutrition-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 2px solid #667eea;
+    }
+    .nutrition-table th {
+      background: #667eea;
+      color: white;
+    }
+    .rating {
+      color: #fbbf24;
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
+    .tips {
+      background: #fffbeb;
+      border-left: 4px solid #fbbf24;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 10px 10px 0;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #667eea;
+      color: #666;
+      font-size: 0.9em;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .recipe-card {
+        box-shadow: none;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="recipe-card">
+    <h1>🥤 Ninja Mixer Shake</h1>
+    <p class="subtitle">"Das Wiener Schnitzel"</p>
+    
+    <div class="highlight">
+      🍺 Zutaten für 2 große Shakes
+    </div>
+
+    <h2>🥩 Für die Schnitzel-Basis</h2>
+    <div class="ingredients">
+      <ul>
+        <li>200g gekochtes Schnitzel (in kleine Würfel geschnitten)</li>
+        <li>100ml warme Rinderbrühe</li>
+        <li>50g Semmelbrösel (geröstet)</li>
+        <li>1 Prise Salz & Pfeffer</li>
+      </ul>
+    </div>
+
+    <h2>🍯 Für die Hollandaise-Creme</h2>
+    <div class="ingredients">
+      <ul>
+        <li>150ml Hollandaise-Sauce (frisch oder aus dem Glas)</li>
+        <li>100ml Sahne</li>
+        <li>1 Eigelb (pasteurisiert)</li>
+        <li>1 TL Zitronensaft</li>
+        <li>Prise Muskatnuss</li>
+      </ul>
+    </div>
+
+    <h2>🥛 Für den Shake</h2>
+    <div class="ingredients">
+      <ul>
+        <li>200ml warme Milch</li>
+        <li>50g Butter (geschmolzen)</li>
+        <li>1 TL Senf (mittelscharf)</li>
+        <li>2 EL Petersilie (gehackt)</li>
+        <li>1/2 TL Knoblauchpulver</li>
+        <li>Eiswürfel (optional, für kalte Version)</li>
+      </ul>
+    </div>
+
+    <h2>🎨 Toppings</h2>
+    <div class="ingredients">
+      <ul>
+        <li>Geröstete Semmelbrösel</li>
+        <li>Petersilie (gehackt)</li>
+        <li>Zitronenzeste</li>
+        <li>Speckwürfel (knusprig)</li>
+      </ul>
+    </div>
+
+    <h2>🌀 Zubereitung im Ninja Mixer</h2>
+    <div class="steps">
+      <h3>Schritt 1: Schnitzel vorbereiten (2 Min)</h3>
+      <ol>
+        <li>Schnitzel in grobe Würfel schneiden</li>
+        <li>Mit warmer Rinderbrühe übergießen (5 Min einweichen)</li>
+        <li>Geröstete Semmelbrösel untermischen</li>
+      </ol>
+
+      <h3>Schritt 2: Hollandaise mixen (1 Min)</h3>
+      <ol>
+        <li>Hollandaise, Sahne, Eigelb in den Ninja Mixer</li>
+        <li>Auf Stufe 1 für 30 Sekunden mixen</li>
+        <li>Zitronensaft und Muskat hinzufügen</li>
+        <li>Weitere 30 Sekunden auf Stufe 2</li>
+      </ol>
+
+      <h3>Schritt 3: Haupt-Shake (2 Min)</h3>
+      <ol>
+        <li>Eingeweichte Schnitzel-Mischung in den Mixer</li>
+        <li>Hollandaise-Creme hinzufügen</li>
+        <li>Warme Milch und geschmolzene Butter dazu</li>
+        <li>Senf, Petersilie, Knoblauchpulver hinzufügen</li>
+        <li><strong>Ninja Mixer auf Stufe 3 für 60 Sekunden</strong></li>
+        <li>Kurz auf Pulse-Stufe für perfekte Konsistenz</li>
+      </ol>
+
+      <h3>Schritt 4: Anrichten (1 Min)</h3>
+      <ol>
+        <li>In große Gläser füllen</li>
+        <li>Mit gerösteten Semmelbröseln bestreuen</li>
+        <li>Frische Petersilie darüber</li>
+        <li>Zitronenzeste als Finish</li>
+        <li>Knusprige Speckwürfel on top</li>
+      </ol>
+    </div>
+
+    <h2>🎯 Ninja Mixer Einstellungen</h2>
+    <table class="nutrition-table">
+      <thead>
+        <tr>
+          <th>Schritt</th>
+          <th>Stufe</th>
+          <th>Zeit</th>
+          <th>Ergebnis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hollandaise</td>
+          <td>1 → 2</td>
+          <td>1 Min</td>
+          <td>Cremig</td>
+        </tr>
+        <tr>
+          <td>Haupt-Shake</td>
+          <td>3</td>
+          <td>60 Sek</td>
+          <td>Smooth</td>
+        </tr>
+        <tr>
+          <td>Finish</td>
+          <td>Pulse</td>
+          <td>10 Sek</td>
+          <td>Perfekte Textur</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tips">
+      <h3>💡 Tipps</h3>
+      <p><strong>Für warme Version:</strong> Milch und Brühe vorher erwärmen (nicht kochen!), Mixer auf niedriger Stufe starten, sofort servieren</p>
+      <p><strong>Für kalte Version:</strong> Alle Zutaten vorher kühlen, 4-5 Eiswürfel hinzufügen, auf höchster Stufe mixen</p>
+      <p><strong>Konsistenz anpassen:</strong> Dicker → Mehr Semmelbrösel | Dünner → Mehr Milch/Brühe | Cremiger → Mehr Hollandaise</p>
+    </div>
+
+    <h2>📊 Nährwerte (pro Shake)</h2>
+    <table class="nutrition-table">
+      <thead>
+        <tr>
+          <th>Nährwert</th>
+          <th>Menge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kalorien</td>
+          <td>~650 kcal</td>
+        </tr>
+        <tr>
+          <td>Protein</td>
+          <td>35g</td>
+        </tr>
+        <tr>
+          <td>Kohlenhydrate</td>
+          <td>25g</td>
+        </tr>
+        <tr>
+          <td>Fett</td>
+          <td>48g</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>🏆 Bewertung</h2>
+    <div class="rating">
+      <p>Geschmack: ⭐⭐⭐⭐⭐</p>
+      <p>Textur: ⭐⭐⭐⭐</p>
+      <p>Zubereitung: ⭐⭐⭐⭐⭐</p>
+      <p>Ninja Mixer geeignet: ⭐⭐⭐⭐⭐</p>
+    </div>
+
+    <div class="highlight">
+      ⏱️ Genusszeit: Sofort nach Zubereitung<br>
+      🕐 Haltbarkeit: Max. 2 Stunden (dann trennen sich die Zutaten)
+    </div>
+
+    <div class="footer">
+      <p><strong>Viel Erfolg beim Mixen! 🥤</strong></p>
+      <p style="margin-top: 10px;">Erstellt mit OpenClaw AI Assistant</p>
+    </div>
+  </div>
+
+  <script>
+    // Auto-print dialog for PDF saving
+    window.addEventListener('load', () => {
+      console.log('💡 Tipp: Drücke Strg+P (oder Cmd+P) um als PDF zu speichern!');
+    });
+  </script>
+</body>
+</html>

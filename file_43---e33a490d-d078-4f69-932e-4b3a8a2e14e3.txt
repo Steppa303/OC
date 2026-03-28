@@ -1,0 +1,5 @@
+Lasst uns mal gemeinsam eine Strategie zum Spornen von Sub Agents entwickeln,
+diese noch nicht umsetzen, erst mal nur gemeinsam entwickeln,
+mit dem Ziel, dass du für spezifische Tasks
+spezifische Sub Agents erstellt, mit dem jeweils für die Aufgabe am besten geeigneten
+uns zur Verfügung stehenden Modell.

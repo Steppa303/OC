@@ -1,0 +1,129 @@
+{
+  "detailedInfo": {
+    "canvasDetails": {
+      "tagName": "CANVAS",
+      "id": "",
+      "className": "",
+      "width": 1920,
+      "height": 150,
+      "clientWidth": 1920,
+      "clientHeight": 150,
+      "offsetWidth": 1920,
+      "offsetHeight": 150,
+      "style": {
+        "width": "1920px",
+        "height": "150px",
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      }
+    },
+    "relevantElements": [
+      {
+        "tagName": "CANVAS",
+        "id": "",
+        "className": "",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 150,
+          "top": 0,
+          "right": 1920,
+          "bottom": 150,
+          "left": 0
+        },
+        "computedStyle": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "display": "block",
+          "visibility": "visible"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "tagName": "DIV",
+        "id": "root",
+        "className": "",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 360,
+          "top": 0,
+          "right": 1920,
+          "bottom": 360,
+          "left": 0
+        },
+        "computedStyle": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "block"
+        }
+      },
+      {
+        "tagName": "DIV",
+        "id": "",
+        "className": "w-full h-screen bg-gradient-to-b from-white via-gray-100 to-gray-200",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 360,
+          "top": 0,
+          "right": 1920,
+          "bottom": 360,
+          "left": 0
+        },
+        "computedStyle": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "block"
+        }
+      },
+      {
+        "tagName": "DIV",
+        "id": "",
+        "className": "",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 150,
+          "top": 0,
+          "right": 1920,
+          "bottom": 150,
+          "left": 0
+        },
+        "computedStyle": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "block"
+        }
+      },
+      {
+        "tagName": "DIV",
+        "id": "",
+        "className": "",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 150,
+          "top": 0,
+          "right": 1920,
+          "bottom": 150,
+          "left": 0
+        },
+        "computedStyle": {
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "display": "block"
+        }
+      }
+    ],
+    "totalElements": 22,
+    "bodyBgColor": "rgb(0, 0, 0)",
+    "documentHeight": 1080,
+    "windowHeight": 1080
+  },
+  "consoleMessages": [],
+  "timestamp": "2026-03-22T07:24:23.934Z"
+}

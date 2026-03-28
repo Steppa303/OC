@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Context Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f0a1e;
+            color: white;
+        }
+        button {
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Context Test</h1>
+    <div class="status" id="status">Status: Initial</div>
+    <button onclick="initAudio()">Initialize Audio</button>
+    <button onclick="playSound()">Play Sound</button>
+    <button onclick="stopSound()">Stop Sound</button>
+    <button onclick="testAllWaveforms()">Test All Waveforms</button>
+    
+    <script>
+        let audioContext = null;
+        let oscillator = null;
+        let gainNode = null;
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = 'Status: ' + message;
+            console.log(message);
+        }
+        
+        function initAudio() {
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    updateStatus('Audio Context initialized. State: ' + audioContext.state);
+                } else if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        updateStatus('Audio Context resumed. State: ' + audioContext.state);
+                    });
+                } else {
+                    updateStatus('Audio Context already running. State: ' + audioContext.state);
+                }
+            } catch (error) {
+                updateStatus('Error initializing audio: ' + error.message);
+            }
+        }
+        
+        function playSound() {
+            if (!audioContext) {
+                updateStatus('Please initialize audio first!');
+                return;
+            }
+            
+            try {
+                // Resume if suspended
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                // Stop any existing sound
+                if (oscillator) {
+                    oscillator.stop();
+                    oscillator = null;
+                }
+                
+                // Create new oscillator
+                oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                
+                // Connect: oscillator -> gain -> destination
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Apply envelope to avoid clicking
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01); // Attack
+                gainNode.gain.exponentialRampToValueAtTime(0.1, now + 0.5); // Decay/Sustain
+                
+                oscillator.start(now);
+                
+                updateStatus('Playing sine wave at 440Hz...');
+            } catch (error) {
+                updateStatus('Error playing sound: ' + error.message);
+            }
+        }
+        
+        function stopSound() {
+            try {
+                if (oscillator) {
+                    oscillator.stop();
+                    oscillator = null;
+                    updateStatus('Sound stopped.');
+                } else {
+                    updateStatus('No sound playing.');
+                }
+            } catch (error) {
+                updateStatus('Error stopping sound: ' + error.message);
+            }
+        }
+        
+        function testAllWaveforms() {
+            if (!audioContext) {
+                updateStatus('Please initialize audio first!');
+                return;
+            }
+            
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
+            let index = 0;
+            
+            function playNext() {
+                if (index >= waveforms.length) return;
+                
+                if (oscillator) {
+                    oscillator.stop();
+                }
+                
+                oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();
+                
+                oscillator.type = waveforms[index];
+                oscillator.frequency.setValueAtTime(300 + index * 50, audioContext.currentTime);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.05, now + 0.3);
+                
+                oscillator.start(now);
+                updateStatus(`Testing ${waveforms[index]} waveform...`);
+                
+                oscillator.stop(now + 0.5);
+                
+                index++;
+                setTimeout(playNext, 600); // Wait for sound to finish
+            }
+            
+            playNext();
+        }
+    </script>
+</body>
+</html>

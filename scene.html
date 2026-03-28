@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js State of the Art Scene</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">Loading 3D Scene...</div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script>
+        // Hauptszene initialisieren
+        class Scene3D {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.controls = null;
+                this.blob = null;
+                this.pedestal = null;
+                
+                // Lichter
+                this.ambientLight = null;
+                this.directionalLight = null;
+                this.pointLights = [];
+                
+                // Zustände
+                this.isMobile = this.checkMobile();
+                this.autoRotate = false;
+                
+                this.init();
+                this.setupEventListeners();
+            }
+            
+            checkMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            init() {
+                // Scene erstellen
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x000000);
+                this.scene.fog = new THREE.Fog(0x000000, 10, 50);
+                
+                // Kamera einrichten
+                const aspect = window.innerWidth / window.innerHeight;
+                this.camera = new THREE.PerspectiveCamera(
+                    75, 
+                    aspect, 
+                    0.1, 
+                    1000
+                );
+                this.camera.position.set(0, 2, 5);
+                
+                // Renderer mit PBR Features
+                this.renderer = new THREE.WebGLRenderer({ 
+                    antialias: true,
+                    alpha: true
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit für mobile
+                
+                // Shadow Mapping aktivieren
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                // Physically Based Rendering
+                this.renderer.physicallyCorrectLights = true;
+                this.renderer.outputEncoding = THREE.sRGBEncoding;
+                this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.renderer.toneMappingExposure = 1.0;
+                
+                document.body.appendChild(this.renderer.domElement);
+                
+                // OrbitControls für mobile-freundliche Bedienung
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+                this.controls.screenSpacePanning = false;
+                this.controls.minDistance = 2;
+                this.controls.maxDistance = 20;
+                
+                // Mobile spezifische Einstellungen
+                if (this.isMobile) {
+                    this.controls.enablePan = false; // Kein Pan auf Mobile
+                    this.controls.rotateSpeed = 0.5;
+                    this.controls.zoomSpeed = 0.5;
+                } else {
+                    this.controls.enablePan = true;
+                }
+                
+                this.createLights();
+                this.createPedestal();
+                this.createBlob();
+                
+                // Loading Overlay entfernen
+                document.getElementById('loading').style.display = 'none';
+                
+                // Animation starten
+                this.animate();
+            }
+            
+            createLights() {
+                // Ambient Light für weiche Füllung
+                this.ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+                this.scene.add(this.ambientLight);
+                
+                // Directional Light mit Schatten (Hauptlichtquelle)
+                this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                this.directionalLight.position.set(5, 10, 7);
+                this.directionalLight.castShadow = true;
+                
+                // Schatten-Einstellungen für High-Quality
+                this.directionalLight.shadow.mapSize.width = 2048;
+                this.directionalLight.shadow.mapSize.height = 2048;
+                this.directionalLight.shadow.camera.near = 0.5;
+                this.directionalLight.shadow.camera.far = 50;
+                this.directionalLight.shadow.camera.left = -10;
+                this.directionalLight.shadow.camera.right = 10;
+                this.directionalLight.shadow.camera.top = 10;
+                this.directionalLight.shadow.camera.bottom = -10;
+                this.directionalLight.shadow.radius = 4;
+                this.directionalLight.shadow.bias = -0.0005;
+                
+                this.scene.add(this.directionalLight);
+                
+                // Point Lights für Akzente
+                const pointLight1 = new THREE.PointLight(0xff0000, 0.5, 20);
+                pointLight1.position.set(-3, 3, 3);
+                pointLight1.castShadow = true;
+                this.scene.add(pointLight1);
+                this.pointLights.push(pointLight1);
+                
+                const pointLight2 = new THREE.PointLight(0x00ff00, 0.5, 20);
+                pointLight2.position.set(3, 3, -3);
+                pointLight2.castShadow = true;
+                this.scene.add(pointLight2);
+                this.pointLights.push(pointLight2);
+                
+                const pointLight3 = new THREE.PointLight(0x0000ff, 0.3, 15);
+                pointLight3.position.set(0, 5, 0);
+                pointLight3.castShadow = true;
+                this.scene.add(pointLight3);
+                this.pointLights.push(pointLight3);
+                
+                // Helper für Debugging (kann später entfernt werden)
+                // this.scene.add(new THREE.DirectionalLightHelper(this.directionalLight));
+                // this.scene.add(new THREE.CameraHelper(this.directionalLight.shadow.camera));
+            }
+            
+            createPedestal() {
+                // Zylindrisches Podest
+                const geometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 32);
+                const material = new THREE.MeshStandardMaterial({
+                    color: 0x111111,
+                    metalness: 0.8,
+                    roughness: 0.2,
+                    emissive: 0x000022, // Sehr dezente Emission
+                    emissiveIntensity: 0.1
+                });
+                
+                this.pedestal = new THREE.Mesh(geometry, material);
+                this.pedestal.position.y = -1;
+                this.pedestal.receiveShadow = true;
+                this.scene.add(this.pedestal);
+            }
+            
+            createBlob() {
+                // Sphere als Blob Placeholder
+                const geometry = new THREE.SphereGeometry(1, 64, 64);
+                const material = new THREE.MeshStandardMaterial({
+                    color: 0x000000,
+                    metalness: 0.9,
+                    roughness: 0.1,
+                    emissive: 0x000000,
+                    wireframe: false
+                });
+                
+                this.blob = new THREE.Mesh(geometry, material);
+                this.blob.position.y = -0.5; // Auf dem Podest
+                this.blob.castShadow = true;
+                this.blob.receiveShadow = true;
+                this.scene.add(this.blob);
+                
+                // Optional: Auto-Rotate für den Blob
+                this.autoRotate = true;
+            }
+            
+            setupEventListeners() {
+                window.addEventListener('resize', () => this.onWindowResize(), false);
+                
+                // Touch Events für mobile Optimierung
+                if (this.isMobile) {
+                    this.renderer.domElement.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                    }, { passive: false });
+                    
+                    this.renderer.domElement.addEventListener('touchmove', (e) => {
+                        e.preventDefault();
+                    }, { passive: false });
+                }
+            }
+            
+            onWindowResize() {
+                // Responsive Anpassung
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                
+                this.camera.aspect = width / height;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(width, height);
+                
+                // Pixel Ratio für verschiedene Geräte
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                // Controls aktualisieren (für Damping)
+                if (this.controls) {
+                    this.controls.update();
+                }
+                
+                // Optional: Blob Rotation
+                if (this.blob && this.autoRotate) {
+                    this.blob.rotation.x += 0.005;
+                    this.blob.rotation.y += 0.01;
+                }
+                
+                // Optional: Pulsierende Point Lights
+                const time = Date.now() * 0.001;
+                this.pointLights.forEach((light, index) => {
+                    light.intensity = 0.3 + Math.sin(time + index) * 0.2;
+                });
+                
+                // Szene rendern
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+        
+        // Szene starten wenn DOM geladen
+        document.addEventListener('DOMContentLoaded', () => {
+            new Scene3D();
+        });
+    </script>
+</body>
+</html>

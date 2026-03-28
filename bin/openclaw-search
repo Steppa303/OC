@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+
+import { Command } from 'commander';
+import { getMemorySearchManager } from '../../usr/lib/node_modules/openclaw/dist/search-manager-CR5cykjp.js';
+import { loadValidatedConfig } from '../../usr/lib/node_modules/openclaw/dist/auth-profiles-DRjqKE3G.js';
+import { defaultRuntime } from '../../usr/lib/node_modules/openclaw/dist/subsystem-BDbeCphF.js';
+import chalk from 'chalk';
+
+const program = new Command();
+
+program
+  .name('openclaw search')
+  .description('Search through OpenClaw memory and documents')
+  .argument('<query>', 'search query')
+  .option('--type <type>', 'filter by type (rezept, session, agent, doc)', null)
+  .option('--limit <limit>', 'limit number of results', '10')
+  .option('--json', 'output in JSON format')
+  .action(async (query, options) => {
+    try {
+      // Load configuration
+      const config = await loadValidatedConfig();
+      
+      // Initialize search manager
+      const searchParams = {
+        cfg: config,
+        agentId: 'main', // Using main agent for now
+        purpose: 'search'
+      };
+      
+      const { manager } = await getMemorySearchManager(searchParams);
+      
+      if (!manager) {
+        console.error(chalk.red('Error: Could not initialize search manager'));
+        process.exit(1);
+      }
+      
+      // Perform search
+      const startTime = Date.now();
+      const results = await manager.search(query, {
+        maxResults: parseInt(options.limit) || 10
+      });
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      
+      if (options.json) {
+        console.log(JSON.stringify({
+          query,
+          results,
+          duration_ms: duration,
+          total_results: results.length
+        }, null, 2));
+        return;
+      }
+      
+      // Filter results by type if specified
+      let filteredResults = results;
+      if (options.type) {
+        filteredResults = results.filter(result => {
+          if (options.type === 'rezept') return result.path.toLowerCase().includes('rezept') || result.path.toLowerCase().includes('recipe');
+          if (options.type === 'session') return result.path.includes('session') || result.path.includes('memory');
+          if (options.type === 'agent') return result.path.includes('agent');
+          if (options.type === 'doc') return result.path.includes('.md') || result.path.includes('.txt');
+          return true;
+        });
+      }
+      
+      // Display results
+      console.log(chalk.bold(`\n🔍 Search results for: "${query}"`));
+      console.log(chalk.gray(`⏱️  Query took ${duration}ms | Found ${results.length} results`));
+      console.log('');
+      
+      if (filteredResults.length === 0) {
+        console.log(chalk.yellow('No results found matching your criteria.'));
+        return;
+      }
+      
+      // Limit results based on option
+      const displayedResults = filteredResults.slice(0, parseInt(options.limit) || 10);
+      
+      displayedResults.forEach((result, index) => {
+        let typeColor = chalk.white; // Default color
+        
+        if (result.path.toLowerCase().includes('rezept') || result.path.toLowerCase().includes('recipe')) {
+          typeColor = chalk.green; // Green for recipes
+        } else if (result.path.includes('session') || result.path.includes('memory')) {
+          typeColor = chalk.blue; // Blue for sessions
+        } else if (result.path.includes('agent')) {
+          typeColor = chalk.yellow; // Yellow for agents
+        } else {
+          typeColor = chalk.white; // White for docs
+        }
+        
+        // Apply type filter
+        if (options.type) {
+          let match = false;
+          if (options.type === 'rezept') match = result.path.toLowerCase().includes('rezept') || result.path.toLowerCase().includes('recipe');
+          if (options.type === 'session') match = result.path.includes('session') || result.path.includes('memory');
+          if (options.type === 'agent') match = result.path.includes('agent');
+          if (options.type === 'doc') match = result.path.includes('.md') || result.path.includes('.txt');
+          
+          if (!match) return;
+        }
+        
+        console.log(`${chalk.gray(`${index + 1}.`)} ${typeColor(result.path)}`);
+        console.log(`   ${chalk.gray(`Score: ${(result.score || 0).toFixed(2)} | Source: ${result.source || 'unknown'}`)}`);
+        
+        if (result.snippet) {
+          const snippet = result.snippet.length > 200 
+            ? result.snippet.substring(0, 200) + '...' 
+            : result.snippet;
+          console.log(`   ${chalk.dim(snippet)}`);
+        }
+        console.log('');
+      });
+      
+      if (displayedResults.length < filteredResults.length) {
+        console.log(chalk.gray(`... and ${filteredResults.length - displayedResults.length} more results`));
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`Error during search: ${error.message}`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+program.parse();

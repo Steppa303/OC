@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melodie Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Melodie Generator</h1>
+        
+        <div class="controls">
+            <label>Root Note: 
+                <select id="rootNote">
+                    <option value="C4">C4</option>
+                    <option value="D4">D4</option>
+                    <option value="E4">E4</option>
+                    <option value="F4">F4</option>
+                    <option value="G4">G4</option>
+                    <option value="A4">A4</option>
+                    <option value="B4">B4</option>
+                </select>
+            </label>
+            
+            <label>Skala: 
+                <select id="scaleType">
+                    <option value="major">Dur</option>
+                    <option value="minor">Moll</option>
+                    <option value="pentatonicMajor">Pentatonisch Dur</option>
+                    <option value="pentatonicMinor">Pentatonisch Moll</option>
+                </select>
+            </label>
+            
+            <label>BPM: 
+                <input type="number" id="bpm" value="120" min="60" max="200">
+            </label>
+        </div>
+        
+        <button onclick="generateAndPlay()">Generiere & Spiele Melodie</button>
+        <button onclick="stopMusic()">Stop</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <!-- Tone.js von CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    
+    <script>
+        async function generateAndPlay() {
+            const rootNote = document.getElementById('rootNote').value;
+            const scaleType = document.getElementById('scaleType').value;
+            const bpm = parseInt(document.getElementById('bpm').value);
+            
+            document.getElementById('status').innerHTML = 'Generiere Melodie...';
+            
+            try {
+                // Generiere Melodie vom Server
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rootNote: rootNote,
+                        scaleType: scaleType,
+                        bpm: bpm
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('status').innerHTML = 'Spiele Melodie...';
+                    
+                    // Spiele die generierte Komposition ab
+                    const playResponse = await fetch('/api/play', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            composition: data.composition
+                        })
+                    });
+                    
+                    const playData = await playResponse.json();
+                    document.getElementById('status').innerHTML = playData.message;
+                } else {
+                    document.getElementById('status').innerHTML = 'Fehler: ' + data.error;
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = 'Fehler: ' + error.message;
+            }
+        }
+        
+        async function stopMusic() {
+            try {
+                await fetch('/api/stop', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                document.getElementById('status').innerHTML = 'Musik gestoppt';
+            } catch (error) {
+                document.getElementById('status').innerHTML = 'Fehler beim Stoppen: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

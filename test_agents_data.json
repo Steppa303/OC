@@ -1,0 +1,17 @@
+{
+  "agents": [
+    {
+      "id": 41,
+      "session_key": "agent:test-session-key",
+      "label": "Test Agent",
+      "task": "This is a test agent for verification",
+      "status": "running",
+      "model": "test-model",
+      "runtime_ms": null,
+      "started_at": "2026-03-24T15:30:00.000Z",
+      "ended_at": null,
+      "error_message": null,
+      "parent_session": "test-parent"
+    }
+  ]
+}

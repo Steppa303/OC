@@ -1,0 +1,5 @@
+{
+  "name": "Backup GrossartigeZeitPlanung - Redesign",
+  "description": "Ein intelligentes Projektplanungstool, das Anfragen in natürlicher Sprache in strukturierte Projektphasen umwandelt und die Teamkapazität mithilfe von Gemini AI verwaltet.",
+  "requestFramePermissions": []
+}
