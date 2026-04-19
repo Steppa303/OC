@@ -20,6 +20,10 @@
     "md2pdf-weasyprint": {
       "version": "2.0.0",
       "installedAt": 1774096213899
+    },
+    "agent-browser-clawdbot": {
+      "version": "0.1.0",
+      "installedAt": 1776605728748
     }
   }
 }

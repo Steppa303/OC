@@ -149,8 +149,8 @@ curl -sI http://localhost/appname/assets/index.js | grep Content-Type
 
 | Aufgabe | Model | Warum |
 |---------|-------|-------|
-| Frontend (React, Vue, UI/UX) | `qwen3-coder-next` | Schnell, gut für UI-Code |
-| Backend (Node.js, API, DB) | `qwen3-coder-plus` | Tiefere Logik, komplexere Architektur |
+| Frontend (React, Vue, UI/UX) | `qwen3.6-plus` | God-Tier Coder, übertrifft alles für UI/UX |
+| Backend (Node.js, API, DB) | `qwen3.6-plus` | Tiefere Logik, komplexere Architektur – neues Biest |
 | Testing (Jest, E2E) | `qwen3-coder-plus` | Gründlichkeit wichtig |
 | Debugging/Analyse | `qwen3.5-plus` | Generalist, gut für Troubleshooting |
 | Writing/Docs | `qwen3.5-plus` | Sprachqualität |
