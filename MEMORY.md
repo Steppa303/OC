@@ -1,6 +1,6 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-04-20 ~13:20_
+_Letzte Aktualisierung: 2026-04-20 ~16:45_
 
 ---
 
@@ -17,8 +17,9 @@ _Letzte Aktualisierung: 2026-04-20 ~13:20_
 - **Bot ID:** 8163320904
 - **Chat ID:** 1400987471 (Bastian's Direkt-Chat)
 - **Config:** `/root/.openclaw/openclaw.json` → `channels.telegram.botToken`
-- **Status:** Läuft (seit 2026-04-20 11:00 nach Restart)
-- **Bekanntes Problem:** Polling kann hängen bleiben → `bot/close` + Gateway restart = Fix
+- **Status:** ✅ Stabil seit 2026-04-20 11:00 (Watchdog v8)
+- **Watchdog v8:** Alle 5 Min Check (Gateway Health + Telegram API + sendMessage Test)
+- **Bekannte Issues:** `sendChatAction failed`, `EFFECT_ID_INVALID` → Gateway restart behebt
 
 ### OpenClaw
 - **Gateway Port:** 18789 (loopback only)
@@ -30,13 +31,23 @@ _Letzte Aktualisierung: 2026-04-20 ~13:20_
 
 ## 🔧 Wichtige Lessons Learned
 
-### Telegram Polling Conflicts (2026-04-18)
+### Telegram Polling Conflicts (2026-04-18 bis 2026-04-20)
 **Problem:** Bot antwortet nicht, Gateway startet aber normal.
-**Ursache:** `409 Conflict: terminated by other getUpdates request` – zwei Instanzen konkurrieren um Updates.
-**Fix:** 
+**Ursachen (mehrere):**
+1. `409 Conflict` – zwei Instanzen konkurrieren (18.04.)
+2. `sendChatAction failed: Network request` (20.04.)
+3. `EFFECT_ID_INVALID` – sendMessage fehlerhaft (20.04.)
+
+**Fixes:**
 1. `curl "https://api.telegram.org/bot<TOKEN>/close"` → killt ALLE Verbindungen auf Telegram-Seite
-2. Gateway restart → sauberer Polling-Start
-3. **NICHT** einfach nur restarten – der Conflict bleibt bestehen!
+2. Gateway restart (`kill -TERM` + systemd auto-restart)
+3. Watchdog v8 erkennt Issues automatisch und restarted
+
+**Watchdog v8 Logik:**
+- Check 1: Gateway Health (`/health` endpoint)
+- Check 2: Telegram API reachable (getMe via IPv4)
+- Check 3: Bot responsive (sendMessage Test)
+- Bei Fail >2 Min: Gateway restart via `kill -TERM`
 
 **Diagnose:** 
 ```bash
@@ -44,8 +55,9 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 ```
 
 ### Watchdog Pattern
-- **Script:** `/root/.openclaw/workspace/scripts/telegram-watchdog.sh` (v6)
-- **Cron:** `*/15 * * * *`
+- **Script:** `/root/.openclaw/workspace/scripts/telegram-watchdog.sh` (v8)
+- **Cron:** `*/5 * * * *` (alle 5 Minuten)
+- **Checks:** 1) Gateway Health, 2) Telegram API reachable, 3) sendMessage Test
 - **Methode:** Health-Endpoint check (`/health`), NICHT Log-Timestamps
 - **Aktion bei Fail:** `kill -TERM` + systemd auto-restart
 - **Warum:** Polling ist silent – kein Log ≠ broken! Health-Endpoint ist der einzige zuverlässige Indikator.
@@ -74,7 +86,7 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - `/tmp/openclaw/openclaw-YYYY-MM-DD.log` – Gateway Logs
 
 ### Cron-Jobs
-- `*/15 * * * *` – Telegram Watchdog
+- `*/5 * * * *` – Telegram Watchdog (v8, alle 5 Min)
 - `0 */3 * * *` – ChromaDB Size Monitor
 - `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
 - `0 2 * * *` – Agent Cleanup
@@ -113,4 +125,29 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 
 ---
 
-_Stand: 20.04.2026 ~13:20. Memory System v2 mit Telegram Context Automation._
+_Stand: 20.04.2026 ~16:45. Telegram Bot stabil (Watchdog v8), Memory System v2._
+
+---
+
+## 📅 Heute (20.04.2026) - Wichtige Events
+
+### Telegram Bot Issues (Tag 5)
+- **10:46:** Gateway restarted nach sendChatAction failed Errors
+- **11:00:** Watchdog v8 detected `EFFECT_ID_INVALID` → auto-restart
+- **11:15:** Watchdog v8 bestätigt: Bot responsive ✅
+- **Status seit 11:15:** Bot stabil online, sendMessage succeeded
+- **Watchdog v8:** Checkt alle 5 Min (Gateway Health + API + sendMessage)
+
+### HEARTBEAT.md Updated
+- Telegram Bot Monitoring Section added
+- Alle Cron-Jobs dokumentiert
+- Watchdog v8 Logic beschrieben
+
+### Memory System
+- Session Ingest: 15:30 Uhr gelaufen ✅
+- 213 Session-Files in memory/sessions/
+- Telegram Context Automation aktiv
+
+### User Status
+- Bastian ist offline gegangen (~14:45)
+- Kommt später wieder
