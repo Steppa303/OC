@@ -6,6 +6,15 @@
 
 ---
 
+## 🧠 Session Startup
+
+**Beim Session-Start:**
+1. `memorySearch` mit Query "letzte Session Zusammenfassung" → findet `memory/summaries/*.md`
+2. Letztes Summary lesen → Kontext über Probleme, Lösungen, Entscheidungen
+3. Daily-Datei lesen (`memory/YYYY-MM-DD.md`) → Telegram Context
+
+---
+
 ## 📊 Agent Status Reports
 
 **Intervall:** Alle 5 Minuten wenn Agents laufen

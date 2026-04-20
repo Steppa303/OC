@@ -79,6 +79,7 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
 - `0 2 * * *` – Agent Cleanup
 - `30 * * * *` – Chat Session Ingest + Telegram Context Update
+- `0 */2 * * *` – Session Summary Generator
 - `0 5 * * *` – Gateway Daily Restart (SIGTERM)
 
 ---
