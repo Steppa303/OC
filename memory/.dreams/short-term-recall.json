@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-18T20:19:02.821Z",
+  "updatedAt": "2026-04-20T11:11:29.457Z",
   "entries": {
     "memory:memory/2026-03-21.md:1:43": {
       "key": "memory:memory/2026-03-21.md:1:43",
@@ -9,20 +9,22 @@
       "endLine": 43,
       "source": "memory",
       "snippet": "# 2026-03-21 - Session Memories ## 🎵 Melodiegenerator (Completed) - **URL:** http://185.217.126.72/melodie-generator/ - **Tech:** Tone.js for audio synthesis - **Features:** - Web Audio API mit PolySynth - Verschiedene Wellenformen (Sine, Square, Sawtooth, Triangle) - BPM, Chaos, Länge einstellbar - Tonarten (Dur, Moll, Pentatonik, Blues, Modes) - Canvas Visualizer - Dark/Light Mode - **Fixes:** - Audio-Context Timing Problem behoben (setTimeout mit 0ms Delay) - Stopp-Button State Fix (isLoading korrekt zurücksetzen) - Loop-Wiederholung mit Tone.Transport.loop = true ## 📊 Agent Dashboard (Completed) - **URL:** http://185.217.126.72/agent-dashboard/ - **Features:** - P",
-      "recallCount": 3,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1.1334871828556061,
+      "totalScore": 1.471590507030487,
       "maxScore": 0.39567344188690184,
       "firstRecalledAt": "2026-04-18T20:18:51.937Z",
-      "lastRecalledAt": "2026-04-18T20:19:02.821Z",
+      "lastRecalledAt": "2026-04-19T17:08:27.276Z",
       "queryHashes": [
         "32b95717ad22",
         "506c3ddf02cd",
-        "65dad0bda103"
+        "65dad0bda103",
+        "de2cffbfc165"
       ],
       "recallDays": [
-        "2026-04-18"
+        "2026-04-18",
+        "2026-04-19"
       ],
       "conceptTags": [
         "185.217.126.72/melodie-generator",
@@ -42,18 +44,20 @@
       "endLine": 50,
       "source": "memory",
       "snippet": "- **Ursache:** UND_ERR_SOCKET (IPv4 Socket Error) – Netzwerkproblem auf Server-Level - Telegram Bot: @ogLobster_bot - Workaround: Gateway restart behebt es temporär ## Heartbeat Session Summary (17.04 - 18.04) - **17.04 ~16:50:** Telegram polling stall (first occurrence) - **17.04 ~17:00:** Gateway restart + `openclaw doctor --fix` (TTS legacy keys migrated) - **18.04 07:10:** Second Telegram stall detected, gateway restarted - **18.04 10:28-11:45:** Multiple gateway restarts, Telegram still not connecting - **18.04 ~11:30:** Telegram watchdog v1-v4 created and iterated (false restart loops) - **18.04 ~11:38:** **ROOT CAUSE FOUND:** `409 Conflict: terminated by other getUpdates request` -",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.4154406040906906,
-      "maxScore": 0.4154406040906906,
+      "totalScore": 0.8525297135114669,
+      "maxScore": 0.43708910942077633,
       "firstRecalledAt": "2026-04-18T20:18:57.493Z",
-      "lastRecalledAt": "2026-04-18T20:18:57.493Z",
+      "lastRecalledAt": "2026-04-19T17:08:27.276Z",
       "queryHashes": [
-        "506c3ddf02cd"
+        "506c3ddf02cd",
+        "de2cffbfc165"
       ],
       "recallDays": [
-        "2026-04-18"
+        "2026-04-18",
+        "2026-04-19"
       ],
       "conceptTags": [
         "gateway",
@@ -73,19 +77,25 @@
       "endLine": 30,
       "source": "memory",
       "snippet": "## Telegram Polling Stall behoben **Problem:** Gestern (17.04.) um ~16:50 ist das Telegram-Polling gecrasht (\"Polling stall detected\", keine Updates für 115s). IPv4 Socket Errors davor. Gateway hat sich neu gestartet aber Telegram blieb instabil. **Ursache:** - IPv4 Socket Errors (UND_ERR_SOCKET) haben das Polling zum Stalls gebracht - Config-Fehler: `messages.tts: Unrecognized key: \"custom\"` + Legacy TTS-Keys **Fix (18.04. ~07:10):** - `openclaw doctor --fix` → hat Legacy TTS-Keys migriert (messages.tts.edge → messages.tts.providers.microsoft) - `openclaw gateway restart` → Telegram neu connected, läuft wieder stabil **Status:** Telegram ✅ (@ogLobster_bot), Gateway running (PID 584600)",
-      "recallCount": 2,
+      "recallCount": 6,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.7890177458524703,
+      "totalScore": 2.3560642302036285,
       "maxScore": 0.4144205331802368,
       "firstRecalledAt": "2026-04-18T20:18:57.493Z",
-      "lastRecalledAt": "2026-04-18T20:19:02.821Z",
+      "lastRecalledAt": "2026-04-20T11:11:29.457Z",
       "queryHashes": [
         "506c3ddf02cd",
-        "65dad0bda103"
+        "65dad0bda103",
+        "de2cffbfc165",
+        "c61f1ff7f159",
+        "58bab0dca553",
+        "7bcc566f4536"
       ],
       "recallDays": [
-        "2026-04-18"
+        "2026-04-18",
+        "2026-04-19",
+        "2026-04-20"
       ],
       "conceptTags": [
         "gateway",
@@ -96,6 +106,68 @@
         "messages.tts",
         "tts-keys",
         "18.04"
+      ]
+    },
+    "memory:memory/2026-04-19.md:23:50": {
+      "key": "memory:memory/2026-04-19.md:23:50",
+      "path": "memory/2026-04-19.md",
+      "startLine": 23,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "- **Neue Regel:** Code/Bugfix-Erklärungen = Höhlenmensch (minimal), alles andere = normal - SOUL.md: Deutsch. Immer. ## 19.04.2026 ### ElevenLabs TTS konfiguriert - **API Key:** sk_759f14b305c8debc5f3a3c58a2799776347b556bc4cfddfb - **Voice ID:** JBFqnCBsd6RMkjVDRZzb (Rachel) - **Model:** eleven_multilingual_v2 - **Output Format:** mp3_44100_128 - **Config:** `/root/.openclaw/openclaw.json` → `messages.tts.providers.elevenlabs` - **Status:** ✅ Aktiv, ElevenLabs ist selected provider (war vorher Microsoft) - **Config-Format:** `voiceId` (nicht `voice`!), `modelId`, `format` - **Wichtig:** Config-Key muss `providers.elevenlabs` heißen, nicht `providers.elevenlabs.voice` oder ähnliches - **Eins",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36008340418338775,
+      "maxScore": 0.36008340418338775,
+      "firstRecalledAt": "2026-04-19T17:19:06.725Z",
+      "lastRecalledAt": "2026-04-19T17:19:06.725Z",
+      "queryHashes": [
+        "58bab0dca553"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "code/bugfix-erklärungen",
+        "soul.md",
+        "19.04.2026",
+        "eleven-multilingual-v2",
+        "mp3-44100-128",
+        "openclaw/openclaw.json",
+        "config-format",
+        "config-key"
+      ]
+    },
+    "memory:memory/2026-04-19.md:72:98": {
+      "key": "memory:memory/2026-04-19.md:72:98",
+      "path": "memory/2026-04-19.md",
+      "startLine": 72,
+      "endLine": 98,
+      "source": "memory",
+      "snippet": "- `resetAllParams` Destructuring Problem in SyncGridPanel.tsx - Fehlendes `defaultValue` Prop - Rebuilt & deployed ### Performance-Analyse (nicht fixiert – User wollte revert) - Waveform Neuberechnung bei Zoom → OffscreenCanvas Pre-rendering - rAF im Hintergrund → Visibility-Check - backdrop-filter GPU-Last → entfernt - **User:** Alles revertet, Original-Code wiederhergestellt ### Abgeschlossene & Verworfene Projekte - **Kokoro TTS:** Kein deutsches Modell verfügbar (HF 404/private) → verworfen - **Piper TTS:** OpenClaw unterstützt keine shell-basierten TTS-Provider → verworfen - **Adobe Bridge Daemon:** AppleScript Syntax-Error (-2741), persistent → verworfen - **Memory Search:** Disabled",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3337713241577148,
+      "maxScore": 0.3337713241577148,
+      "firstRecalledAt": "2026-04-19T17:19:06.725Z",
+      "lastRecalledAt": "2026-04-19T17:19:06.725Z",
+      "queryHashes": [
+        "58bab0dca553"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "syncgridpanel.tsx",
+        "performance-analyse",
+        "pre-rendering",
+        "visibility-check",
+        "backdrop-filter",
+        "gpu-last",
+        "original-code",
+        "404/private"
       ]
     }
   }

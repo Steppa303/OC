@@ -41,5 +41,30 @@
 
 ---
 
+## 📡 Telegram Bot Monitoring
+
+**Status:** ✅ ONLINE (seit 2026-04-20 ~11:15, Watchdog v8)
+**Bot:** @ogLobster_bot (Bernd)
+**Watchdog:** `*/5 * * * *` (alle 5 Min)
+**Script:** `/root/.openclaw/workspace/scripts/telegram-watchdog.sh` (v8)
+**Log:** `/tmp/telegram-watchdog.log`
+
+### Checks (v8):
+1. Gateway Health (`/health` endpoint)
+2. Telegram API reachable (getMe via IPv4)
+3. Bot responsive (sendMessage test)
+
+### Auto-Restart:
+- Bei Gateway-Fail: `kill -TERM` + systemd auto-restart
+- Bei Telegram-Fail: Gateway restart nach 2 Min Persistenz
+
+### Cron-Jobs:
+- `*/5 * * * *` – Telegram Watchdog (alle 5 Min)
+- `0 5 * * *` – Daily Gateway Restart (früh 5 Uhr, via SIGTERM)
+- `0 */3 * * *` – ChromaDB Size Monitor
+- `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
+
+---
+
 # Email Check entfernt (AgentMail nicht konfiguriert)
 # Bei Bedarf: AGENTMAIL_API_KEY setzen und Aufgabe wieder aktivieren

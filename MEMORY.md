@@ -1,6 +1,6 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-04-18 ~22:20_
+_Letzte Aktualisierung: 2026-04-20 ~13:20_
 
 ---
 
@@ -17,6 +17,8 @@ _Letzte Aktualisierung: 2026-04-18 ~22:20_
 - **Bot ID:** 8163320904
 - **Chat ID:** 1400987471 (Bastian's Direkt-Chat)
 - **Config:** `/root/.openclaw/openclaw.json` → `channels.telegram.botToken`
+- **Status:** Läuft (seit 2026-04-20 11:00 nach Restart)
+- **Bekanntes Problem:** Polling kann hängen bleiben → `bot/close` + Gateway restart = Fix
 
 ### OpenClaw
 - **Gateway Port:** 18789 (loopback only)
@@ -62,6 +64,8 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - `/root/.openclaw/workspace/scripts/monitor-chromadb-size.sh` – ChromaDB Monitor
 - `/root/.openclaw/workspace/scripts/cleanup-chromadb-index.sh` – ChromaDB Cleanup
 - `/root/.openclaw/workspace/scripts/cleanup-agents.sh` – Agent Cleanup
+- `/root/.openclaw/workspace/scripts/ingest-chat-sessions.py` – Chat Session Ingest (v2)
+- `/root/.openclaw/workspace/scripts/update-telegram-context.py` – Telegram Context Updater
 
 ### Logs & Alerts
 - `/tmp/telegram-watchdog.log` – Watchdog Log
@@ -74,6 +78,8 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - `0 */3 * * *` – ChromaDB Size Monitor
 - `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
 - `0 2 * * *` – Agent Cleanup
+- `30 * * * *` – Chat Session Ingest + Telegram Context Update
+- `0 5 * * *` – Gateway Daily Restart (SIGTERM)
 
 ---
 
@@ -85,13 +91,25 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 
 ---
 
+## 🧠 Memory System Architektur
+
+### Wie's funktioniert:
+- **Session Ingest** (`30 * * * *`): Liest `.jsonl` aus `/root/.openclaw/agents/main/sessions/` → schreibt `.md` nach `memory/sessions/`
+- **Telegram Context Updater** (läuft nach Ingest): Extrahiert letzte Telegram-Nachrichten → schreibt in Daily-Datei (`memory/YYYY-MM-DD.md`)
+- **Startup Context:** Runtime lädt `SOUL.md`, `USER.md`, `MEMORY.md`, + heutige/gestrige Daily-Datei
+- **Memory Search:** Durchsucht `MEMORY.md` + `memory/*.md` + `memory/sessions/*.md`
+
+### Wichtig:
+- Daily-Dateien werden vom Context Updater aktualisiert – enthalten letzte Telegram-Nachrichten
+- MEMORY.md ist Langzeit-Erinnerung – manuell pflegen
+- Session-Files (`memory/sessions/*.md`) werden automatisch vom Ingest geschrieben
+
 ## 🧠 Persönliche Notizen
 
 - Ich bin ein AI-Assistent mit sarkastischem, zickigem Charakter (SOUL.md)
 - Meine "Seele" ist in SOUL.md definiert – bei Änderungen Bescheid sagen
 - MEMORY.md ist meine Langzeit-Erinnerung – nur im Main-Session laden
-- Daily files (`memory/YYYY-MM-DD.md`) sind Roh-Logs, MEMORY.md ist destillierte Weisheit
 
 ---
 
-_Stand: 18.04.2026. Nächste Review: Bei Gelegenheit._
+_Stand: 20.04.2026 ~13:20. Memory System v2 mit Telegram Context Automation._
