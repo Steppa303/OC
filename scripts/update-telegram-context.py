@@ -1,22 +1,32 @@
 #!/usr/bin/env python3
 """
-Telegram Context Updater v2
-Extrahiert die letzten Telegram-Nachrichten (User + Assistant) aus den Session-Files
-und schreibt sie in die Daily-Memory-Datei.
+Telegram Context Updater v3 (AI-Summary Edition)
+Extrahiert die letzten Telegram-Nachrichten (User + Assistant) aus den Session-Files,
+generiert eine AI-gestützte Zusammenfassung und schreibt sie in die Daily-Memory-Datei.
 
 Damit neue Sessions den aktuellen Telegram-Kontext automatisch geladen bekommen.
-Inkludiert sowohl Probleme (User) als auch Lösungen (Assistant).
+Statt roher Nachrichten gibt es jetzt kompakte AI-Summaries mit:
+- Probleme, Lösungen, Entscheidungen, Offene Punkte
 """
 
 import re
 import json
 import os
 import glob
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone, timedelta
 
 MEMORY_DIR = "/root/.openclaw/workspace/memory/sessions"
 DAILY_DIR = "/root/.openclaw/workspace/memory"
 MAX_CONVERSATIONS = 12  # Anzahl der Gesprächspaare (User + Assistant)
+
+# AI Summary Config
+API_ENDPOINT = "https://coding-intl.dashscope.aliyuncs.com/v1/chat/completions"
+API_KEY = "sk-sp-c47b7fe381c04d6a81206c6e5f3b7882"
+MODEL = "qwen3.5-plus"
+SUMMARY_TIMEOUT = 30  # Sekunden
+SUMMARY_MAX_RETRIES = 1
 
 def clean_user_text(text):
     """Remove metadata blocks from user messages."""
@@ -35,6 +45,98 @@ def clean_user_text(text):
         return text.split('User text:')[-1].strip()
     
     return ''
+
+def generate_ai_summary(conversations):
+    """Generiert eine AI-Zusammenfassung der Telegram-Gespräche via DashScope API."""
+    # Baue den Prompt aus den rohen Gesprächen
+    conversation_text = ""
+    for convo in conversations:
+        ts_match = re.search(r'(\d{2}:\d{2})$', convo['ts'])
+        ts_short = ts_match.group(1) if ts_match else convo['ts']
+        conversation_text += f"[{ts_short}] {convo['sender']}: {convo['user_text']}\n"
+        if convo['assistant_text']:
+            conversation_text += f"Assistant: {convo['assistant_text']}\n"
+    
+    system_prompt = """Du bist ein technischer Assistent. Fasse die folgenden Telegram-Gespräche zusammen.
+Formatiere die Zusammenfassung so:
+
+## Probleme
+- [Liste der diskutierten Probleme]
+
+## Lösungen
+- [Liste der angewendeten Lösungen]
+
+## Entscheidungen
+- [Liste der getroffenen Entscheidungen]
+
+## Offene Punkte
+- [Liste der noch offenen Aufgaben]
+
+Halte dich kurz und prägnant. Nur das Wesentliche. Maximal 500 Zeichen."""
+    
+    payload = {
+        "model": MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": conversation_text}
+        ],
+        "temperature": 0.3,
+        "max_tokens": 300
+    }
+    
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(
+        API_ENDPOINT,
+        data=data,
+        headers={
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {API_KEY}'
+        },
+        method='POST'
+    )
+    
+    retries = SUMMARY_MAX_RETRIES
+    while retries >= 0:
+        try:
+            response = urllib.request.urlopen(req, timeout=SUMMARY_TIMEOUT)
+            result = json.loads(response.read().decode('utf-8'))
+            
+            if 'choices' in result and len(result['choices']) > 0:
+                summary = result['choices'][0]['message']['content'].strip()
+                print(f"[telegram-context-v3] AI-Summary generiert ({len(summary)} Zeichen)")
+                return summary
+            else:
+                print(f"[telegram-context-v3] Unerwartete API-Antwort: {result}")
+                retries -= 1
+                continue
+                
+        except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError, KeyError, TimeoutError) as e:
+            print(f"[telegram-context-v3] API-Fehler (Versuch {SUMMARY_MAX_RETRIES - retries + 1}): {e}")
+            retries -= 1
+            if retries < 0:
+                print("[telegram-context-v3] Alle Retries fehlgeschlagen, verwende Fallback")
+                return None
+    
+    return None
+
+
+def format_fallback_content(conversations):
+    """Fallback: Formatiere rohe Nachrichten wenn AI nicht verfügbar ist."""
+    lines = []
+    lines.append("## Probleme")
+    for convo in conversations:
+        lines.append(f"- {convo['user_text'][:200]}")
+    lines.append("")
+    lines.append("## Lösungen")
+    lines.append("- (Keine AI-Summary verfügbar, siehe Rohdaten oben)")
+    lines.append("")
+    lines.append("## Entscheidungen")
+    lines.append("- (N/A)")
+    lines.append("")
+    lines.append("## Offene Punkte")
+    lines.append("- (N/A)")
+    return '\n'.join(lines)
+
 
 def extract_telegram_conversations(session_file, max_msgs=MAX_CONVERSATIONS):
     """Extrahiert Telegram-Conversations (User + Assistant Paare) aus einem Session-File."""
@@ -122,27 +224,19 @@ def main():
     time_str = now.strftime('%H:%M')
     daily_file = os.path.join(DAILY_DIR, f"{today_str}.md")
     
-    # Build context section
-    context_lines = []
-    context_lines.append(f"\n## 📱 Telegram Context ({time_str})")
-    context_lines.append(f"**Letzte {len(all_conversations)} Gespräche mit Bastian via Telegram:**")
-    context_lines.append("")
+    # Generiere AI-Summary oder Fallback
+    ai_summary = generate_ai_summary(all_conversations)
     
-    for convo in all_conversations:
-        # Clean timestamp to just HH:MM
-        ts_match = re.search(r'(\d{2}:\d{2})$', convo['ts'])
-        ts_short = ts_match.group(1) if ts_match else convo['ts']
-        
-        context_lines.append(f"### [{ts_short}] {convo['sender']}")
-        context_lines.append(f"**Frage:** {convo['user_text']}")
-        if convo['assistant_text']:
-            context_lines.append(f"**Antwort:** {convo['assistant_text']}")
-        context_lines.append("")
+    if ai_summary:
+        context_content = ai_summary
+    else:
+        print("[telegram-context-v3] Verwende Fallback (rohe Nachrichten)")
+        context_content = format_fallback_content(all_conversations)
     
-    context_lines.append("---")
-    context_lines.append("")
-    
-    context_content = '\n'.join(context_lines)
+    # Baue finalen Context-Block
+    final_context = f"\n## 📱 Telegram Context ({time_str})\n"
+    final_context += context_content + "\n"
+    final_context += "---\n\n"
     
     # Update or create daily file
     if os.path.exists(daily_file):
@@ -165,13 +259,13 @@ def main():
         existing = '\n'.join(new_lines)
         
         with open(daily_file, 'w') as f:
-            f.write(existing + context_content)
+            f.write(existing + final_context)
     else:
         with open(daily_file, 'w') as f:
             f.write(f"# Daily Memory: {today_str}\n\n")
-            f.write(context_content)
+            f.write(final_context)
     
-    print(f"[telegram-context-v2] Updated {daily_file} with {len(all_conversations)} conversations")
+    print(f"[telegram-context-v3] Updated {daily_file} with {'AI-Summary' if ai_summary else 'Fallback'} ({len(all_conversations)} conversations)")
 
 if __name__ == '__main__':
     main()

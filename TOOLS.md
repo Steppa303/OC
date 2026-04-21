@@ -164,6 +164,25 @@ curl -sI http://localhost/appname/assets/index.js | grep Content-Type
 - **Completion kommt als User-Message** → Nicht als Tool-Response!
 - **Multiple Subagents:** Track alle `childSessionKeys`, warte auf ALLE Completions
 
+### ⏱️ Timeout-Regeln:
+
+- **Default Timeout:** 30 Minuten (`runTimeoutSeconds: 1800`)
+- **Kurze Tasks** (< 5 Min): `runTimeoutSeconds: 300`
+- **Builds/Deploys:** `runTimeoutSeconds: 1800` (30 Min)
+- **Complex Testing:** `runTimeoutSeconds: 1800` (30 Min)
+- **Bei Timeout:** Agent Status manuell auf "timeout" setzen via `/api/agents/end`
+- **Dashboard Bug:** Timed-Out Agents bleiben auf "running" – muss manuell gefixt werden
+
+### 🐛 Dashboard Status Tracking:
+
+**Problem:** Subagents die timeouten werden vom Dashboard nicht automatisch erkannt.
+**Workaround:** Bei Completion-Event mit "timed out" Status → sofort API call:
+```bash
+curl -X POST http://localhost:3002/api/agents/end \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"<key>","status":"timeout","runtimeMs":<ms>}'
+```
+
 ### Beispiel:
 ```javascript
 // Subagent spawnen
