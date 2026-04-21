@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Telegram Context Updater v1
-Extrahiert die letzten Telegram-Nachrichten aus den Session-Files
+Telegram Context Updater v2
+Extrahiert die letzten Telegram-Nachrichten (User + Assistant) aus den Session-Files
 und schreibt sie in die Daily-Memory-Datei.
 
 Damit neue Sessions den aktuellen Telegram-Kontext automatisch geladen bekommen.
+Inkludiert sowohl Probleme (User) als auch Lösungen (Assistant).
 """
 
 import re
@@ -15,44 +16,84 @@ from datetime import datetime, timezone, timedelta
 
 MEMORY_DIR = "/root/.openclaw/workspace/memory/sessions"
 DAILY_DIR = "/root/.openclaw/workspace/memory"
-MAX_MESSAGES = 15
+MAX_CONVERSATIONS = 12  # Anzahl der Gesprächspaare (User + Assistant)
 
-def extract_telegram_messages(session_file, max_msgs=MAX_MESSAGES):
-    """Extrahiert Telegram-User-Nachrichten aus einem Session-File."""
+def clean_user_text(text):
+    """Remove metadata blocks from user messages."""
+    if text.startswith('[Startup context'):
+        return ''
+    
+    # Remove JSON metadata blocks
+    parts = text.split('```')
+    if len(parts) > 1:
+        actual_text = parts[-1].strip()
+        if actual_text and len(actual_text) > 10:
+            return actual_text
+    
+    # Fallback: get text after "User text:" if present
+    if 'User text:' in text:
+        return text.split('User text:')[-1].strip()
+    
+    return ''
+
+def extract_telegram_conversations(session_file, max_msgs=MAX_CONVERSATIONS):
+    """Extrahiert Telegram-Conversations (User + Assistant Paare) aus einem Session-File."""
     with open(session_file) as f:
         content = f.read()
     
+    # Extract all messages in order
     user_msgs = re.findall(r'## User \(([^)]+)\)\n\n(.+?)(?=\n## |\Z)', content, re.DOTALL)
+    assistant_msgs = re.findall(r'## Assistant \(([^)]+)\)\n\n(.+?)(?=\n## |\Z)', content, re.DOTALL)
     
-    results = []
+    conversations = []
+    
     for ts, msg in user_msgs:
+        # Check if this is a Telegram message
         if '"chat_id": "telegram:' not in msg:
             continue
         
         # Extract sender name
         sender_match = re.search(r'"sender"\s*:\s*"([^"]+)"', msg)
-        sender = sender_match.group(1) if sender_match else 'User'
+        sender = sender_match.group(1) if sender_match else 'Bastian'
         
-        # Extract actual text - it's after the last ``` block
-        parts = msg.split('```')
-        actual_text = ''
+        # Extract actual user text
+        user_text = clean_user_text(msg)
+        if not user_text or user_text.startswith('Read HEARTBEAT'):
+            continue
         
-        if len(parts) > 1:
-            actual_text = parts[-1].strip()
+        # Find the corresponding Assistant response
+        # The assistant message comes right after the user message
+        assistant_text = ''
+        for ats, amsg in assistant_msgs:
+            # Find the first assistant message after this user message
+            if ats > ts or ats == ts:
+                # Extract assistant text
+                if amsg:
+                    # Skip thinking blocks
+                    thinking_match = re.search(r'<thinking>(.+?)</thinking>', amsg, re.DOTALL)
+                    if thinking_match:
+                        amsg_clean = amsg.replace(thinking_match.group(0), '').strip()
+                    else:
+                        amsg_clean = amsg
+                    
+                    # Get first meaningful text
+                    parts = amsg_clean.split('```')
+                    if len(parts) > 1:
+                        actual = parts[-1].strip()
+                    else:
+                        actual = amsg_clean.strip()
+                    
+                    assistant_text = actual[:300]
+                    break
         
-        if not actual_text:
-            if 'User text:' in msg:
-                actual_text = msg.split('User text:')[-1].strip()
-        
-        # Skip heartbeat/system messages
-        if actual_text and not actual_text.startswith('Read HEARTBEAT'):
-            results.append({
-                'ts': ts,
-                'sender': sender,
-                'text': actual_text[:200]
-            })
+        conversations.append({
+            'ts': ts,
+            'sender': sender,
+            'user_text': user_text[:250],
+            'assistant_text': assistant_text[:300]
+        })
     
-    return results[-max_msgs:]
+    return conversations[-max_msgs:]
 
 def main():
     # Get all session files sorted by modification time (newest first)
@@ -62,18 +103,18 @@ def main():
         reverse=True
     )
     
-    all_messages = []
+    all_conversations = []
     for sf in session_files[:3]:  # Check last 3 modified sessions
-        msgs = extract_telegram_messages(sf)
-        all_messages.extend(msgs)
+        convos = extract_telegram_conversations(sf)
+        all_conversations.extend(convos)
     
-    if not all_messages:
-        print("[telegram-context] No Telegram messages found")
+    if not all_conversations:
+        print("[telegram-context] No Telegram conversations found")
         return
     
-    # Sort by timestamp and take last MAX_MESSAGES
-    all_messages.sort(key=lambda m: m['ts'])
-    all_messages = all_messages[-MAX_MESSAGES:]
+    # Sort by timestamp and take last MAX_CONVERSATIONS
+    all_conversations.sort(key=lambda c: c['ts'])
+    all_conversations = all_conversations[-MAX_CONVERSATIONS:]
     
     # Write to daily file
     now = datetime.now(timezone(timedelta(hours=1)))
@@ -84,16 +125,20 @@ def main():
     # Build context section
     context_lines = []
     context_lines.append(f"\n## 📱 Telegram Context ({time_str})")
-    context_lines.append(f"**Letzte {len(all_messages)} Nachrichten von Bastian via Telegram:**")
+    context_lines.append(f"**Letzte {len(all_conversations)} Gespräche mit Bastian via Telegram:**")
     context_lines.append("")
     
-    for msg in all_messages:
+    for convo in all_conversations:
         # Clean timestamp to just HH:MM
-        ts_match = re.search(r'(\d{2}:\d{2})$', msg['ts'])
-        ts_short = ts_match.group(1) if ts_match else msg['ts']
-        context_lines.append(f"- [{ts_short}] {msg['sender']}: {msg['text'][:150]}")
+        ts_match = re.search(r'(\d{2}:\d{2})$', convo['ts'])
+        ts_short = ts_match.group(1) if ts_match else convo['ts']
+        
+        context_lines.append(f"### [{ts_short}] {convo['sender']}")
+        context_lines.append(f"**Frage:** {convo['user_text']}")
+        if convo['assistant_text']:
+            context_lines.append(f"**Antwort:** {convo['assistant_text']}")
+        context_lines.append("")
     
-    context_lines.append("")
     context_lines.append("---")
     context_lines.append("")
     
@@ -126,7 +171,7 @@ def main():
             f.write(f"# Daily Memory: {today_str}\n\n")
             f.write(context_content)
     
-    print(f"[telegram-context] Updated {daily_file} with {len(all_messages)} messages")
+    print(f"[telegram-context-v2] Updated {daily_file} with {len(all_conversations)} conversations")
 
 if __name__ == '__main__':
     main()
