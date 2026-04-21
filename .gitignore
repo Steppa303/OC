@@ -1,0 +1,33 @@
+# Build artifacts
+node_modules/
+dist/
+__pycache__/
+*.pyc
+
+# Cache
+.cache/
+chromadb/
+rag-db/
+
+# Secrets
+.secrets/
+*.env
+!.env.example
+
+# Screenshots (temporär)
+screenshots/
+*.png
+*.jpg
+*.jpeg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+rag-env/
+*.egg-info/

@@ -183,9 +183,29 @@ curl -X POST http://localhost:3002/api/agents/end \
   -d '{"sessionKey":"<key>","status":"timeout","runtimeMs":<ms>}'
 ```
 
+### 🔗 Dashboard Auto-Tracking
+
+**NACH jedem `sessions_spawn()` SOFORT die Dashboard-API callen:**
+
+```bash
+curl -X POST http://localhost:3002/api/agents/start \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"<childSessionKey>","label":"<label>","task":"<task>","model":"<model>"}'
+```
+
+**Bei Completion (User-Message) den Agent beenden:**
+
+```bash
+curl -X POST http://localhost:3002/api/agents/end \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"<childSessionKey>","status":"done"|"failed"|"timeout","runtimeMs":<ms>}'
+```
+
+**Regel:** Kein `sessions_spawn()` ohne Dashboard-Tracking. Immer.
+
 ### Beispiel:
 ```javascript
-// Subagent spawnen
+// 1. Subagent spawnen
 const result = await sessions_spawn({
   runtime: "subagent",
   label: "Frontend Coder",
@@ -194,10 +214,18 @@ const result = await sessions_spawn({
   mode: "run"
 });
 
-// Session yield (optional, wenn auf Result gewartet wird)
+// 2. SOFORT Dashboard tracken
+await exec(`curl -X POST http://localhost:3002/api/agents/start \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"${result.childSessionKey}","label":"Frontend Coder","task":"Baue React Component mit TailwindCSS...","model":"qwen3-coder-next"}'`);
+
+// 3. Session yield (optional, wenn auf Result gewartet wird)
 await sessions_yield();
 
-// Completion kommt als User-Message → Dann final answer liefern
+// 4. Completion kommt als User-Message → Dashboard beenden
+await exec(`curl -X POST http://localhost:3002/api/agents/end \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"${result.childSessionKey}","status":"done","runtimeMs":${runtime}}'`);
 ```
 
 ---
