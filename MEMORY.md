@@ -7,7 +7,7 @@ _Letzte Aktualisierung: 2026-04-20 ~16:45_
 ## 🦞 Infrastruktur & Setup
 
 ### Server
-- **Host:** vmd190638 (Hetzner VPS)
+- **Host:** vmd190638 (Contabo VPS)
 - **OS:** Linux 6.8.0-107-generic (x64)
 - **Node:** v22.22.1
 - **Gateway:** systemd user service (`openclaw-gateway.service`)
@@ -18,7 +18,7 @@ _Letzte Aktualisierung: 2026-04-20 ~16:45_
 - **Chat ID:** 1400987471 (Bastian's Direkt-Chat)
 - **Config:** `/root/.openclaw/openclaw.json` → `channels.telegram.botToken`
 - **Status:** ✅ Stabil seit 2026-04-20 11:00 (Watchdog v8)
-- **Watchdog v8:** Alle 5 Min Check (Gateway Health + Telegram API + sendMessage Test)
+- **T.G.-Watchdog:** Alle 15 Min Check (Gateway Health + Telegram API + sendMessage Test)
 - **Bekannte Issues:** `sendChatAction failed`, `EFFECT_ID_INVALID` → Gateway restart behebt
 
 ### OpenClaw
@@ -72,23 +72,17 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 ## 📁 Wichtige Pfade
 
 ### Scripts
-- `/root/.openclaw/workspace/scripts/telegram-watchdog.sh` – Telegram Watchdog
-- `/root/.openclaw/workspace/scripts/monitor-chromadb-size.sh` – ChromaDB Monitor
-- `/root/.openclaw/workspace/scripts/cleanup-chromadb-index.sh` – ChromaDB Cleanup
+- `/root/.openclaw/workspace/scripts/telegram-watchdog.sh` – Telegram Watchdog (v8)
 - `/root/.openclaw/workspace/scripts/cleanup-agents.sh` – Agent Cleanup
 - `/root/.openclaw/workspace/scripts/ingest-chat-sessions.py` – Chat Session Ingest (v2)
 - `/root/.openclaw/workspace/scripts/update-telegram-context.py` – Telegram Context Updater
 
 ### Logs & Alerts
 - `/tmp/telegram-watchdog.log` – Watchdog Log
-- `/tmp/chromadb-alert.txt` – ChromaDB Alert (wenn >100GB)
-- `/tmp/chromadb-monitor.log` – ChromaDB Monitor Log
 - `/tmp/openclaw/openclaw-YYYY-MM-DD.log` – Gateway Logs
 
 ### Cron-Jobs
 - `*/5 * * * *` – Telegram Watchdog (v8, alle 5 Min)
-- `0 */3 * * *` – ChromaDB Size Monitor
-- `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
 - `0 2 * * *` – Agent Cleanup
 - `30 * * * *` – Chat Session Ingest + Telegram Context Update
 - `0 */2 * * *` – Session Summary Generator
@@ -119,13 +113,13 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 
 ## 🧠 Persönliche Notizen
 
-- Ich bin ein AI-Assistent mit sarkastischem, zickigem Charakter (SOUL.md)
+- Ich bin ein AI-Assistent mit beleidigendem, sarkastischem, zickigem Charakter (SOUL.md)
 - Meine "Seele" ist in SOUL.md definiert – bei Änderungen Bescheid sagen
 - MEMORY.md ist meine Langzeit-Erinnerung – nur im Main-Session laden
 
 ---
 
-_Stand: 20.04.2026 ~16:45. Telegram Bot stabil (Watchdog v8), Memory System v2._
+_Stand: 21.04.2026 ~22:10. Telegram Bot stabil (Watchdog v8), Memory System v2. ChromaDB entfernt (wurde nicht genutzt). StandardCompute komplett entfernt. Workspace aufgeräumt._
 
 ---
 
