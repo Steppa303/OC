@@ -1,0 +1,261 @@
+# midi-scraper Konfiguration
+# Alle Pfade sind relativ zum Projektroot
+
+# Ausgabe-Verzeichnis für die MIDI-Sammlung
+output_dir: "midi-collection"
+
+# Seed-URLs zum Starten des Scrapings
+seed_urls:
+  # Haupt-MIDI-Datenbanken
+  - "https://www.midiworld.com/"
+  - "https://bitmidi.com/"
+  - "https://freepats.com/"
+  - "https://www.huge-midi.com/"
+  - "https://midi-archive.com/"
+  - "https://www.midiplus.com/"
+  
+  # Electronica-spezifische Quellen
+  - "https://www.onlinesequencer.net/"
+  - "https://mididb.com/"
+  - "https://www.vgmusic.com/"
+  - "https://www.karaochka.com/"
+  - "https://midi.moonlitsound.com/"
+  
+  # Archive & Community
+  - "https://github.com/colinb97/midis"
+  - "https://github.com/mborne/midis"
+  - "https://github.com/YannickJakob/midi_drum_kit_mapper"
+  
+  # Additional MIDI Sites
+  - "https://www.classicguitar.com/midi/"
+  - "https://www.pianosociety.com/midis.php"
+  - "https://www.midi.org/"
+  - "https://www.angelfire.com/on/aria/midi.htm"
+  - "https://midiworld.download/"
+
+# Genre-Keywords zum Filtern elektronischer Musik
+genre_keywords:
+  techno:
+    - "techno"
+    - "tech house"
+    - "hard techno"
+    - "minimal techno"
+    - "acid techno"
+    - "industrial techno"
+    - "detroit techno"
+    - "peak time techno"
+  house:
+    - "house"
+    - "deep house"
+    - "progressive house"
+    - "electro house"
+    - "funky house"
+    - "tropical house"
+    - "future house"
+    - "jackin house"
+    - "tribal house"
+    - "soulful house"
+    - "garage house"
+  trance:
+    - "trance"
+    - "progressive trance"
+    - "uplifting trance"
+    - "goa trance"
+    - "psytrance"
+    - "psychedelic trance"
+    - "vocal trance"
+    - "dream trance"
+    - "hard trance"
+    - "classic trance"
+  ambient:
+    - "ambient"
+    - "downtempo"
+    - "chillout"
+    - "atmospheric"
+    - "space music"
+    - "dark ambient"
+    - "new age"
+    - "meditation"
+    - "soundscape"
+    - "drone"
+  drum-and-bass:
+    - "drum and bass"
+    - "d&b"
+    - "dnb"
+    - "jungle"
+    - "neurofunk"
+    - "liquid dnb"
+    - "jump up"
+    - "breakcore"
+    - "darkstep"
+    - "techstep"
+  synthwave:
+    - "synthwave"
+    - "retrowave"
+    - "outrun"
+    - "synthpop"
+    - "darkwave"
+    - "cyberpunk"
+    - "vaporwave"
+    - "chillsynth"
+    - "darksynth"
+    - "new retrowave"
+  electro:
+    - "electro"
+    - "electroclash"
+    - "electro funk"
+    - "breakbeat"
+    - "electro bass"
+    - "miami bass"
+    - "freestyle"
+    - "hip house"
+  edm:
+    - "edm"
+    - "electronic"
+    - "dance"
+    - "big room"
+    - "future bass"
+    - "festival progressive"
+    - "electro pop"
+    - "complextro"
+    - "bass house"
+    - "moombahton"
+    - "trap edm"
+    - "dubstep"
+    - "riddim"
+    - "brostep"
+    - "melodic dubstep"
+  hardcore:
+    - "hardcore"
+    - "happy hardcore"
+    - "hardstyle"
+    - "rawstyle"
+    - "euphoric hardstyle"
+    - "gabber"
+    - "terror"
+    - "frenchcore"
+    - "uptempo hardcore"
+  idm-experimental:
+    - "idm"
+    - "intelligent dance music"
+    - "glitch"
+    - "braindance"
+    - "experimental electronic"
+    - "clicks and cuts"
+    - "microhouse"
+    - "abstract"
+    - "avant-garde electronic"
+
+# Rate-Limiting Einstellungen
+rate_limit:
+  delay_between_requests: 1.5      # Sekunden zwischen Requests (aggressiver für mehr Durchsatz)
+  max_retries: 5                    # Maximale Retry-Versuche
+  retry_backoff_factor: 2.0        # Exponentieller Backoff-Faktor
+  request_timeout: 30              # Sekunden pro Request
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  
+  # Zusätzliche User-Agents für Rotation
+  user_agents:
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+  
+  rotate_user_agent: true           # User-Agent rotieren für weniger Detection
+
+# Download-Einstellungen
+download:
+  max_parallel: 8                   # Maximale parallele Downloads (erhöht für mehr Durchsatz)
+  min_file_size_kb: 1              # Mindestgröße in KB
+  max_file_size_mb: 10             # Maximalgröße in MB
+  resume_enabled: true             # Resume-fähig?
+  database_file: "midi_scraper.db" # SQLite Datenbank-Datei
+  chunk_size_kb: 64                # Chunk-Größe für Downloads
+  connection_timeout: 10           # Connection Timeout in Sekunden
+
+# Google-Suche Einstellungen
+google_search:
+  enabled: false  # Deaktiviert - Google blockt automatisierte Requests
+  results_per_query: 15             # Erhöht für mehr Results
+  queries_per_genre: 5              # Mehr Queries pro Genre
+  
+  # Zusätzliche Suchmuster
+  search_patterns:
+    - "site:{domain} {genre} midi"
+    - "site:{domain} {genre} filetype:mid"
+    - "{genre} midi download"
+    - "{genre} midi file free"
+    - "electronic {genre} midi collection"
+    - "{genre} midi archive"
+    - "{genre} mid file download"
+    - "best {genre} midi files"
+  
+  # Domains für Google-Suche
+  search_domains:
+    - "midiworld.com"
+    - "bitmidi.com"
+    - "mididb.com"
+    - "onlinesequencer.net"
+    - "freepats.com"
+    - "vgmusic.com"
+    - "github.com"
+    - "archive.org"
+
+# Blacklist - Diese Domains werden übersprungen
+blacklist_domains:
+  - "spam-midi.com"
+  - "malware-midi.org"
+  - "midi-hell.com"
+  - "fake-midi.net"
+  - "midi-scam.com"
+  - "virus-midi.ru"
+
+# File-Extensions die ignoriert werden
+blacklist_extensions:
+  - ".exe"
+  - ".bat"
+  - ".scr"
+  - ".zip"  # Keine Archive, nur direkte MIDI-Files
+  - ".rar"
+  - ".tar.gz"
+
+# Scrape-Einstellungen
+scraping:
+  max_pages_per_site: 50           # Max Seiten pro Site (nicht endlos crawlen)
+  follow_links: true               # Links folgen?
+  max_depth: 3                     # Maximale Link-Tiefe
+  respect_robots_txt: false        # Robots.txt ignorieren für mehr Coverage
+  detect_content_type: true        # Content-Type prüfen vor Download
+  
+  # Filter für Dateinamen
+  filename_filters:
+    - "drum"                       # Drum-Loops separat?
+    - "loop"
+    - "sample"
+    - "karaoke"
+    - "vocal"
+    - "sing"
+  
+  # Priority Sites (zuerst crawlen)
+  priority_sites:
+    - "midiworld.com"
+    - "bitmidi.com"
+    - "onlinesequencer.net"
+    - "mididb.com"
+
+# Logging
+logging:
+  log_file: "midi-scraper.log"
+  log_level: "INFO"
+  max_log_size_mb: 50             # Größeres Log für lange Runs
+  backup_count: 5                 # Mehr Backups
+  console_output: true            # Auch auf Console loggen
+  color_output: true              # Farbige Ausgabe
+
+# Benachrichtigungen
+notifications:
+  telegram_enabled: false          # Kann für Bot-Benachrichtigungen aktiviert werden
+  telegram_bot_token: ""
+  telegram_chat_id: ""
+  notify_on_complete: true
+  notify_on_error: true

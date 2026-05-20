@@ -1,0 +1,49 @@
+2026-05-01 13:43:35 [INFO] __main__: edm-scraper gestartet mit Kommando: scrape
+2026-05-01 13:44:15 [INFO] __main__: edm-scraper gestartet mit Kommando: scrape
+2026-05-01 13:44:15 [INFO] database: Datenbank initialisiert: /root/.openclaw/workspace/projects/edm-scraper/midi_edm_scraper.db
+2026-05-01 13:44:15 [INFO] __main__: ============================================================
+2026-05-01 13:44:15 [INFO] __main__: START: EDM MIDI-Scraper
+2026-05-01 13:44:15 [INFO] __main__: ============================================================
+2026-05-01 13:44:15 [INFO] __main__: Schritt 1/4: Crawle Seed-URLs...
+2026-05-01 13:44:15 [INFO] scraper: Starte Scraping von 18 Seed-URLs...
+2026-05-01 13:47:04 [WARNING] scraper: Fehler beim Crawlen von https://midiklowd.com/free-midi-packs/: 404 Client Error: Not Found for url: https://midiklowd.com/free-midi-packs/
+2026-05-01 13:47:06 [WARNING] scraper: Fehler beim Crawlen von https://unwav.com/product-tag/free/: 404 Client Error: Not Found for url: https://unwav.com/product-tag/free/
+2026-05-01 13:47:08 [WARNING] scraper: Fehler beim Crawlen von https://unwav.com/product-tag/edm/: 404 Client Error: Not Found for url: https://unwav.com/product-tag/edm/
+2026-05-01 13:49:32 [WARNING] scraper: Fehler beim Crawlen von https://www.nonstop2k.com/: 403 Client Error: Forbidden for url: https://www.nonstop2k.com/
+2026-05-01 13:52:16 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/club-house-nowhere-land-mid: HTTPSConnectionPool(host='bitmidi.com', port=443): Read timed out. (read timeout=30)
+2026-05-01 13:56:19 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-mbg-trance-wave-one-mid: HTTPSConnectionPool(host='bitmidi.com', port=443): Read timed out. (read timeout=30)
+2026-05-01 13:56:20 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-quicksilver-bombastic-trance-mix-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/dj-quicksilver-bombastic-trance-mix-mid
+2026-05-01 13:56:22 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-rise-trance-1-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/dj-rise-trance-1-mid
+2026-05-01 13:56:24 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-rise-trance-2-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/dj-rise-trance-2-mid
+2026-05-01 13:56:25 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-rise-trance-3-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/dj-rise-trance-3-mid
+2026-05-01 13:56:27 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/dj-rise-trance-4-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/dj-rise-trance-4-mid
+2026-05-01 13:56:29 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/ferry-corsten-brain-box-darryl-logik-remix-main-trance-lead-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/ferry-corsten-brain-box-darryl-logik-remix-main-trance-lead-mid
+2026-05-01 13:56:30 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/fire-and-ice-tour-de-trance-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/fire-and-ice-tour-de-trance-mid
+2026-05-01 13:56:32 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/future-trance-united-face-2-face-megara-vs-dj-lee-mid: 502 Server Error: Bad Gateway for url: https://bitmidi.com/future-trance-united-face-2-face-megara-vs-dj-lee-mid
+2026-05-01 13:56:34 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/search?q=trance&page=1: 502 Server Error: Bad Gateway for url: https://bitmidi.com/search?q=trance&page=1
+2026-05-01 13:56:35 [WARNING] scraper: Fehler beim Crawlen von https://bitmidi.com/search?q=trance&page=2: 502 Server Error: Bad Gateway for url: https://bitmidi.com/search?q=trance&page=2
+2026-05-01 13:57:23 [INFO] scraper: Gefundene MIDI-URLs nach Seed-Scraping: 876
+2026-05-01 13:57:23 [INFO] __main__: Seed-URLs: 876 MIDI-Links gefunden
+2026-05-01 13:57:23 [INFO] __main__: Gesamt: 876 eindeutige MIDI-URLs gefunden
+2026-05-01 13:57:23 [INFO] __main__: Schritt 2/4: Starte Downloads...
+2026-05-01 13:57:23 [ERROR] __main__: Unerwarteter Fehler: attempt to write a readonly database
+Traceback (most recent call last):
+  File "/root/.openclaw/workspace/projects/edm-scraper/main.py", line 336, in main
+  File "/root/.openclaw/workspace/projects/edm-scraper/main.py", line 76, in cmd_scrape
+    print("EDM MIDI Scraper - Validierung")
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/root/.openclaw/workspace/projects/edm-scraper/downloader.py", line 98, in download_all
+    self.db.add_download(url, genre)
+  File "/root/.openclaw/workspace/projects/edm-scraper/database.py", line 99, in add_download
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)""",
+sqlite3.OperationalError: attempt to write a readonly database
+2026-05-01 13:57:23 [INFO] database: Datenbankverbindung geschlossen

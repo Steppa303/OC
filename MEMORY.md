@@ -1,6 +1,6 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-04-20 ~16:45_
+_Letzte Aktualisierung: 2026-05-18 ~17:40_
 
 ---
 
@@ -30,6 +30,12 @@ _Letzte Aktualisierung: 2026-04-20 ~16:45_
 ---
 
 ## 🔧 Wichtige Lessons Learned
+
+### Bailian/qwen3.6-plus Rate-Limiting (25.04.2026)
+**Problem:** Drei Orchestratoren parallel → alle failed.
+**Ursache:** `usage allocated quota exceeded` – qwen3.6-plus hat ein Request/Token-Quota.
+**Fix:** Orchestratoren **nacheinander** spawnen, nicht parallel. Max 1-2 große Orchestratoren gleichzeitig. Wenn einer failed → warten bevor Retry.
+**Symptome:** `failed` nach 1-2 Min, `quota exceeded`, `timed out` nach 4s (ohne Output)
 
 ### Telegram Polling Conflicts (2026-04-18 bis 2026-04-20)
 **Problem:** Bot antwortet nicht, Gateway startet aber normal.
@@ -76,6 +82,11 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - `/root/.openclaw/workspace/scripts/cleanup-agents.sh` – Agent Cleanup
 - `/root/.openclaw/workspace/scripts/ingest-chat-sessions.py` – Chat Session Ingest (v2)
 - `/root/.openclaw/workspace/scripts/update-telegram-context.py` – Telegram Context Updater
+- `/root/.openclaw/workspace/scripts/cloudflare-dns.sh` – Cloudflare DNS Manager
+
+### Secrets
+- `/root/.openclaw/workspace/.secrets/cloudflare.env` – Cloudflare API Token + Zone ID
+- Cloudflare DNS: `./cloudflare-dns.sh add A subdomain 185.217.126.72`
 
 ### Logs & Alerts
 - `/tmp/telegram-watchdog.log` – Watchdog Log
@@ -111,6 +122,27 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - MEMORY.md ist Langzeit-Erinnerung – manuell pflegen
 - Session-Files (`memory/sessions/*.md`) werden automatisch vom Ingest geschrieben
 
+
+## 📸 Instagram Workflow – instagrapi (18.05.2026)
+**Problem:** Instagram blockiert Browser-Automation (agent-browser, Firefox, Chrome) mit reCAPTCHA.
+**Lösung:** `instagrapi` – private Instagram API, kein Browser, kein CAPTCHA.
+**Session:** `projects/haterbernd/instagrapi-session.json` (wird automatisch gespeichert)
+**Scripts:**
+- `projects/haterbernd/dm-auto-checker.py` – DMs checken & automatisch antworten
+- `projects/haterbernd/haterbernd-poster.py` – Bilder, Karussels, Reels posten
+**API-Doku:** `projects/haterbernd/INSTAGRAM-API-WORKFLOW.md`
+**Posting-Methoden:**
+- `cl.photo_upload()` – Einzelbild
+- `cl.album_upload()` – Karussell
+- `cl.clip_upload()` – Reel/Video
+- `cl.direct_send()` – DM senden
+- `cl.direct_threads()` – DMs lesen
+**WICHTIG:**
+- KEIN VPN-Proxy nötig für instagrapi
+- KEIN agent-browser mehr für Instagram-Aktionen
+- Cron: DM-Checker alle 2h, Auto-Poster alle 30 Min (16-21 Uhr)
+**Videos:** Google Veo 3.1 → ffmpeg Overlays → `cl.clip_upload()`
+
 ## 🧠 Persönliche Notizen
 
 - Ich bin ein AI-Assistent mit beleidigendem, sarkastischem, zickigem Charakter (SOUL.md)
@@ -119,7 +151,7 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 
 ---
 
-_Stand: 21.04.2026 ~22:10. Telegram Bot stabil (Watchdog v8), Memory System v2. ChromaDB entfernt (wurde nicht genutzt). StandardCompute komplett entfernt. Workspace aufgeräumt._
+_Stand: 20.05.2026 ~10:15. Image Model Wechsel: Gemini → qwen-image-2.0-pro. HaterBernd Poster angepasst._
 
 ---
 
@@ -142,6 +174,31 @@ _Stand: 21.04.2026 ~22:10. Telegram Bot stabil (Watchdog v8), Memory System v2. 
 - 213 Session-Files in memory/sessions/
 - Telegram Context Automation aktiv
 
+## 🎨 Bildgenerierung Workflow (20.05.2026)
+**Entscheidung:** Bildgenerierung über **qwen-image-2.0-pro** (Alibaba Bailian Token Plan), NICHT mehr Gemini.
+**Script:** `/root/.openclaw/workspace/scripts/qwen-image-gen.sh`
+**API:** `https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions` (Multimodal-Format)
+**API Key:** `/root/.openclaw/workspace/.secrets/bailian.env`
+
+### Rollen-Verteilung:
+- **Bilder:** qwen-image-2.0-pro (Alibaba Bailian Token Plan)
+- **Videos:** Gemini (Google Veo) – NUR für Videos!
+- Gemini wird NICHT mehr für Bilder verwendet!
+
+### Image Models (Token Plan):
+- `qwen-image-2.0-pro` → Primary (2048×2048, beste Qualität)
+- `qwen-image-2.0` → Fallback
+- `wan2.7-image-pro` → Alternative
+- `wan2.7-image` → Schnell
+
+### openclaw.json Image Defaults:
+- Primary: `bailian/qwen-image-2.0-pro`
+- Fallbacks: `bailian/qwen-image-2.0`, `bailian/wan2.7-image-pro`
+
+## 📅 Heute (20.05.2026) - Wichtige Events
+- **09:00:** Reel "Hustle Culture Autopsie" nachgeholt (MoviePy-Abhängigkeit installiert)
+- **09:45:** openclaw.json auf Alibaba Token Plan umgestellt
+- **10:15:** Bildgenerierung von Gemini auf qwen-image-2.0-pro umgestellt
+
 ### User Status
-- Bastian ist offline gegangen (~14:45)
-- Kommt später wieder
+- Bastian ist online

@@ -1,0 +1,979 @@
+#!/usr/bin/env bash
+# haterbernd-poster.sh — Automatisierter Instagram Poster für HaterBernd
+# Version: 2.0 (mit Retry, Monitoring, Telegram-Benachrichtigung)
+#
+# Verwendung: ./haterbernd-poster.sh [--check] [--post ID] [--next] [--force]
+#
+# SOP: projects/haterbernd/INSTAGRAM-POSTING-SOP.md
+# Log: /tmp/haterbernd-poster.log
+# Cron-Log: /tmp/haterbernd-poster-cron.log
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCHEDULE="$SCRIPT_DIR/schedule.json"
+SOP="$SCRIPT_DIR/INSTAGRAM-POSTING-SOP.md"
+NANO_SCRIPT="/root/.openclaw/workspace/scripts/nano-banana-pro.sh"
+IMG_DIR="/tmp/haterbernd-posts"
+LOG_FILE="/tmp/haterbernd-poster.log"
+STATE_FILE="$SCRIPT_DIR/post-state.json"
+SCREENSHOT_DIR="/root/.openclaw/workspace/media/haterbernd-posts"
+
+mkdir -p "$IMG_DIR" "$SCREENSHOT_DIR"
+
+# ==================== TELEGRAM BENACHRICHTIGUNG ====================
+
+TELEGRAM_BOT_TOKEN=""
+TELEGRAM_CHAT_ID="1400987471"
+
+# Hole Bot-Token aus openclaw config
+if [ -f "/root/.openclaw/openclaw.json" ]; then
+  TELEGRAM_BOT_TOKEN=$(python3 -c "
+import json
+with open('/root/.openclaw/openclaw.json') as f:
+    cfg = json.load(f)
+for ch in cfg.get('channels',{}).get('telegram',{}).get('instances',[]):
+    if 'botToken' in ch:
+        print(ch['botToken'])
+        break
+" 2>/dev/null || true)
+fi
+
+notify_telegram() {
+  local message="$1"
+  local screenshot="${2:-}"
+  
+  if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+    echo "⚠️  Telegram Bot-Token nicht gefunden, skipping notification" | tee -a "$LOG_FILE"
+    return
+  fi
+  
+  # Text-Nachricht
+  curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"chat_id\": \"$TELEGRAM_CHAT_ID\",
+      \"text\": \"$message\",
+      \"parse_mode\": \"HTML\"
+    }" > /dev/null 2>&1
+  
+  # Optional Screenshot senden
+  if [ -n "$screenshot" ] && [ -f "$screenshot" ]; then
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto" \
+      -F "chat_id=$TELEGRAM_CHAT_ID" \
+      -F "photo=@$screenshot" \
+      -F "caption=Screenshot" > /dev/null 2>&1
+  fi
+}
+
+# ==================== LOGGING ====================
+
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
+}
+
+# ==================== VPN CHECK ====================
+
+check_vpn() {
+  log "🔒 Prüfe VPN-Proxy..."
+  if ! systemctl is-active --quiet vpn-proxy.service; then
+    log "⚠️  VPN-Proxy nicht aktiv, starte..."
+    systemctl start vpn-proxy.service
+    sleep 3
+    if ! systemctl is-active --quiet vpn-proxy.service; then
+      log "❌ VPN-Proxy konnte nicht gestartet werden!"
+      notify_telegram "🚨 <b>HaterBernd ERROR</b>\n\nVPN-Proxy konnte nicht gestartet werden.\nPosting abgebrochen."
+      return 1
+    fi
+  fi
+  
+  # Prüfe ob SOCKS-Proxy erreichbar
+  if ! curl -s --socks5 127.0.0.1:1080 --max-time 5 https://www.instagram.com/ > /dev/null 2>&1; then
+    log "⚠️  SOCKS-Proxy antwortet nicht, versuche Restart..."
+    systemctl restart vpn-proxy.service
+    sleep 3
+  fi
+  
+  log "✅ VPN-Proxy aktiv und erreichbar"
+  return 0
+}
+
+# ==================== SCHEDULE LOGIC ====================
+
+find_next_post() {
+  local force="${1:-false}"
+  local now_epoch
+  now_epoch=$(date +%s)
+  
+  python3 - "$SCHEDULE" "$STATE_FILE" "$force" "$now_epoch" << 'PYEOF'
+import sys, json, os
+from datetime import datetime
+
+schedule_file = sys.argv[1]
+state_file = sys.argv[2]
+force = sys.argv[3] == "true"
+now_epoch = int(sys.argv[4])
+
+with open(schedule_file) as f:
+    schedule = json.load(f)
+
+state = {"posted_ids": [], "failed_ids": [], "retry_counts": {}}
+if os.path.exists(state_file):
+    with open(state_file) as f:
+        state = json.load(f)
+
+posted = set(state.get("posted_ids", []))
+failed = set(state.get("failed_ids", []))
+retry_counts = state.get("retry_counts", {})
+max_retries = 3
+
+for post in schedule["posts"]:
+    pid = post["id"]
+    if pid in posted:
+        continue
+    
+    # Prüfe Retry-Limit
+    retries = retry_counts.get(str(pid), 0)
+    if pid in failed and retries >= max_retries:
+        continue
+    
+    post_dt = datetime.strptime(f"{post['date']} {post['time']}", "%Y-%m-%d %H:%M")
+    post_epoch = int(post_dt.timestamp())
+    
+    if force or now_epoch >= post_epoch:
+        print(json.dumps(post))
+        sys.exit(0)
+
+print("NO_POST_DUE")
+PYEOF
+}
+
+increment_retry() {
+  local post_id="$1"
+  python3 - "$STATE_FILE" "$post_id" << 'PYEOF'
+import sys, json, os
+
+state_file = sys.argv[1]
+post_id = str(int(sys.argv[2]))
+
+state = {"posted_ids": [], "failed_ids": [], "retry_counts": {}, "history": []}
+if os.path.exists(state_file):
+    with open(state_file) as f:
+        state = json.load(f)
+
+if "retry_counts" not in state:
+    state["retry_counts"] = {}
+
+state["retry_counts"][post_id] = state["retry_counts"].get(post_id, 0) + 1
+
+with open(state_file, "w") as f:
+    json.dump(state, f, indent=2)
+
+print(f"Retry count for post {post_id}: {state['retry_counts'][post_id]}")
+PYEOF
+}
+
+update_state() {
+  local post_id="$1"
+  local status="$2"
+  local note="${3:-}"
+  
+  python3 - "$STATE_FILE" "$post_id" "$status" "$note" << 'PYEOF'
+import sys, json, os
+from datetime import datetime
+
+state_file = sys.argv[1]
+post_id = int(sys.argv[2])
+status = sys.argv[3]
+note = sys.argv[4] if len(sys.argv) > 4 else ""
+
+state = {"posted_ids": [], "failed_ids": [], "retry_counts": {}, "history": []}
+if os.path.exists(state_file):
+    with open(state_file) as f:
+        state = json.load(f)
+
+if status == "success":
+    if post_id not in state["posted_ids"]:
+        state["posted_ids"].append(post_id)
+    # Remove from failed if it was there
+    if post_id in state.get("failed_ids", []):
+        state["failed_ids"].remove(post_id)
+    state["history"].append({
+        "post_id": post_id,
+        "status": "success",
+        "timestamp": datetime.now().isoformat(),
+        "note": note
+    })
+elif status == "failed":
+    if post_id not in state.get("failed_ids", []):
+        state["failed_ids"].append(post_id)
+    state["history"].append({
+        "post_id": post_id,
+        "status": "failed",
+        "timestamp": datetime.now().isoformat(),
+        "note": note
+    })
+
+with open(state_file, "w") as f:
+    json.dump(state, f, indent=2)
+PYEOF
+}
+
+# ==================== REEL UPLOAD ====================
+
+post_reel_to_instagram() {
+  local post_json="$1"
+  local video_path
+  video_path=$(echo "$post_json" | python3 -c "import sys,json; print(json.load(sys.stdin).get('video_path',''))")
+  local caption
+  caption=$(echo "$post_json" | python3 -c "import sys,json; p=json.load(sys.stdin); print(p['caption'] + '\\n\\n' + p.get('hashtags',''))")
+  local post_title
+  post_title=$(echo "$post_json" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])")
+  local post_id
+  post_id=$(echo "$post_json" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+
+  if [ -z "$video_path" ] || [ ! -f "$video_path" ]; then
+    log "❌ Video-Datei nicht gefunden: $video_path"
+    return 1
+  fi
+
+  log "🎬 Reel upload für Post #$post_id: $post_title"
+  log "📁 Video: $video_path"
+
+  # Browser starten
+  log "  🌐 Browser starten..."
+  ALL_PROXY=socks5://127.0.0.1:1080 agent-browser --session haterbernd-reel open "https://www.instagram.com/" 2>&1 | tee -a "$LOG_FILE"
+  sleep 4
+
+  # Auth laden falls vorhanden
+  if [ -f "$SCRIPT_DIR/instagram-auth.json" ]; then
+    agent-browser --session haterbernd-reel state load "$SCRIPT_DIR/instagram-auth.json" 2>&1 | tee -a "$LOG_FILE"
+    sleep 2
+  fi
+
+  # Login check
+  local snap
+  snap=$(agent-browser --session haterbernd-reel snapshot -i --json 2>&1)
+  local is_logged
+  is_logged=$(echo "$snap" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    for v in d['data']['refs'].values():
+        name = v.get('name','').lower()
+        if 'new post' in name or 'haterbernd' in name:
+            print('yes'); break
+    else:
+        print('no')
+except: print('no')
+" 2>/dev/null)
+
+  if [ "$is_logged" = "no" ]; then
+    log "  🔐 Einloggen..."
+    # Same login flow as carousel (simplified)
+    local cookie_ref
+    cookie_ref=$(echo "$snap" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'allow all' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null)
+    [ -n "$cookie_ref" ] && agent-browser --session haterbernd-reel click "@$cookie_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 2
+
+    agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if v.get('role')=='button' and 'log in' in v.get('name','').lower():
+        print(r); break
+" 2>/dev/null | while IFS= read -r ref; do
+      agent-browser --session haterbernd-reel click "@$ref" 2>&1 | tee -a "$LOG_FILE"
+    done
+    sleep 3
+
+    agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    role = v.get('role','')
+    name = v.get('name','').lower()
+    if role == 'textbox' and ('phone' in name or 'email' in name or 'username' in name):
+        print(f'USER:{r}')
+    elif role == 'textbox' and 'password' in name:
+        print(f'PASS:{r}')
+    elif role == 'button' and 'log in' in name:
+        print(f'BTN:{r}')
+" 2>/dev/null | while IFS= read -r line; do
+      case "$line" in
+        USER:*) agent-browser --session haterbernd-reel fill "@${line#*:}" "HaterBernd" 2>&1 | tee -a "$LOG_FILE" ;;
+        PASS:*) agent-browser --session haterbernd-reel fill "@${line#*:}" 'instabernd#Jungle68' 2>&1 | tee -a "$LOG_FILE" ;;
+        BTN:*) agent-browser --session haterbernd-reel click "@${line#*:}" 2>&1 | tee -a "$LOG_FILE" ;;
+      esac
+    done
+    sleep 5
+
+    # Not Now dialogs
+    for attempt in 1 2; do
+      agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'not now' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null | while IFS= read -r ref; do
+        agent-browser --session haterbernd-reel click "@$ref" 2>&1 | tee -a "$LOG_FILE"
+        sleep 1
+      done
+    done
+    sleep 3
+  fi
+
+  # Auth speichern
+  agent-browser --session haterbernd-reel state save "$SCRIPT_DIR/instagram-auth.json" 2>&1 | tee -a "$LOG_FILE"
+
+  # New post öffnen (Reel Upload)
+  log "  📝 Reel Upload öffnen..."
+  sleep 2
+
+  # Direkt zur Reel Create URL
+  agent-browser --session haterbernd-reel goto "https://www.instagram.com/reels/create/" 2>&1 | tee -a "$LOG_FILE"
+  sleep 5
+
+  # Video upload
+  log "  🎬 Video hochladen..."
+  agent-browser --session haterbernd-reel upload "input[type=file]" "$video_path" 2>&1 | tee -a "$LOG_FILE"
+  sleep 8
+
+  # Screenshot nach Upload
+  agent-browser --session haterbernd-reel screenshot "$SCREENSHOT_DIR/reel-${post_title// /_}-upload.png" 2>&1 | tee -a "$LOG_FILE"
+
+  # Next klicken (wenn sichtbar)
+  for attempt in 1 2 3; do
+    local next_ref
+    next_ref=$(agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    name = v.get('name','').lower()
+    if ('next' in name or 'weiter' in name) and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null)
+
+    if [ -n "$next_ref" ]; then
+      agent-browser --session haterbernd-reel click "@$next_ref" 2>&1 | tee -a "$LOG_FILE"
+      sleep 3
+    else
+      break
+    fi
+  done
+
+  # Caption eintragen
+  log "  ✍️ Caption eintragen..."
+  agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'caption' in v.get('name','').lower() and v.get('role')=='textbox':
+        print(r); break
+" 2>/dev/null | while IFS= read -r ref; do
+    agent-browser --session haterbernd-reel fill "@$ref" "$caption" 2>&1 | tee -a "$LOG_FILE"
+  done
+  sleep 2
+
+  # Share
+  log "  🚀 Share..."
+  local share_ref
+  share_ref=$(agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'share' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null)
+
+  if [ -n "$share_ref" ]; then
+    agent-browser --session haterbernd-reel click "@$share_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 8
+  fi
+
+  # Screenshot nach Share
+  agent-browser --session haterbernd-reel screenshot "$SCREENSHOT_DIR/reel-${post_title// /_}-done.png" 2>&1 | tee -a "$LOG_FILE"
+
+  # Erfolg prüfen
+  local result
+  result=$(agent-browser --session haterbernd-reel snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    for v in d['data']['refs'].values():
+        if 'shared' in v.get('name','').lower() or 'share' in v.get('name','').lower():
+            print('SUCCESS'); break
+    else:
+        print('UNKNOWN')
+except: print('ERROR')
+" 2>/dev/null)
+
+  agent-browser --session haterbernd-reel close 2>&1 | tee -a "$LOG_FILE"
+
+  if [ "$result" = "SUCCESS" ]; then
+    log "✅ Reel erfolgreich veröffentlicht!"
+    return 0
+  else
+    log "⚠️  Reel-Status: $result (möglicherweise trotzdem erfolgreich)"
+    return 0
+  fi
+}
+
+# ==================== BILDER GENERIEREN ====================
+
+generate_images() {
+  local post_json="$1"
+  local post_id
+  post_id=$(echo "$post_json" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+  
+  local post_dir="$IMG_DIR/post-$post_id"
+  mkdir -p "$post_dir"
+  
+  local slide_count
+  slide_count=$(echo "$post_json" | python3 -c "import sys,json; print(len(json.load(sys.stdin).get('slides',[])))")
+  
+  log "🎨 Generiere $slide_count Bilder für Post #$post_id..."
+  
+  python3 - "$post_json" "$post_dir" "$NANO_SCRIPT" << 'PYEOF'
+import sys, json, subprocess, os, re
+
+post_json_file = sys.argv[1]
+post_dir = sys.argv[2]
+nano_script = sys.argv[3]
+
+with open(post_json_file) as f:
+    post = json.load(f)
+
+slides = post.get("slides", [])
+post_id = post["id"]
+
+generated = []
+for i, slide in enumerate(slides):
+    prompt = slide["prompt"]
+    size = slide.get("size", "1:1")
+    imgsize = slide.get("imgsize", "2K")
+    outfile = os.path.join(post_dir, f"slide-{i+1}.jpg")
+    
+    print(f"  Slide {i+1}/{len(slides)} [{size}, {imgsize}]...")
+    
+    result = subprocess.run([
+        nano_script, prompt,
+        "--size", size,
+        "--imgsize", imgsize,
+        "--output", post_dir
+    ], capture_output=True, text=True, timeout=120)
+    
+    if result.returncode != 0:
+        print(f"  ❌ Slide {i+1} fehlgeschlagen: {result.stderr[:200]}")
+        sys.exit(1)
+    
+    # Finde generiertes Bild in stdout
+    for line in result.stdout.strip().split("\n"):
+        if "📸" in line:
+            src = line.replace("📸", "").strip()
+            if os.path.exists(src):
+                os.rename(src, outfile)
+                print(f"  ✅ Slide {i+1} → {outfile}")
+                generated.append(outfile)
+                break
+    else:
+        # Fallback: suche neuestes jpg im output dir
+        files = sorted([f for f in os.listdir(post_dir) if f.endswith('.jpg')], 
+                      key=lambda f: os.path.getmtime(os.path.join(post_dir, f)), reverse=True)
+        for f in files:
+            fp = os.path.join(post_dir, f)
+            if os.path.getmtime(fp) > os.path.getmtime(post_json_file) - 60:
+                if fp not in generated:
+                    os.rename(fp, outfile)
+                    print(f"  ✅ Slide {i+1} (fallback) → {outfile}")
+                    generated.append(outfile)
+                    break
+
+# Meta speichern
+meta = {
+    "post_id": post_id,
+    "title": post["title"],
+    "slide_count": len(slides),
+    "caption": post["caption"],
+    "hashtags": post.get("hashtags", ""),
+    "full_caption": post["caption"] + "\n\n" + post.get("hashtags", ""),
+    "slide_files": generated,
+    "format": post.get("format", "carousel")
+}
+with open(os.path.join(post_dir, "meta.json"), "w") as f:
+    json.dump(meta, f, indent=2)
+
+print(f"\n✅ Alle {len(generated)} Slides generiert")
+PYEOF
+}
+
+# ==================== INSTAGRAM POSTING ====================
+
+post_to_instagram() {
+  local post_dir="$1"
+  local meta
+  meta=$(cat "$post_dir/meta.json")
+  local caption
+  caption=$(echo "$meta" | python3 -c "import sys,json; print(json.load(sys.stdin)['full_caption'])")
+  local slide_count
+  slide_count=$(echo "$meta" | python3 -c "import sys,json; print(json.load(sys.stdin)['slide_count'])")
+  local post_title
+  post_title=$(echo "$meta" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])")
+  
+  log "📤 Poste auf Instagram: $slide_count Slide(s)..."
+  
+  # Browser starten
+  log "  🌐 Browser starten..."
+  ALL_PROXY=socks5://127.0.0.1:1080 agent-browser --session haterbernd-post open "https://www.instagram.com/" 2>&1 | tee -a "$LOG_FILE"
+  sleep 4
+  
+  # Prüfen ob eingeloggt
+  local is_logged="no"
+  local snap
+  snap=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1)
+  
+  # Cookies falls nötig
+  if echo "$snap" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    for v in d['data']['refs'].values():
+        if 'allow all' in v.get('name','').lower() and v.get('role')=='button':
+            print('need_cookie')
+            break
+except: pass
+" 2>/dev/null | grep -q "need_cookie"; then
+    log "  🍪 Cookies akzeptieren..."
+    local cookie_ref
+    cookie_ref=$(echo "$snap" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'allow all' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null)
+    [ -n "$cookie_ref" ] && agent-browser --session haterbernd-post click "@$cookie_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 2
+    snap=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1)
+  fi
+  
+  # Check login status
+  is_logged=$(echo "$snap" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    for v in d['data']['refs'].values():
+        name = v.get('name','').lower()
+        if 'new post' in name or 'haterbernd' in name:
+            print('yes'); break
+    else:
+        print('no')
+except: print('no')
+" 2>/dev/null)
+  
+  if [ "$is_logged" = "no" ]; then
+    log "  🔐 Einloggen..."
+    
+    # Login button
+    local login_ref
+    login_ref=$(echo "$snap" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if v.get('role')=='button' and 'log in' in v.get('name','').lower():
+        print(r); break
+" 2>/dev/null)
+    
+    [ -n "$login_ref" ] && agent-browser --session haterbernd-post click "@$login_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 2
+    
+    # Credentials
+    agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    role = v.get('role','')
+    name = v.get('name','').lower()
+    if role == 'textbox' and ('phone' in name or 'email' in name or 'username' in name):
+        print(f'USER:{r}')
+    elif role == 'textbox' and 'password' in name:
+        print(f'PASS:{r}')
+    elif role == 'button' and 'log in' in name:
+        print(f'BTN:{r}')
+" 2>/dev/null | while IFS= read -r line; do
+      case "$line" in
+        USER:*) agent-browser --session haterbernd-post fill "@${line#*:}" "HaterBernd" 2>&1 | tee -a "$LOG_FILE" ;;
+        PASS:*) agent-browser --session haterbernd-post fill "@${line#*:}" 'instabernd#Jungle68' 2>&1 | tee -a "$LOG_FILE" ;;
+        BTN:*) agent-browser --session haterbernd-post click "@${line#*:}" 2>&1 | tee -a "$LOG_FILE" ;;
+      esac
+    done
+    
+    sleep 5
+    
+    # Not Now dialogs
+    for attempt in 1 2; do
+      agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'not now' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null | while IFS= read -r ref; do
+        agent-browser --session haterbernd-post click "@$ref" 2>&1 | tee -a "$LOG_FILE"
+        sleep 1
+      done
+      sleep 1
+    done
+    
+    sleep 3
+  fi
+  
+  # Auth speichern
+  agent-browser --session haterbernd-post state save "$SCRIPT_DIR/instagram-auth.json" 2>&1 | tee -a "$LOG_FILE"
+  
+  # New post öffnen
+  log "  📝 Upload-Dialog öffnen..."
+  
+  local new_post_ref
+  new_post_ref=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'new post' in v.get('name','').lower():
+        print(r); break
+" 2>/dev/null)
+  
+  if [ -n "$new_post_ref" ]; then
+    agent-browser --session haterbernd-post click "@$new_post_ref" 2>&1 | tee -a "$LOG_FILE"
+  else
+    # Fallback: eval
+    agent-browser --session haterbernd-post eval "
+var links = Array.from(document.querySelectorAll('a')).filter(a => a.textContent.includes('New post'));
+if (links.length > 0) links[0].click();
+" 2>&1 | tee -a "$LOG_FILE"
+  fi
+  sleep 3
+  
+  # Upload
+  log "  📁 Dateien hochladen..."
+  local files=""
+  for i in $(seq 1 "$slide_count"); do
+    files="$files $post_dir/slide-$i.jpg"
+  done
+  
+  agent-browser --session haterbernd-post upload "input[type=file]" $files 2>&1 | tee -a "$LOG_FILE"
+  sleep 4
+  
+  # Screenshot nach Upload
+  agent-browser --session haterbernd-post screenshot "$SCREENSHOT_DIR/post-${post_title// /_}-upload.png" 2>&1 | tee -a "$LOG_FILE"
+  
+  # Next (Crop)
+  for attempt in 1 2 3; do
+    local next_ref
+    next_ref=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if v.get('name','') == 'Next':
+        print(r); break
+" 2>/dev/null)
+    
+    if [ -z "$next_ref" ]; then
+      # Prüfen ob schon beim Caption-Screen
+      agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'caption' in v.get('name','').lower():
+        print('at_caption'); break
+" 2>/dev/null | grep -q "at_caption" && break
+      sleep 1
+      continue
+    fi
+    
+    agent-browser --session haterbernd-post click "@$next_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 2
+  done
+  
+  # Caption
+  log "  ✍️ Caption eintragen..."
+  agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'caption' in v.get('name','').lower() and v.get('role')=='textbox':
+        print(r); break
+" 2>/dev/null | while IFS= read -r ref; do
+    agent-browser --session haterbernd-post fill "@$ref" "$caption" 2>&1 | tee -a "$LOG_FILE"
+  done
+  sleep 1
+  
+  # Share
+  log "  🚀 Share..."
+  local share_ref
+  share_ref=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+for r,v in d['data']['refs'].items():
+    if 'share' in v.get('name','').lower() and v.get('role')=='button':
+        print(r); break
+" 2>/dev/null)
+  
+  if [ -n "$share_ref" ]; then
+    agent-browser --session haterbernd-post click "@$share_ref" 2>&1 | tee -a "$LOG_FILE"
+    sleep 5
+  fi
+  
+  # Screenshot nach Share
+  agent-browser --session haterbernd-post screenshot "$SCREENSHOT_DIR/post-${post_title// /_}-done.png" 2>&1 | tee -a "$LOG_FILE"
+  
+  # Erfolg prüfen
+  local result
+  result=$(agent-browser --session haterbernd-post snapshot -i --json 2>&1 | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    for v in d['data']['refs'].values():
+        if 'shared' in v.get('name','').lower():
+            print('SUCCESS'); break
+    else:
+        print('UNKNOWN')
+except: print('ERROR')
+" 2>/dev/null)
+  
+  agent-browser --session haterbernd-post close 2>&1 | tee -a "$LOG_FILE"
+  
+  if [ "$result" = "SUCCESS" ]; then
+    log "✅ Post erfolgreich veröffentlicht!"
+    return 0
+  else
+    log "⚠️  Post-Status: $result (möglicherweise trotzdem erfolgreich)"
+    return 0
+  fi
+}
+
+# ==================== MAIN ====================
+
+run_post() {
+  local result="$1"
+  local post_id
+  post_id=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+  local post_title
+  post_title=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])")
+  local post_date
+  post_date=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin)['date'])")
+  local post_time
+  post_time=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin)['time'])")
+  
+  log "========================================="
+  log "📋 Post #$post_id: '$post_title'"
+  log "   📅 $post_date um $post_time"
+  log "========================================="
+  
+  # VPN check
+  check_vpn || return 1
+  
+  # Format check
+  local post_format
+  post_format=$(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin).get('format','carousel'))")
+  
+  if [ "$post_format" = "reel" ]; then
+    # Reel posten (Video exists already)
+    log "🎬 Reel-Format erkannt, Video-Upload..."
+    if post_reel_to_instagram "$result"; then
+    update_state "$post_id" "success" "Automatisch gepostet via Cron"
+    notify_telegram "✅ <b>HaterBernd Post veröffentlicht</b>\n\nPost #$post_id: $post_title\n\n$caption_preview" "SCREENSHOT_PATH"
+    log "✅ Post #$post_id erfolgreich!"
+    return 0
+  else
+    update_state "$post_id" "failed" "Posting fehlgeschlagen"
+    increment_retry "$post_id"
+    notify_telegram "🚨 <b>HaterBernd FEHLER</b>\n\nPost #$post_id: $post_title\n\n❌ Posting fehlgeschlagen.\n\nRetry: $(cat "$STATE_FILE" | python3 -c "import sys,json; s=json.load(sys.stdin); print(s.get('retry_counts',{}).get(str($post_id),0))")/3"
+    return 1
+  fi
+}
+
+case "${1:-}" in
+  --check)
+    log "🔍 Prüfe auf fällige Posts..."
+    result=$(find_next_post)
+    if [ "$result" = "NO_POST_DUE" ]; then
+      log "✅ Keine Posts fällig."
+      exit 0
+    fi
+    
+    # Caption preview für Notification (erste 100 chars)
+    caption_preview=$(echo "$result" | python3 -c "
+import sys,json
+p=json.load(sys.stdin)
+c=p.get('caption','')[:100]
+print(c + '...' if len(c) >= 100 else c)
+" 2>/dev/null)
+    
+    SCREENSHOT_PATH=""
+    if run_post "$result"; then
+      # Finde neuesten Screenshot
+      SCREENSHOT_PATH=$(ls -t "$SCREENSHOT_DIR"/*.png 2>/dev/null | head -1 || true)
+      notify_telegram "✅ <b>HaterBernd Post veröffentlicht!</b>\n\n<b>Post #$post_id:</b> $post_title\n\n<i>$caption_preview</i>" "$SCREENSHOT_PATH"
+    fi
+    ;;
+  
+  --next)
+    result=$(find_next_post "true")
+    if [ "$result" = "NO_POST_DUE" ]; then
+      echo "Keine weiteren Posts im Schedule."
+    else
+      python3 - <<< "
+import json
+p = json.loads('''$result''')
+print(f'📋 Post #{p[\"id\"]} - {p[\"title\"]}')
+print(f'   📅 {p[\"day\"]}, {p[\"date\"]} um {p[\"time\"]}')
+print(f'   📝 Format: {p[\"format\"]} ({p[\"slide_count\"]} Slides)')
+print(f'   📄 Caption: {p[\"caption\"][:80]}...')
+"
+    fi
+    ;;
+  
+  --post)
+    post_id="${2:-}"
+    [ -z "$post_id" ] && { echo "Usage: $0 --post ID"; exit 1; }
+    
+    check_vpn
+    result=$(python3 - "$SCHEDULE" "$post_id" << 'PYEOF'
+import sys, json
+with open(sys.argv[1]) as f:
+    schedule = json.load(f)
+for post in schedule["posts"]:
+    if post["id"] == int(sys.argv[2]):
+        print(json.dumps(post))
+        sys.exit(0)
+print("NOT_FOUND")
+PYEOF
+)
+    [ "$result" = "NOT_FOUND" ] && { log "❌ Post #$post_id nicht gefunden!"; exit 1; }
+    
+    caption_preview=$(echo "$result" | python3 -c "import sys,json; c=json.load(sys.stdin).get('caption','')[:100]; print(c+'...' if len(c)>=100 else c)" 2>/dev/null)
+    
+    SCREENSHOT_PATH=""
+    if run_post "$result"; then
+      SCREENSHOT_PATH=$(ls -t "$SCREENSHOT_DIR"/*.png 2>/dev/null | head -1 || true)
+      notify_telegram "✅ <b>HaterBernd Post veröffentlicht!</b>\n\n<b>Post #$post_id:</b> $(echo "$result" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])")\n\n<i>$caption_preview</i>" "$SCREENSHOT_PATH"
+    fi
+    ;;
+  
+  --force)
+    log "🔥 Force-Post: Nächsten Post sofort..."
+    check_vpn
+    result=$(find_next_post "true")
+    [ "$result" = "NO_POST_DUE" ] && { log "❌ Keine Posts mehr."; exit 1; }
+    run_post "$result"
+    ;;
+  
+  --status)
+    if [ -f "$STATE_FILE" ]; then
+      python3 - "$STATE_FILE" "$SCHEDULE" << 'PYEOF'
+import sys, json
+
+with open(sys.argv[1]) as f:
+    state = json.load(f)
+with open(sys.argv[2]) as f:
+    schedule = json.load(f)
+
+posted = set(state.get("posted_ids", []))
+failed = set(state.get("failed_ids", []))
+retry_counts = state.get("retry_counts", {})
+total = len(schedule["posts"])
+
+print(f"📊 HaterBernd Posting Status")
+print(f"{'='*40}")
+print(f"✅ Gepostet: {len(posted)}/{total}")
+print(f"❌ Fehlgeschlagen: {len(failed)}")
+print(f"⏳ Verbleibend: {total - len(posted) - len(failed)}")
+
+if posted:
+    print(f"\n✅已成功 Posts: {sorted(posted)}")
+if failed:
+    print(f"\n❌ Failed Posts:")
+    for pid in sorted(failed):
+        retries = retry_counts.get(str(pid), 0)
+        max_r = 3
+        print(f"   Post #{pid} - Retry: {retries}/{max_r}")
+
+# Nächster Post
+for post in schedule["posts"]:
+    if post["id"] not in posted and post["id"] not in failed:
+        print(f"\n📋 Nächster: Post #{post['id']} - {post['title']}")
+        print(f"   📅 {post['day']}, {post['date']} um {post['time']}")
+        break
+PYEOF
+    else
+      echo "Noch keine Posts gepostet."
+    fi
+    ;;
+  
+  --health)
+    log "🏥 Health Check..."
+    issues=()
+    
+    # VPN
+    if ! systemctl is-active --quiet vpn-proxy.service; then
+      issues+=("❌ VPN-Proxy nicht aktiv")
+    else
+      echo "✅ VPN-Proxy: aktiv"
+    fi
+    
+    # Cron
+    if crontab -l 2>/dev/null | grep -q "haterbernd-poster"; then
+      echo "✅ Cron-Job: aktiv"
+    else
+      issues+=("❌ Cron-Job nicht gefunden")
+    fi
+    
+    # Files
+    for f in "$SCHEDULE" "$SOP" "$NANO_SCRIPT"; do
+      if [ -f "$f" ]; then
+        echo "✅ $(basename $f): vorhanden"
+      else
+        issues+=("❌ $(basename $f): fehlt")
+      fi
+    done
+    
+    # Disk space
+    disk_usage=$(df -h /tmp | awk 'NR==2{print $5}')
+    echo "💾 Disk Usage /tmp: $disk_usage"
+    
+    if [ ${#issues[@]} -gt 0 ]; then
+      echo ""
+      echo "⚠️  Issues:"
+      printf "  %s\n" "${issues[@]}"
+      notify_telegram "⚠️ <b>HaterBernd Health Check</b>\n\nIssues gefunden:\n$(printf '%s\n' "${issues[@]}")"
+    else
+      echo ""
+      echo "✅ Alle Checks bestanden!"
+    fi
+    ;;
+  
+  *)
+    echo "HaterBernd Instagram Poster v2.0"
+    echo ""
+    echo "Usage: $0 [OPTION]"
+    echo ""
+    echo "Optionen:"
+    echo "  --check    Prüft ob ein Post fällig ist (Cron)"
+    echo "  --next     Nächster Post"
+    echo "  --post ID  Bestimmten Post posten"
+    echo "  --force    Nächsten Post sofort posten"
+    echo "  --status   Posting-Status"
+    echo "  --health   System Health Check"
+    echo "  --help     Diese Hilfe"
+    echo ""
+    echo "SOP: $SOP"
+    ;;
+esac

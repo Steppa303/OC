@@ -1,0 +1,126 @@
+# EDM MIDI Scraper Konfiguration
+project:
+  name: "edm-midi-collection"
+  output_dir: "/root/.openclaw/workspace/projects/midi-scraper/midi-edm-collection"
+  db_path: "midi_edm_scraper.db"
+  log_file: "midi-edm-scraper.log"
+
+# Seed-URLs für EDM MIDI Packs
+seed_urls:
+  # Producer MIDI Pack Sites
+  - "https://www.dancemidisamples.com/format/free-packs/"
+  - "https://www.dancemidisamples.com/product-category/midi/"
+  - "https://midiklowd.com/edm-house-midi-packs"
+  - "https://midiklowd.com/free-midi-packs/"
+  - "https://unwav.com/product-tag/free/"
+  - "https://unwav.com/product-tag/edm/"
+  - "https://free-sample-packs.com/category/midi/"
+  - "https://free-sample-packs.com/category/edm/"
+  # BitMidi
+  - "https://bitmidi.com/search?q=edm"
+  - "https://bitmidi.com/search?q=electronic"
+  - "https://bitmidi.com/search?q=dance"
+  - "https://bitmidi.com/search?q=house"
+  - "https://bitmidi.com/search?q=techno"
+  - "https://bitmidi.com/search?q=trance"
+  # MIDI World
+  - "https://www.midiworld.com/"
+  - "https://www.midiworld.com/search/"
+  # Reddit MIDI community
+  - "https://www.reddit.com/r/midi/"
+  - "https://www.reddit.com/r/midi/search/?q=edm&type=link"
+  # MIDI File Archive
+  - "https://midiworld.download/"
+  # Free MIDI Downloads
+  - "https://freemidi.org/"
+  - "https://www.karaoke-version.com/midi-files.html"
+  # Producer Forums
+  - "https://splice.com/sounds/midi"
+  - "https://loopcloud.com/sounds/midi"
+  # YouTube EDM MIDI tutorials
+  - "https://www.youtube.com/results?search_query=edm+mid+free+download"
+
+# Genre Keywords für Filter
+genre_keywords:
+  - "edm"
+  - "electronic"
+  - "dance"
+  - "house"
+  - "techno"
+  - "trance"
+  - "dubstep"
+  - "hardstyle"
+  - "progressive"
+  - "big room"
+  - "deep house"
+  - "electro"
+  - "synth"
+  - "ambient"
+  - "drum and bass"
+  - "dnb"
+  - "breakbeat"
+  - "future bass"
+  - "trap"
+  - "hardcore"
+
+# Filter
+file_extensions:
+  - ".mid"
+  - ".midi"
+
+blacklist_domains:
+  - "youtube.com"
+  - "vimeo.com"
+  - "facebook.com"
+  - "instagram.com"
+  - "twitter.com"
+  - "x.com"
+
+blacklist_extensions:
+  - ".html"
+  - ".htm"
+  - ".php"
+  - ".js"
+  - ".css"
+  - ".png"
+  - ".jpg"
+  - ".gif"
+  - ".svg"
+  - ".pdf"
+  - ".zip"
+  - ".rar"
+  - ".exe"
+  - ".mp3"
+  - ".mp4"
+  - ".wav"
+  - ".flac"
+  - ".aac"
+
+# Download-Einstellungen
+download:
+  max_concurrent: 8
+  timeout: 30
+  max_retries: 3
+  retry_delay: 2
+  min_file_size: 200  # Bytes (EDM MIDIs sind meist größer)
+  rate_limit: 1.0  # Sekunden zwischen Requests
+
+# Scraping-Einstellungen
+scraping:
+  max_depth: 3
+  timeout: 15
+  concurrent: 4
+  rate_limit: 1.5
+
+# User-Agents
+user_agents:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+  - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0"
+
+# Benachrichtigungen
+notifications:
+  enabled: true
+  interval_minutes: 10
+  telegram_chat_id: "1400987471"

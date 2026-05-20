@@ -1,0 +1,117 @@
+{
+  "cookies": [
+    {
+      "name": "csrftoken",
+      "value": "XQdIVK64WCliMdQ4pfnBgW",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1813676428.889381,
+      "size": 31,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "__Secure-ENID",
+      "value": "33.SE=fR2X8Zj9VOphCsGoszoNVxkIAY1CXFnIjszYJ4myJYhQbDL-Jy0LYKdANqUFiKF1-0zu5VlVDzt2AEo504IwJyA5OG0Mr6gyBTiSLOJmFA3LiP9hV5DXD2IvzAozG5cX68wu9KfiTVgNaw8HA8I-XfKw14XETZQ0ANS2cgXW5nXgu2cXeQbh4yVJnxYUdmdFpw",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1813303128.835671,
+      "size": 213,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "datr",
+      "value": "jCkLamfYy8cStxhLSr2wkZ6F",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1813676436.29675,
+      "size": 28,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "ig_did",
+      "value": "2EDBD17F-B89A-4190-B328-B00A68608E6D",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1810652436.296776,
+      "size": 42,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "mid",
+      "value": "agspjAAEAAEwUuF_EliWbFGni1YC",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1813676436.296799,
+      "size": 31,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "wd",
+      "value": "1280x577",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1779721247.0,
+      "size": 10,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://www.instagram.com",
+      "localStorage": [
+        {
+          "name": "signal_flush_timestamp",
+          "value": "1779116447826"
+        },
+        {
+          "name": "Session",
+          "value": "ykq3ai:1779116482449"
+        },
+        {
+          "name": "chatd-deviceid",
+          "value": "d979b1ac-9d66-48ab-bd1d-60c053e78b1a"
+        },
+        {
+          "name": "hb_timestamp",
+          "value": "1779116447770"
+        },
+        {
+          "name": "IGSession",
+          "value": "a4deis:1779118247450"
+        },
+        {
+          "name": "banzai:last_storage_flush",
+          "value": "1779116448517.3"
+        }
+      ],
+      "sessionStorage": [
+        {
+          "name": "TabId",
+          "value": "hmlylx"
+        },
+        {
+          "name": "original_referrer",
+          "value": "https://www.instagram.com/accounts/login/"
+        }
+      ]
+    }
+  ]
+}

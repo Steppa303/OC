@@ -1,0 +1,6 @@
+Schau mal auf unserem Server. Da gibt es die Anwendung Stepp Slampler, die wir
+kosten und duplizier das Ding mal in so eine Art Staging Umgebung und dann
+implementiere eine Funktion mit der wir eine Variante unterschiedlicher
+Beez, so was wie zum Beispiel vor der Flore oder Drum and Bass, irgendwelche
+Standard, Elektronische Musik, Drum-Kettans auswählen können.
+Blick los.

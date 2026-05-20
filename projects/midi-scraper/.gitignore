@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Projekt-spezifisch
+midi-scraper.log
+*.db
+midi-collection/
+.secrets/
+
+# OS
+.DS_Store
+Thumbs.db

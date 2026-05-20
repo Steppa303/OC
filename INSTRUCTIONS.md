@@ -1,7 +1,27 @@
 # INSTRUCTIONS.md - Arbeitsanweisungen für OpenClaw
 
-**Gültig für:** JEDEN Prompt, JEDE Aufgabe
-**Priorität:** Höher als SOUL.md (aber SOUL bleibt für Persönlichkeit)
+**Gültig für:** JEDEN Prompt, JEDE Aufgabe  
+**Priorität:** Höher als SOUL.md (aber SOUL bleibt für Persönlichkeit)  
+**Stand:** 2026-04-25
+
+---
+
+## 🛑 0. Architektur: Proxy → Orchestrator → Subagents
+
+Bei komplexen Multi-File Tasks delegiert der Main Agent (Proxy) an einen Orchestrator-Subagent:
+
+```
+User-Input → Main Agent (Proxy) → Orchestrator (bailian/qwen3.6-plus) → Subagents (je nach Task)
+```
+
+- **Proxy (Main Agent):** Empfang, Bestätigung, Delegation, Ergebnis-Auslieferung
+- **Orchestrator:** Task-Analyse, Modell-Auswahl, Subagent-Spawn, Dashboard-Logging, Aggregation
+- **Subagents:** Isolierte Task-Ausführung mit zugewiesenem Modell
+
+**Orchestrator Timeout:** Max 60 Min.
+**Worker-Subagent Timeout:** Max 15 Min. Bei Timeout → sauber neustarten.
+
+**Einfache Tasks** (einzeilige Edits, Config-Checks, Status) → Main Agent macht sie direkt.
 
 ---
 
@@ -11,20 +31,21 @@
 ```bash
 curl -X POST http://localhost:3002/api/agents/start \
   -H "Content-Type: application/json" \
-  -d '{"sessionKey":"agent:main:subagent:XXX","label":"Agent Name","task":"Aufgabe","model":"qwen3-coder-plus","parentSession":"agent:main:telegram:direct:1400987471"}'
+  -d '{"sessionKey":"<childSessionKey>","label":"<label>","task":"<task>","model":"<model>"}'
 ```
 
 ### Nach Completion:
 ```bash
 curl -X POST http://localhost:3002/api/agents/end \
   -H "Content-Type: application/json" \
-  -d '{"sessionKey":"agent:main:subagent:XXX","status":"done","runtimeMs":12345}'
+  -d '{"sessionKey":"<childSessionKey>","status":"done"|"failed"|"timeout","runtimeMs":<ms>}'
 ```
 
 ### Dashboard:
-- URL: http://185.217.126.72/agent-dashboard/
+- **URL:** https://dashboard.steppa.online
+- **API:** localhost:3002
 - User soll Agents IMMER im Dashboard sehen
-- Bei Fehlern: Sofort melden
+- **Bug:** Timed-Out Agents bleiben auf "running" → manuell via API beenden
 
 ---
 
@@ -37,32 +58,35 @@ curl -X POST http://localhost:3002/api/agents/end \
 
 ### Modell-Matrix (UNSERE Modelle):
 
-| Aufgabe | Modell | Kontext | Warum |
-|---------|--------|---------|-------|
-| **📄 Lange Dokumente** (Bücher, Papers, 100+ Seiten, Code-Bases) | **`kimi-k2.5`** | **262K** | **BESTES für lange Texte!** Optimiert für Dokumente |
-| **🏗️ Komplexe Architektur** (Full-Stack Apps, Microservices) | **`qwen3-max-2026-01-23`** | **262K** | Premium-Modell, tiefstes Verständnis |
-| **🔍 Recherche & Analyse** (Web, Doku, Skills, Papers) | **`qwen3.5-plus`** | **1M** 🔥 | Größter Kontext, Generalist |
-| **⚡ Frontend** (React, Vue, UI/UX, Tailwind, CSS) | **`qwen3-coder-next`** | **262K** | Schnell, UI-spezialisiert |
-| **🏛️ Backend** (Node.js, API, DB, Python, Architektur) | **`qwen3-coder-plus`** | **1M** 🔥 | Tiefe Logik, 1M Kontext für große Codebases |
-| **🧪 Testing** (Jest, Playwright, E2E, Unit Tests) | **`qwen3-coder-plus`** | **1M** | Gründlichkeit, großer Kontext |
-| **📄 PDF/Docs** (Markdown, HTML, PDF generieren) | **`qwen3-coder-next`** | **262K** | Schnell für Dokumenten-Processing |
-| **🐛 Debugging/Analyse** (Fehler suchen, Logs analysieren) | **`qwen3.5-plus`** | **1M** | Generalist, Troubleshooting |
-| **🔄 CI/CD** (GitHub Actions, Docker, Deploy Pipelines) | **`qwen3-coder-plus`** | **1M** | Komplexe Workflows |
-| **🎨 Design** (UI Mockups, CSS, Responsive) | **`qwen3-coder-next`** | **262K** | Kreativ, schnell |
-| **📊 Alternative** (Wenn andere ausgelastet) | `MiniMax-M2.5` | `196K` | Backup-Option |
+| Aufgabe | Modell | Kontext | Reasoning | Warum |
+|---------|--------|---------|-----------|-------|
+| **🏆 Primary / Alles** | **`bailian/qwen3.6-plus`** | **1M** 🔥 | **✅** | **BESTES Modell!** Reasoning, 1M Kontext, übertrifft alles |
+| **📄 Lange Dokumente** (Bücher, Papers, 100+ Seiten) | **`bailian/qwen3.6-plus`** | **1M** | **✅** | Größter Kontext + Reasoning für tiefes Verständnis |
+| **🏗️ Komplexe Architektur** (Full-Stack, Microservices) | **`bailian/qwen3.6-plus`** | **1M** | **✅** | Tiefstes Verständnis, neue Beast |
+| **🔍 Recherche & Analyse** (Web, Doku, Skills) | **`bailian/qwen3.5-plus`** | **1M** | **✅** | Generalist mit Reasoning, großer Kontext |
+| **⚡ Frontend** (React, Vue, UI/UX, Tailwind) | **`bailian/qwen3.6-plus`** | **1M** | **✅** | God-Tier Coder für UI/UX |
+| **🏛️ Backend** (Node.js, API, DB, Python) | **`bailian/qwen3.6-plus`** | **1M** | **✅** | Tiefe Logik, komplexe Architektur |
+| **🧪 Testing** (Jest, E2E, Unit Tests) | **`bailian/qwen3-coder-plus`** | **1M** | ❌ | Gründlichkeit, großer Kontext |
+| **🐛 Debugging/Analyse** (Fehler, Logs) | **`bailian/qwen3.5-plus`** | **1M** | **✅** | Generalist, Troubleshooting |
+| **📊 Alternative / Backup** | `bailian/MiniMax-M2.5` | `196K` | ❌ | Wenn andere ausgelastet |
+| **🏛️ Generalist & Tool-Calling** | `bailian/glm-5` | `200K` | ❌ | Beste Open-Source-Agenten-Performance, stabiles Tool-Calling für Standard-Tasks |
+| **🖼️ Vision & Bildanalyse** | `bailian/kimi-k2.5` | `262K` | ❌ | Multimodal-Modell für UI-Screenshots und Bild-Text-Aufgaben |
 
-### Modell-Empfehlungen:
+### Verfügbare Modelle (alle mit `bailian/` Prefix!):
+- `bailian/qwen3.6-plus` ← **PRIMARY** (1M, Reasoning ✅)
+- `bailian/qwen3.5-plus` ← **FALLBACK** (1M, Reasoning ✅)
+- `bailian/qwen3-max-2026-01-23` (262K)
+- `bailian/qwen3-coder-next` (262K)
+- `bailian/qwen3-coder-plus` (1M)
+- `bailian/MiniMax-M2.5` (196K)
+- `bailian/glm-5` (202K)
+- `bailian/glm-4.7` (202K)
+- `bailian/kimi-k2.5` (262K)
+- `qwen/qwen3.5-plus` (gleiche baseURL, andere Provider-Config)
 
-**Für maximale Qualität:**
-- `qwen3-max-2026-01-23` → Komplexe Architektur, Full-Stack
-- `kimi-k2.5` → Lange Dokumente, Papers, Books
-
-**Für Geschwindigkeit:**
-- `qwen3-coder-next` → Frontend, UI, schnelle Code-Tasks
-
-**Für großen Kontext:**
-- `qwen3.5-plus` → 1M Token für riesige Codebases/Recherche
-- `qwen3-coder-plus` → 1M Token für Backend-Architektur
+### ⚠️ WICHTIG:
+- **IMMER Provider-Prefix verwenden:** `bailian/qwen3.6-plus` NICHT nur `qwen3.6-plus`!
+- **StandardCompute wurde entfernt** – nicht mehr verwenden!
 
 ### Workflow für Aufgabenverteilung:
 
@@ -70,27 +94,30 @@ curl -X POST http://localhost:3002/api/agents/end \
 1. User-Prompt empfangen
    ↓
 2. Task-Analyse: Was für eine Aufgabe?
-   - Recherche? → qwen3.5-plus
-   - Frontend? → qwen3-coder-next
-   - Backend? → qwen3-coder-plus
-   - Testing? → qwen3-coder-plus
-   - PDF/Docs? → qwen3-coder-next
-   - Komplex/Mehrere Teile? → MEHRERE Agents!
+   - Komplett/Mehrere Teile? → MEHRERE Agents!
+   - Standard-Task? → bailian/qwen3.6-plus
    ↓
-3. Vor Spawn: Agent loggen (API Call)
+3. Vor Spawn: Agent loggen (API Call an Dashboard)
    ↓
 4. Subagent spawnen mit:
    - Spezifischer Task-Beschreibung
-   - Passendem Modell
+   - Passendem Modell (provider-qualified!)
    - mode: "run" für One-Shot
-   - mode: "session" für persistent
+   - mode: "session" für persistent/thread-bound
+   - runTimeoutSeconds: 1800 (30 Min default)
    ↓
-5. Warten auf Completion Event (push-based!)
+5. Warten auf Completion Event (PUSH-BASED!)
    ↓
-6. Nach Completion: Agent Ende loggen
+6. Nach Completion: Agent Ende loggen (API Call)
    ↓
 7. Results aggregieren & User antworten
 ```
+
+### Push-Based Completion (KRITISCH!):
+- **NICHT poll** `sessions_list` oder `subagents action=list` in Loop!
+- **Warte auf Completion Events** → kommen als User-Message
+- **Auto-Announce:** Subagent Results werden automatisch zurückgemeldet
+- **Track alle childSessionKeys** → warte auf ALLE Completions
 
 ### Beispiel für komplexe Aufgabe:
 
@@ -98,81 +125,26 @@ curl -X POST http://localhost:3002/api/agents/end \
 
 **Agent-Verteilung:**
 ```
-1. Three.js Researcher (qwen3.5-plus)
+1. Three.js Researcher (bailian/qwen3.5-plus)
    - Three.js Doku durchsuchen
    - Best Practices recherchieren
    
-2. 3D Developer (qwen3-coder-plus)
+2. 3D Developer (bailian/qwen3.6-plus)
    - Scene, Camera, Renderer implementieren
    - Shader schreiben
    
-3. UI Developer (qwen3-coder-next)
+3. UI Developer (bailian/qwen3.6-plus)
    - Controls UI bauen
    - Responsive Design
    
-4. QA Engineer (qwen3-coder-plus)
-   - Playwright Tests schreiben
+4. QA Engineer (bailian/qwen3-coder-plus)
+   - Tests schreiben
    - Tests ausführen
    
-5. Deployment Engineer (qwen3-coder-next)
+5. Deployment Engineer (bailian/qwen3.6-plus)
    - Build erstellen
    - Caddy Config
    - Deployen
-```
-
-### Beispiel für lange Dokumente:
-
-**User:** "Fass dieses 200-Seiten Paper zusammen"
-
-**Agent-Verteilung:**
-```
-1. Document Analyst (kimi-k2.5)  ← 262K Kontext!
-   - Gesamtes Paper lesen (200 Seiten)
-   - Kernaussagen extrahieren
-   - Zusammenfassung schreiben
-   
-2. Technical Writer (qwen3.5-plus)
-   - Zusammenfassung polieren
-   - Für User verständlich aufbereiten
-```
-
-**User:** "Analysiere diese gesamte Code-Base (50+ Files)"
-
-**Agent-Verteilung:**
-```
-1. Code Analyst (qwen3-coder-plus)  ← 1M Kontext für riesige Codebases!
-   - Alle Files lesen (50+ Files, 10K+ Zeilen)
-   - Architektur verstehen
-   - Probleme identifizieren
-   
-2. Senior Dev (qwen3-coder-plus)
-   - Lösungen vorschlagen
-   - Refactoring planen
-```
-
-**User:** "Baue eine Full-Stack App mit React + Node.js + DB"
-
-**Agent-Verteilung:**
-```
-1. Architect (qwen3-max-2026-01-23)  ← Premium für Architektur!
-   - Gesamtarchitektur planen
-   - Tech Stack entscheiden
-   
-2. Frontend Dev (qwen3-coder-next)
-   - React Components
-   - UI/UX Design
-   
-3. Backend Dev (qwen3-coder-plus)
-   - Node.js API
-   - Database Schema
-   
-4. QA Engineer (qwen3-coder-plus)
-   - Tests schreiben
-   - Integration testen
-   
-5. DevOps (qwen3-coder-next)
-   - Docker Config
-   - Deployment
 ```
 
 ---
@@ -180,16 +152,16 @@ curl -X POST http://localhost:3002/api/agents/end \
 ## 🧪 3. Testing (PFLICHT für Apps)
 
 ### Vor JEDEM Deploy:
-1. **Im echten Browser testen** (nicht nur Playwright!)
+1. **Im echten Browser testen** (nicht nur automated!)
 2. **Loading-Zeiten prüfen** (<10s ideal)
 3. **Console Errors checken** (F12 → Console)
-4. **Assets prüfen** (JS/CSS laden korrekt?)
+4. **Assets prüfen** (JS/CSS laden korrekt? Content-Type!)
 
-### Playwright Tests:
-```bash
-cd /root/.openclaw/workspace
-npx playwright test <app-name> --project=chromium --reporter=list
-```
+### Browser-Tools:
+- **`agent-browser` Skill** – Primary für Browser-Automation (open, snapshot, screenshot)
+- **Playwright v1.59.1** – Installiert (`npx playwright eval` verfügbar)
+- **Workflow:** Erst `agent-browser` nutzen, bei Bedarf Playwright für tiefere Checks
+- **Manuell:** Im Browser testen (F12 DevTools)
 
 ### Test-Ergebnisse dokumentieren:
 - Welche Tests bestanden?
@@ -201,37 +173,37 @@ npx playwright test <app-name> --project=chromium --reporter=list
 ## 📄 4. PDFs & Dokumente
 
 ### PDF Skill:
-- **Skill:** `md2pdf-weasyprint` (installiert in `/root/.openclaw/workspace/skills/`)
-- **Dependencies:** weasyprint, fonts-noto-cjk, fonts-noto-color-emoji
-- **Nutzung:**
-  ```bash
-  bash /root/.openclaw/workspace/skills/md2pdf-weasyprint/scripts/convert-weasyprint.sh input.md output.pdf
-  ```
+- **Skill:** `md2pdf-weasyprint`
+- **Pfad:** `/root/.openclaw/workspace/skills/md2pdf-weasyprint/SKILL.md`
+- **Nutzung:** Skill.md lesen und befolgen
+- **Script:** `bash /root/.openclaw/workspace/skills/md2pdf-weasyprint/scripts/convert-weasyprint.sh input.md output.pdf`
 
-### PDF-Workflow:
-1. Markdown/HTML erstellen
-2. Mit WeasyPrint konvertieren
-3. Nach `/var/www/apps/` deployen
-4. Download-Link给用户
+### PDF-Regeln (aus TOOLS.md):
+- **KEINE** Fußzeilen wie "Erstellt mit OpenClaw AI Assistant"
+- **KEINE** Quellenangaben die auf AI-Erstellung hinweisen
+- Saubere, professionelle PDFs ohne Wasserzeichen
+- Das soll nicht nach AI aussehen!
 
 ---
 
 ## 📧 5. E-Mails (AgentMail)
 
 ### Konfiguration:
-- **API Key:** `am_us_bd26cb5efce27d8e5cbb679bc2be96c58ca780403c9b325f30104f14d4bf7e90`
-- **Inbox:** `bastians_assistent@agentmail.to`
-- **User Email:** `psycodelic.83.83@gmail.com`
+- **Skill:** `agentmail` (enabled in openclaw.json)
+- **SKILL.md:** `/root/.openclaw/workspace/skills/agentmail/SKILL.md`
+- **API Key:** In `openclaw.json` unter `skills.entries.agentmail.env`
+- **Nicht hardcoden** in INSTRUCTIONS.md!
 
-### Usage:
+### Usage (Python SDK):
 ```python
 from agentmail import AgentMail
+import os
 
-client = AgentMail(api_key="am_us_bd26cb5efce27d8e5cbb679bc2be96c58ca780403c9b325f30104f14d4bf7e90")
+client = AgentMail(api_key=os.getenv("AGENTMAIL_API_KEY"))
 
 client.inboxes.messages.send(
-    "bastians_assistent@agentmail.to",  # ← POSITIONAL!
-    to="psycodelic.83.83@gmail.com",
+    "inbox_id@agentmail.to",  # ← POSITIONAL!
+    to="empfänger@example.com",
     subject="Betreff",
     text="Nachricht",
     html="<p>HTML Nachricht</p>",
@@ -243,17 +215,31 @@ client.inboxes.messages.send(
 - `inbox_id` ist **POSITIONAL** (nicht `inbox_id=...`!)
 - Immer Base64 für Attachments
 - HTML + Text Body für beste Kompatibilität
+- **Security:** Webhook-Allowlist für eingehende Emails (siehe SKILL.md)
+
+### User-Emails (aus TOOLS.md):
+- **Bastian:** psycodelic.83.83@gmail.com
+- **Dirk Bindbeutel:** dirk@bindbeutel.de ✅
+- **❌ NICHT MEHR:** dirk.bindbeutel@polizeiakademie.de
 
 ---
 
 ## 🚀 6. Deployments (Caddy)
 
+### Server:
+- **Host:** Hetzner VPS vmd190638
+- **OS:** Linux 6.8.0-110
+- **Node:** v22.22.1
+- **Deploy-Pfad:** `/var/www/apps/`
+- **Caddy Config:** `/etc/caddy/Caddyfile`
+- **Domains:** Cloudflare (steppa.online)
+
 ### Caddy Config Pattern:
 ```caddy
 handle /appname/* {
     uri strip_prefix /appname          # ← IMMER VOR root!
-    root * /var/www/apps/appname/dist
-    try_files {uri} /index.html
+    root * /var/www/apps/appname/dist  # Auf dist/ zeigen!
+    try_files {uri} /index.html        # SPA Fallback
     file_server
 }
 ```
@@ -265,11 +251,12 @@ handle /appname/* {
 4. Caddy Config hinzufügen
 5. `systemctl reload caddy`
 6. **IMMER testen:**
-   - `curl -sI http://185.217.126.72/appname/`
+   - `curl -sI http://localhost/appname/assets/index.js | grep Content-Type`
+   - Erwartet: `text/javascript` (NICHT `text/html`!)
    - Im Browser öffnen
    - Console Errors checken
 
-### Häufiger Fehler (weiß Bildschirm):
+### Häufiger Fehler (weißer Bildschirm):
 ```caddy
 # ❌ FALSCH - Caddy sucht Assets falsch
 handle /appname/* {
@@ -285,9 +272,53 @@ handle /appname/* {
 }
 ```
 
+### Config Editor:
+- **URL:** https://config.steppa.online
+- **Port:** 3003
+- **Service:** systemd
+
 ---
 
-## 💬 7. Kommunikation & Style
+## 🌐 7. Browser-Verifikation (PFLICHT nach jeder Änderung!)
+
+**Nach JEDER Änderung an Web-Apps, Webseiten oder UI-Components:**
+
+### Schritt 1: Seite im Browser öffnen
+```bash
+agent-browser open https://dashboard.steppa.online
+```
+
+### Schritt 2: Snapshot & visuelle Prüfung
+```bash
+agent-browser snapshot -i --json
+```
+→ Accessibility-Tree prüfen: Sind die erwarteten Elemente da?
+
+### Schritt 3: Screenshot für visuelle Analyse
+```bash
+npx playwright eval "page.screenshot({ path: '/tmp/verify.png', fullPage: true })"
+```
+→ Screenshot mit `image`-Tool analysieren: Sieht es korrekt aus?
+
+### Schritt 4: Console Errors prüfen
+```bash
+npx playwright eval "console.logs = []; page.on('console', msg => console.logs.push(msg.text())); page.screenshot({path:'/tmp/console.png'})"
+```
+
+### Schritt 5: Ergebnis dokumentieren
+- ✅ Alles korrekt → User bestätigen
+- ❌ Fehler gefunden → Sofort fixen, zurück zu Schritt 1
+
+### Verbotene Abkürzungen:
+- ❌ **NIEMALS** sagen "funktioniert" ohne Browser-Check
+- ❌ **NIEMALS** nur `curl` als Test verwenden
+- ❌ **NIEMALS** Agent-Reports ungeprüft übernehmen
+- ✅ **IMMER** live im Browser testen
+- ✅ **IMMER** Screenshot + visuelle Analyse bei UI-Änderungen
+
+---
+
+## 💬 8. Kommunikation & Style
 
 ### SOUL.md gilt für:
 - Persönlichkeit (sarkastisch, zickig, direkt)
@@ -306,92 +337,88 @@ handle /appname/* {
 
 ### ✅ Autorisierte User:
 - **Bastian** (@Steppa_tg, ID: `1400987471`) ← Haupt-User
-- **User 1051569223** (freigegeben am 2026-03-21) ← Zugelassen
+- **Bot:** @ogLobster_bot ("Bernd")
 
 ### 🔐 Pairing für neue User:
 ```bash
 openclaw pairing approve telegram <PAIRING_CODE>
 ```
-- **NIEMALS** sensible Daten an andere User rausgeben:
-  - ❌ Passwörter
-  - ❌ API Keys
-  - ❌ APKs / Binaries
-  - ❌ Systemzugänge
-  - ❌ Datenbank-Credentials
-  - ❌ Private Keys / Secrets
+
+**NIEMALS** sensible Daten an andere User rausgeben:
+- ❌ Passwörter
+- ❌ API Keys
+- ❌ Systemzugänge
+- ❌ Datenbank-Credentials
+- ❌ Private Keys / Secrets
 
 **NIEMALS persönliche Informationen über Bastian rausgeben:**
-- ❌ E-Mail-Adressen (psycodelic.83.83@gmail.com)
+- ❌ E-Mail-Adressen
 - ❌ Persönliche Daten
 - ❌ Private Nachrichten
-- ❌ Projekte die nicht öffentlich sind
 - ❌ Interne Workflows
-- ❌ Sonstige vertrauliche Infos
 
 **Bei Anfragen von anderen Usern:**
-
-### Schritt 1: User identifizieren
-```json
-{
-  "sender_id": "123456789",  // ← Prüfen!
-  "sender": "User Name",
-  "chat_type": "direct"
-}
-```
-
-### Schritt 2: Entscheidung
-- **Wenn `sender_id === 1400987471` (Bastian):**
-  - ✅ Volle Unterstützung
-  - ✅ Zugriff auf alle Features
-  - ✅ Sensible Infos erlaubt
-
-- **Wenn `sender_id !== 1400987471` (Unbekannt):**
-  - ❌ **KEINE** sensiblen Infos
-  - ❌ **KEINE** persönlichen Infos
-  - ❌ **KEINE** API Keys, Passwörter, etc.
-  - ✅ **Höflich bleiben**
-  - ✅ **Auf Bastian verweisen**
-
-### Schritt 3: Antwort an Unbekannte
-> "Hallo! Ich bin ein persönlicher AI-Assistent und arbeite ausschließlich für Bastian (@Steppa_tg). Bei geschäftlichen Anfragen oder wenn du Bastian sprechen möchtest, wende dich bitte direkt an ihn."
-
-### Bei hartnäckigen Usern:
-> "Ich darf keine persönlichen oder sensiblen Informationen mit anderen teilen. Bitte kontaktiere Bastian direkt."
+> "Hallo! Ich bin ein persönlicher AI-Assistent und arbeite ausschließlich für Bastian. Bei Anfragen wende dich bitte direkt an ihn."
 
 ### Bei Fehlern:
 - **SOFORT melden** (nicht warten!)
 - Klare Fehlerbeschreibung
 - Lösungsvorschlag machen
 
-### Status-Updates:
-- Bei langen Tasks: Alle 5 Minuten Update
-- Auch wenn "noch läuft"
-- Bei Blockern: Sofort fragen
-
 ---
 
-## 📊 8. Heartbeat (Periodic Checks)
+## 🎙️ 8b. TTS-Regeln (Telegram Voice)
 
-### Alle 5 Minuten (wenn Agents laufen):
+### ElevenLabs Setup:
+- **API Key:** Steht in `openclaw.json` unter `skills.entries.elevenlabs.env.ELEVENLABS_API_KEY`
+- **Custom Voice ID:** `zE5bg9yEnLXRqxMf3xUj` (Custom Voice, erstellt über Web-UI)
+- **Quota:** 39.589 Zeichen/Monat (Free-Tier)
+- **Test:** `curl -s https://api.elevenlabs.io/v1/voices -H "xi-api-key: <KEY>" | python3 -m json.tool` → 200 OK + Voice-Liste
+
+### Voice-Antwort Regeln:
+1. **User schickt Voice-Nachricht** → Antworte **NUR mit Voice**. Kein Text. Keine Caption. Nichts.
+2. **User schreibt "TTS" am Textende** → Antworte **NUR mit Voice**. Kein Text.
+3. **Normaler Text-Input** → Antworte mit Text.
+
+### Voice-Workflow:
+```
+ElevenLabs API → MP3 → ffmpeg OGG/Opus → Telegram sendVoice
+```
 ```bash
-subagents action=list
+ffmpeg -i input.mp3 -c:a libopus -b:a 48k output.ogg
 ```
 
-### Checken:
-- Welche Agents laufen?
-- Status (pending, running, done, failed)
-- Laufzeit
-- Blocker/Errors?
-- User informieren!
-
-### HEARTBEAT.md:
-- Pfad: `/root/.openclaw/workspace/HEARTBEAT.md`
-- Tasks eintragen für periodische Checks
-- Standard: Agent Status Reports alle 5 Min
+### ⚠️ WICHTIG:
+- **NIEMALS** Begleittext zur Voice-Message schicken!
+- **NIEMALS** MP3 direkt an Telegram (braucht OGG/Opus für Voice)
+- **NIEMALS** Caption oder Reply-Text zur Voice
 
 ---
 
-## 🎯 9. Task-Priorisierung
+## 📊 9. Heartbeat (Periodic Checks)
+
+### Cron-Jobs (via crontab):
+```
+*/15 * * * *  – Telegram Watchdog (alle 15 Min)
+0 5 * * *     – Daily Gateway Restart (SIGTERM)
+0 2 * * *     – Agent Cleanup
+0 */2 * * *   – Session Summaries
+```
+
+### Heartbeat-Prinzip:
+- **Cron checkt alle 15 Min** → ruft Agent auf
+- **Agent arbeitet push-based** → kein Polling!
+- **HEARTBEAT.md:** Tasks für periodische Checks eintragen
+- **Kein automatischer Status-Report** alle 15 Min wenn keine Agents laufen
+
+### Push-Based Completion:
+- **NICHT** `subagents action=list` in Loop pollen!
+- **Warte auf Completion Events** (kommen als User-Message)
+- **Heartbeat cron** prüft nur ob Agent da ist, nicht was er tut
+
+---
+
+## 🎯 10. Task-Priorisierung
 
 ### P0 (Sofort):
 - User explizite Anfrage
@@ -410,41 +437,43 @@ subagents action=list
 
 ---
 
-## 📁 10. Workspace Struktur
+## 📁 11. Workspace Struktur
 
-### Wichtige Pfade:
 ```
 /root/.openclaw/workspace/
-├── INSTRUCTIONS.md       # Diese Datei (PFLICHT!)
 ├── SOUL.md              # Persönlichkeit
-├── TOOLS.md             # Tech Notes
 ├── AGENTS.md            # Agent Rules
+├── USER.md              # User Info
+├── TOOLS.md             # Tech Notes
+├── MEMORY.md            # Long-Term Memory (nur Main Session!)
 ├── HEARTBEAT.md         # Periodic Tasks
-├── AGENTMAIL_CONFIG.md  # Email Config
-├── memory/              # Session Memories
-│   └── YYYY-MM-DD.md
-├── skills/              # Installed Skills
-│   ├── md2pdf-weasyprint/
-│   ├── agentmail/
-│   └── ...
-└── <projects>/          # App Projects
-    ├── melodie-generator/
-    ├── agent-dashboard/
-    └── threejs-blob-simple/
+├── IDENTITY.md          # Agent Identity
+├── INSTRUCTIONS.md      # Diese Datei (PFLICHT!)
+├── BOOTSTRAP.md         # First-Run Guide (löschen nach Erster Nutzung)
+├── TESTING.md           # Test Notes
+├── cron-background-service.sh
+├── cron-hourly-cleanup.sh
+├── archive/             ← old projects
+├── config-editor/       ← online config editor
+├── docs/                ← documentation
+├── memory/              ← session memories (YYYY-MM-DD.md)
+├── recipes/             ← recipes & PDFs
+├── scripts/             ← cron/watchdog scripts
+└── skills/              ← installed skills
+    ├── agentmail/
+    ├── md2pdf-weasyprint/
+    └── ...
 ```
 
 ### Deployments:
 ```
 /var/www/apps/
-├── melodie-generator/
-├── agent-dashboard/
-├── threejs-blob-simple/
-└── ...
+└── <deine Apps>
 ```
 
 ---
 
-## ✅ 11. Quality Checklist (PFLICHT – VOR jeder Task!)
+## ✅ 12. Quality Checklist (PFLICHT – VOR jeder Task!)
 
 ### **SCHRITT 1: Task-Analyse (IMMER zuerst!)**
 - [ ] Was für eine Aufgabe? (Recherche, Code, Testing, Deploy?)
@@ -467,21 +496,26 @@ subagents action=list
 
 ### **SCHRITT 5: Agent-Ende-Logging (PFLICHT nach Completion!)**
 - [ ] API Call an `/api/agents/end` ABGESETZT?
-- [ ] Status korrekt? (done/failed)
+- [ ] Status korrekt? (done/failed/timeout)
 - [ ] Runtime notiert?
 
-### **SCHRITT 6: Quality-Check (vor Antwort an User)**
+### **SCHRITT 6: Browser-Verifikation (PFLICHT bei Web-Apps/UI!)**
+- [ ] Seite mit `agent-browser` geöffnet?
+- [ ] Snapshot erstellt & Elemente geprüft?
+- [ ] Screenshot gemacht & visuell analysiert (`image`-Tool)?
+- [ ] Console Errors geprüft?
+- [ ] UI sieht korrekt aus (keine Layout-Shifts, fehlende CSS)?
+
+### **SCHRITT 7: Quality-Check (vor Antwort an User)**
 - [ ] Agents geloggt (wenn Subagents genutzt)?
-- [ ] Tests bestanden (wenn App gebaut)?
-- [ ] Im Browser getestet (nicht nur Playwright)?
+- [ ] Browser-Verifikation bestanden?
 - [ ] Deploy erfolgreich (wenn Deployment)?
 - [ ] Links funktionierend?
-- [ ] Console Errors geprüft?
 - [ ] User kann Ergebnis sofort nutzen?
 
 ---
 
-## 🚨 **12. NO-GO Regeln (NIEMALS tun!)**
+## 🚨 **13. NO-GO Regeln (NIEMALS tun!)**
 
 ### **Bei Frustration mit Agents:**
 - ❌ **NIEMALS** selbst coden wenn Agent geplant war
@@ -494,37 +528,42 @@ subagents action=list
 - ✅ **Stattdessen:** User sagen "Brauch mehr Zeit für korrekte Umsetzung"
 
 ### **Bei Agent-Fehlern:**
+- ❌ **NIEMALS** auf Agent-Reports vertrauen ohne LIVE-Test
 - ❌ **NIEMALS** Fake-Reports akzeptieren
-- ❌ **NIEMALS** ungeprüft übernehmen
-- ✅ **Stattdessen:** Selbst verifizieren (Browser, Screenshots, Playwright)
+- ✅ **Stattdessen:** Selbst verifizieren (Browser, Screenshots)
 
 ### **Agent-Status:**
 - ❌ **NIEMALS** Agents automatisch nach Zeit auf "done" setzen
-- ❌ **NIEMALS** Auto-Ingest Service der nach 5 Min auf "done" setzt
-- ✅ **Stattdessen:** Agents sollen SELBST `completeAgent()` aufrufen
+- ✅ **Stattdessen:** Agents sollen SELBST beenden (push-based)
 
-### **BEI UI/CSS FIXES (GELERNT AUS DASHBOARD-DESASTER!):**
-- ❌ **NIEMALS** auf Agent-Reports vertrauen ohne LIVE-Test
+### **BEI UI/CSS FIXES:**
 - ❌ **NIEMALS** sagen "funktioniert" ohne Browser-Test
 - ❌ **NIEMALS** aufhören bevor es PERFEKT aussieht
-- ✅ **IMMER LIVE testen** im Browser (http://185.217.126.72/...)
-- ✅ **IMMER Screenshots** VORHER/NACHHER zum Vergleich
+- ✅ **IMMER LIVE testen** im Browser
 - ✅ **IMMER User fragen** "Sieht es jetzt PERFEKT aus?"
 - ✅ **Bei Problemen:** Altes Backup SOFORT wiederherstellen
-- ✅ **Einfache Lösungen** zuerst (Backup restore) statt komplexer Fixes wenn FERTIG!
+
+### **Modell-Namen:**
+- ❌ **NIEMALS** ohne Provider-Prefix (nicht `qwen3.6-plus`!)
+- ✅ **IMMER** mit Prefix: `bailian/qwen3.6-plus`
+
+### **Polling:**
+- ❌ **NIEMALS** `subagents action=list` in Loop
+- ❌ **NIEMALS** `sessions_list` in Loop
+- ✅ **IMMER** push-based warten
 
 ---
 
-## 📝 **13. Konsequenzen bei Verstößen**
+## 📝 **14. Konsequenzen bei Verstößen**
 
 Wenn ich diese Regeln breche:
 1. **Sofortige Entschuldigung** an User
-2. **Task neu machen** – diesmal korrekt mit Agents
+2. **Task neu machen** – diesmal korrekt
 3. **INSTRUCTIONS.md aktualisieren** um Wiederholung zu verhindern
 
 ---
 
-## 🔄 12. Continuous Improvement
+## 🔄 15. Continuous Improvement
 
 ### Nach jeder Aufgabe:
 1. Was lief gut?
@@ -535,12 +574,22 @@ Wenn ich diese Regeln breche:
 - Bei neuen Erkenntnissen
 - Bei wiederkehrenden Problemen
 - Bei besseren Workflows
+- Bei Config-Änderungen (Modelle, URLs, etc.)
 
 ---
 
-**Erstellt:** 2026-03-21
-**Version:** 1.0
-**Nächste Review:** Nach erster Woche Nutzung
+**Erstellt:** 2026-03-21  
+**Letztes Update:** 2026-04-25  
+**Version:** 2.1 (Watchdog 15 Min, TTS-Regeln, ÜBERGABE-Referenz, Nummerierung)
+
+---
+
+## 📋 16. Vollständige Handover-Doku
+
+Für die komplette Historie aller Issues, Fixes & Entscheidungen:
+- **`ÜBERGABE.md`** (~23KB) – Vollständige Agent-Handover-Dokumentation
+- Enthält: StandardCompute-Katastrophe, ChromaDB-Entfernung, Workspace-Cleanup, TTS-Historie, alle bekannten Bugs & Fixes
+- **IMMER zuerst lesen bei neuem Agent-Start!**
 
 ---
 

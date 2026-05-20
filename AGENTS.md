@@ -117,6 +117,18 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
 
+### ⚠️ SUBAGENT DASHBOARD TRACKING — NON-NEGOTIABLE
+
+**After EVERY `sessions_spawn()`: IMMEDIATELY call the Dashboard API. No exceptions.**
+
+```bash
+curl -s -X POST http://localhost:3002/api/agents/start \
+  -H "Content-Type: application/json" \
+  -d '{"sessionKey":"<childSessionKey>","label":"<label>","task":"<task>","model":"<model>"}'
+```
+
+**If you spawn without tracking → you fucked up.** No excuses. Do it in the SAME turn as the spawn.
+
 **🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
 
 **📝 Platform Formatting:**
@@ -124,6 +136,27 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
+
+## ⛓️ Chain of Command (Proxy → Orchestrator → Subagents)
+
+**Prinzip:** Der Main Agent (Proxy) delegiert komplexe Tasks an einen Orchestrator-Subagent.
+
+### Workflow:
+1. **Receive:** User schickt Nachricht auf Telegram.
+2. **Acknowledge:** Kurze Bestätigung an User (im SOUL.md-Vibe).
+3. **Delegate:** Bei komplexen Tasks → Orchestrator spawnen mit `sessions_spawn()`.
+4. **Wait:** Proxy wartet (`sessions_yield()`).
+5. **Deliver:** Fertiges Ergebnis an User ausliefern.
+
+### Red Lines:
+- Bei **komplexen Multi-File Tasks** → Orchestrator spawnen, nicht selbst coden
+- Bei **einfachen Tasks** (einzeilige Edits, Config-Checks, Status-Abfragen) → selbst machen
+- **JEDER Subagent wird im Dashboard getrackt** → nach spawn SOFORT `POST /api/agents/start`
+- Bei Completion → `POST /api/agents/end`
+
+### Timeout-Regel:
+- Orchestrator Timeout: **60 Minuten** (`runTimeoutSeconds: 3600`) – muss mehrere Subagents koordinieren
+- Worker-Subagent Timeout: **15 Minuten** – bei Timeout → Task sauber neustarten
 
 ## 💓 Heartbeats - Be Proactive!
 

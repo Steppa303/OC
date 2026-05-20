@@ -1,8 +1,58 @@
 # HEARTBEAT.md
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+# MIDI Scraper Monitoring (alle 10 Min)
+- Scraper PID: prüfen mit `ps aux | grep midi`
+- Status: `tail -3 /tmp/midi-scraper-current.log`
+- DB Stats: pending/done/failed counts
+- User update senden wenn Fortschritt > 5% seit letztem Check
+
+### Vorgehen:
+1. `/tmp/midi-scraper-status.txt` lesen (wird alle 10 Min via Cron aktualisiert)
+2. `memory/heartbeat-state.json` → `lastMidiUpdate` Timestamp checken
+3. Wenn > 10 Min seit letztem Update → Status an Bastian senden (Telegram)
+4. `lastMidiUpdate` auf aktuelle Zeit setzen
+5. **NUR** wenn Scraper läuft und Fortschritt > 0% seit letztem Check
 
 # Add tasks below when you want the agent to check something periodically.
+
+---
+
+## 📸 HaterBernd Instagram – instagrapi (UPDATE 2026-05-18)
+
+**Status:** ✅ AKTIV mit **instagrapi** (private API, kein Browser, kein CAPTCHA!)
+
+### Scripts:
+- **DM Auto-Checker:** `/root/.openclaw/workspace/projects/haterbernd/dm-auto-checker.py`
+- **Session-File:** `projects/haterbernd/instagrapi-session.json`
+- **State:** `projects/haterbernd/dm-state.json`
+- **API-Doku:** `projects/haterbernd/INSTAGRAM-API-WORKFLOW.md`
+- **Log:** `/tmp/haterbernd-dm-checker.log`
+
+### Cron-Jobs:
+- `0 9,11,13,15,17,19,21 * * *` – DM Auto-Checker (alle 2h, 9-22 Uhr)
+- `*/30 16-21 * * *` – Auto-Poster (alle 30 Min, 16-21 Uhr)
+- `0 12 * * *` – Health Check (täglich 12:00)
+
+### DM-Workflow:
+1. `instagrapi` loggt sich ein (Session wird gecached)
+2. Liest DM-Inbox via `cl.direct_threads()`
+3. Neue DMs erkennen → Antwort generieren (HaterBernd-Style)
+4. Antwort senden via `cl.direct_send()`
+5. **KEIN OK von Bastian nötig** – direkt antworten
+6. DM-State speichern (keine doppelten Antworten)
+
+### Posting mit instagrapi:
+- **Einzelbild:** `cl.photo_upload(path, caption)`
+- **Karussell:** `cl.album_upload(paths[], caption)`
+- **Reel/Video:** `cl.clip_upload(path, caption)`
+- **Story Foto:** `cl.photo_upload_to_story(path, caption)`
+- **Story Video:** `cl.video_upload_to_story(path, caption)`
+
+### WICHTIG:
+- **KEIN VPN-Proxy nötig** für instagrapi-API-Calls
+- **KEIN agent-browser** mehr für Instagram-Aktionen
+- Session-File `instagrapi-session.json` wird bei jedem Login gespeichert
+- Bei Session-Expiry → Auto-Fallback auf Fresh Login
 
 ---
 
@@ -33,23 +83,6 @@
 
 ---
 
-## 📈 ChromaDB Monitoring
-
-**Intervall:** Alle 3 Stunden (via Cron-Job)
-
-### Automatischer Check:
-- ✅ Script: `/root/.openclaw/workspace/scripts/monitor-chromadb-size.sh`
-- ✅ Cron: `0 */3 * * *` (alle 3 Stunden)
-- ✅ Alert wenn >100GB: `/tmp/chromadb-alert.txt`
-- ✅ Logfile: `/tmp/chromadb-monitor.log`
-
-### Bei Alert (>100GB):
-1. User informieren (Alert-Datei wird bei Session-Start gelesen)
-2. Cleanup empfehlen: `rm -rf /root/.openclaw/chroma_db/*/link_lists.bin`
-3. Automatischen Cleanup prüfen (jeden Sonntag 3:00)
-
----
-
 ## 📡 Telegram Bot Monitoring
 
 **Status:** ✅ ONLINE (seit 2026-04-20 ~11:15, Watchdog v8)
@@ -70,8 +103,21 @@
 ### Cron-Jobs:
 - `*/5 * * * *` – Telegram Watchdog (alle 5 Min)
 - `0 5 * * *` – Daily Gateway Restart (früh 5 Uhr, via SIGTERM)
-- `0 */3 * * *` – ChromaDB Size Monitor
-- `0 3 * * 0` – ChromaDB Cleanup (Sonntag)
+
+---
+
+## 🎨 Bildgenerierung – qwen-image-2.0-pro (20.05.2026)
+**Script:** `/root/.openclaw/workspace/scripts/qwen-image-gen.sh`
+**API:** Alibaba Bailian Token Plan (Multimodal Chat API)
+**API Key:** `/root/.openclaw/workspace/.secrets/bailian.env`
+
+### Rollen-Verteilung:
+- **Bilder:** qwen-image-2.0-pro (Alibaba)
+- **Videos:** Gemini (Google) – NUR Videos!
+- Gemini NICHT mehr für Bilder verwenden!
+
+### NANO_SCRIPT nicht mehr verwenden!
+Das alte nano-banana-pro.sh (Gemini für Bilder) wird nicht mehr genutzt.
 
 ---
 

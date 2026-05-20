@@ -1,2 +1,0 @@
-Wir müssen auf jeden Fall sicherstellen, dass Agents die ausversehen irgendwie im Loop laufen
-oder so auch ein Timeout bekommen, damit die ihnen nicht unsere ganzen Tokens auffressen.
