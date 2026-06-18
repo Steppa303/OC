@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reader - steppa.online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="lucide.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1 class="logo">📖 reader</h1>
+            <button id="theme-btn" class="btn-icon" aria-label="Theme umschalten">
+                <i class="icon icon-moon" id="theme-icon"></i>
+            </button>
+        </header>
+
+        <main>
+            <!-- Shelf View -->
+            <div id="shelf-view" class="view active">
+                <section class="upload-section">
+                    <div id="dropzone" class="dropzone">
+                        <i class="icon icon-upload" style="font-size: 32px; display: block; margin-bottom: 8px;"></i>
+                        <p>EPUB hier fallen lassen oder klicken</p>
+                        <input type="file" id="file-input" accept=".epub" hidden>
+                    </div>
+                    <div id="upload-progress" class="upload-progress hidden">
+                        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <p id="upload-error" class="error hidden"></p>
+                </section>
+
+                <section id="bookshelf" class="bookshelf">
+                    <div id="book-grid" class="book-grid"></div>
+                </section>
+            </div>
+
+            <!-- Reader View -->
+            <div id="reader-view" class="view">
+                <div class="reader-topbar">
+                    <button id="back-btn" class="btn-icon" aria-label="Zurück">
+                        <i class="icon icon-arrow-left"></i>
+                    </button>
+                    <span id="reader-title" class="reader-title"></span>
+                    <div class="reader-actions">
+                        <button id="toc-btn" class="btn-icon" aria-label="Inhaltsverzeichnis">
+                            <i class="icon icon-list"></i>
+                        </button>
+                        <button id="bookmark-btn" class="btn-icon" aria-label="Lesezeichen">
+                            <i class="icon icon-bookmark" id="bookmark-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="reader-body">
+                    <aside id="toc-panel" class="toc-panel hidden">
+                        <h3 class="toc-title">Kapitel</h3>
+                        <ul id="toc-list" class="toc-list"></ul>
+                    </aside>
+
+                    <div class="reader-main">
+                        <div id="content-area" class="content-area">
+                            <div class="loading">Lade Buchinhalt…</div>
+                        </div>
+
+                        <div id="player" class="player">
+                            <div class="player-controls">
+                                <button id="play-btn" class="btn-icon btn-play" aria-label="Vorlesen starten" title="Vorlesen starten/pausieren">
+                                    <i class="icon icon-play" id="play-icon"></i>
+                                </button>
+                                <span class="play-label">Vorlesen</span>
+                                <button id="prev-btn" class="btn-icon" aria-label="Vorheriges Kapitel" title="Vorheriges Kapitel">
+                                    <i class="icon icon-skip-back"></i>
+                                </button>
+                                <button id="next-btn" class="btn-icon" aria-label="Nächstes Kapitel" title="Nächstes Kapitel">
+                                    <i class="icon icon-skip-forward"></i>
+                                </button>
+                                <button id="stop-btn" class="btn-icon" disabled aria-label="Stopp" title="Vorlesen stoppen">
+                                    <i class="icon icon-square"></i>
+                                </button>
+                            </div>
+                            <div class="player-extras">
+                                <div class="speed-group">
+                                    <label for="speed-range">Speed</label>
+                                    <input type="range" id="speed-range" min="0.5" max="2" step="0.1" value="1">
+                                    <span id="speed-label">1.0×</span>
+                                </div>
+                                <div class="voice-group">
+                                    <label for="voice-select">Stimme</label>
+                                    <select id="voice-select">
+                                        <option value="EXAVITQu4vr4xnSDxMaL" selected>Sarah</option>
+                                        <option value="VHYWoxffK1pFlM1dtRb0">Thomas (German)</option>
+                                        <option value="CoFoB7a7PXA8RBsMHbua">Berta Berlin (German)</option>
+                                        <option value="zE5bg9yEnLXRqxMf3xUj">Nervbold</option>
+                                        <option value="CwhRBWXzGAHq8TQ4Fs17">Roger</option>
+                                        <option value="IKne3meq5aSn9XLyUdCD">Charlie</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="player-time">
+                                <span id="time-current">0:00</span>
+                                <span id="time-sep">/</span>
+                                <span id="time-total">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
