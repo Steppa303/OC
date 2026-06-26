@@ -1,0 +1,14 @@
+{
+  "apps": [{
+    "name": "clipsaver",
+    "script": "server.js",
+    "cwd": "/root/.openclaw/workspace/projects/video-downloader",
+    "env": {
+      "PORT": 3100,
+      "NODE_ENV": "production"
+    },
+    "max_memory_restart": "500M",
+    "error_file": "/root/.pm2/logs/clipsaver-error.log",
+    "out_file": "/root/.pm2/logs/clipsaver-out.log"
+  }]
+}

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClipSaver - Video Downloader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81', 950: '#1e1b4b' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    body { transition: background-color 0.3s, color 0.3s; }
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    .glass-light {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    @keyframes spin-slow { to { transform: rotate(360deg); } }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6); }
+    }
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scale-in {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+      20%, 40%, 60%, 80% { transform: translateX(4px); }
+    }
+    @keyframes progress-bar {
+      0% { width: 0%; }
+      30% { width: 30%; }
+      60% { width: 60%; }
+      85% { width: 85%; }
+      100% { width: 95%; }
+    }
+    .animate-fade-in-up { animation: fade-in-up 0.4s ease-out; }
+    .animate-fade-in { animation: fade-in 0.3s ease-out; }
+    .animate-scale-in { animation: scale-in 0.3s ease-out; }
+    .animate-shake { animation: shake 0.4s ease-in-out; }
+    .animate-progress { animation: progress-bar 3s ease-in-out forwards; }
+    .loading-spinner {
+      width: 24px; height: 24px;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin-slow 0.8s linear infinite;
+    }
+    .file-size-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    .format-btn {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .format-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .format-btn:hover::after { opacity: 1; }
+    .format-btn.selected { border-color: #6366f1; background: rgba(99, 102, 241, 0.15); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+    @media (prefers-color-scheme: light) {
+      html:not(.dark) .glass { background: rgba(255, 255, 255, 0.8); border-color: rgba(0,0,0,0.05); }
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen dark transition-colors duration-300">
+
+  <!-- Background Decoration -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-600/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <header class="text-center mb-10 animate-fade-in">
+      <div class="flex items-center justify-center gap-3 mb-2">
+        <svg class="w-10 h-10 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h1 class="text-4xl font-extrabold tracking-tight">
+          <span class="bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">ClipSaver</span>
+        </h1>
+      </div>
+      <p class="text-gray-400 text-lg mt-1">Videos von überall herunterladen – schnell, einfach, kostenlos</p>
+    </header>
+
+    <!-- URL Input Card -->
+    <div class="glass rounded-2xl p-6 md:p-8 mb-6 animate-fade-in-up shadow-xl">
+      <label for="url-input" class="block text-sm font-medium text-gray-300 mb-2">Video-URL</label>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-1">
+          <input
+            id="url-input"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            class="w-full px-4 py-3.5 bg-gray-800/70 border border-gray-700/50 rounded-xl text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-200 text-base"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+        <button
+          id="fetch-btn"
+          class="px-8 py-3.5 bg-primary-600 hover:bg-primary-500 active:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+        >
+          <svg id="fetch-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span id="fetch-text">Video erkennen</span>
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">Unterstützt YouTube, Vimeo, Dailymotion, Twitch, TikTok und tausende weitere Seiten</p>
+    </div>
+
+    <!-- Error Display -->
+    <div id="error-box" class="glass rounded-xl p-4 mb-6 border border-red-500/20 hidden animate-shake" style="animation-duration: 0.4s;">
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+          <h4 class="font-semibold text-red-300 text-sm">Fehler</h4>
+          <p id="error-text" class="text-red-200/80 text-sm mt-0.5"></p>
+        </div>
+        <button id="error-close" class="ml-auto text-red-400/60 hover:text-red-300 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-box" class="hidden glass rounded-2xl p-8 mb-6 text-center animate-fade-in">
+      <div class="loading-spinner mx-auto mb-4"></div>
+      <p class="text-gray-300 font-medium">Analysiere Video...</p>
+      <p class="text-gray-500 text-sm mt-1">yt-dlp extrahiert die verfügbaren Informationen</p>
+    </div>
+
+    <!-- Video Info Card -->
+    <div id="video-info" class="hidden glass rounded-2xl overflow-hidden mb-6 animate-scale-in shadow-xl">
+      <!-- Thumbnail -->
+      <div id="thumbnail-container" class="relative aspect-video bg-gray-800 overflow-hidden hidden">
+        <img id="thumbnail-img" class="w-full h-full object-cover" alt="Video Thumbnail" />
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
+        <!-- Duration Badge -->
+        <div id="duration-badge" class="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-sm font-medium px-3 py-1 rounded-lg hidden"></div>
+      </div>
+
+      <div class="p-6">
+        <!-- Title -->
+        <h2 id="video-title" class="text-xl font-bold text-gray-100 mb-1 leading-tight"></h2>
+        <!-- Uploader -->
+        <p id="video-uploader" class="text-sm text-gray-400 mb-5 hidden">
+          <svg class="w-4 h-4 inline mr-1 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <span id="uploader-text"></span>
+        </p>
+
+        <!-- Format Selection -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Verfügbare Qualitäten</h3>
+            <span id="format-count" class="text-xs text-gray-500"></span>
+          </div>
+
+          <div id="formats-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-5">
+            <!-- Formats will be populated by JS -->
+          </div>
+
+          <!-- Download Button -->
+          <button
+            id="download-btn"
+            class="w-full py-3.5 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span id="download-text">Download starten</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download Progress -->
+    <div id="progress-box" class="hidden glass rounded-2xl p-6 mb-6 animate-fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="loading-spinner !w-5 !h-5 !border-2"></div>
+          <span class="font-medium text-gray-200">Download läuft...</span>
+        </div>
+        <span id="progress-percent" class="text-sm text-gray-400 font-mono">0%</span>
+      </div>
+      <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+        <div id="progress-bar" class="file-size-bar h-full rounded-full" style="width: 0%;"></div>
+      </div>
+      <div class="flex justify-between mt-2 text-xs text-gray-500">
+        <span id="progress-speed">-</span>
+        <span id="progress-size">-</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 text-center animate-fade-in">
+      <div class="glass rounded-xl p-5">
+        <svg class="w-8 h-8 text-primary-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        <h3 class="font-semibold text-gray-200 text-sm">Blitzschnell</h3>
+        <p class="text-gray-500 text-xs mt-1">yt-dlp Engine für maximale Geschwindigkeit</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <svg class="w-8 h-8 text-primary-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3 class="font-semibold text-gray-200 text-sm">1000+ Seiten</h3>
+        <p class="text-gray-500 text-xs mt-1">YouTube, Twitch, TikTok & viele mehr</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <svg class="w-8 h-8 text-primary-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+        <h3 class="font-semibold text-gray-200 text-sm">Privat & Sicher</h3>
+        <p class="text-gray-500 text-xs mt-1">Keine Speicherung, keine Logs, kein Tracking</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center mt-10 pb-4 text-gray-600 text-xs">
+      Powered by yt-dlp &bull; ClipSaver v1.0
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const DOM = {
+        urlInput: document.getElementById('url-input'),
+        fetchBtn: document.getElementById('fetch-btn'),
+        fetchIcon: document.getElementById('fetch-icon'),
+        fetchText: document.getElementById('fetch-text'),
+        errorBox: document.getElementById('error-box'),
+        errorText: document.getElementById('error-text'),
+        errorClose: document.getElementById('error-close'),
+        loadingBox: document.getElementById('loading-box'),
+        videoInfo: document.getElementById('video-info'),
+        thumbnailContainer: document.getElementById('thumbnail-container'),
+        thumbnailImg: document.getElementById('thumbnail-img'),
+        durationBadge: document.getElementById('duration-badge'),
+        videoTitle: document.getElementById('video-title'),
+        videoUploader: document.getElementById('video-uploader'),
+        uploaderText: document.getElementById('uploader-text'),
+        formatsGrid: document.getElementById('formats-grid'),
+        formatCount: document.getElementById('format-count'),
+        downloadBtn: document.getElementById('download-btn'),
+        downloadText: document.getElementById('download-text'),
+        progressBox: document.getElementById('progress-box'),
+        progressPercent: document.getElementById('progress-percent'),
+        progressBar: document.getElementById('progress-bar'),
+        progressSpeed: document.getElementById('progress-speed'),
+        progressSize: document.getElementById('progress-size')
+      };
+
+      let selectedFormatId = null;
+      let currentVideoData = null;
+      let isDownloading = false;
+
+      // ── Utility Functions ──
+      function formatFileSize(bytes) {
+        if (!bytes || bytes === 0) return 'Unbekannt';
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let i = 0;
+        let size = bytes;
+        while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
+        return size.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
+      }
+
+      function formatBitrate(bitrate) {
+        if (!bitrate || bitrate === 0) return '';
+        const units = ['bps', 'Kbps', 'Mbps'];
+        let i = 0;
+        let rate = bitrate;
+        while (rate >= 1000 && i < units.length - 1) { rate /= 1000; i++; }
+        return rate.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
+      }
+
+      function getResolutionLabel(format) {
+        if (format._isBest) return '🏆 Best (Auto)';
+        const isAudio = !format.vcodec || format.vcodec === 'none';
+        if (isAudio) {
+          const br = format.abr || 0;
+          return 'Audio' + (br > 0 ? ' ' + br.toFixed(0) + 'k' : '');
+        }
+        const height = format.height || 0;
+        if (height >= 2160) return '4K';
+        if (height >= 1440) return '1440p';
+        if (height >= 1080) return '1080p';
+        if (height >= 720) return '720p';
+        if (height >= 480) return '480p';
+        if (height >= 360) return '360p';
+        if (height >= 240) return '240p';
+        if (height >= 144) return '144p';
+        return 'Video';
+      }
+
+      function getFormatIcon(format) {
+        if (format._isBest) return `<svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+        const isAudio = !format.vcodec || format.vcodec === 'none';
+        if (isAudio) return `<svg class="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>`;
+        const h = format.height || 0;
+        if (h >= 2160) return `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>`;
+        if (h >= 1080) return `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>`;
+        return `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+      }
+
+      // ── Error Display ──
+      function showError(message) {
+        DOM.errorText.textContent = message.replace(/^error:/i, '').trim();
+        DOM.errorBox.classList.remove('hidden');
+        DOM.errorBox.classList.add('animate-shake');
+        setTimeout(() => DOM.errorBox.classList.remove('animate-shake'), 500);
+      }
+
+      function hideError() {
+        DOM.errorBox.classList.add('hidden');
+      }
+
+      DOM.errorClose.addEventListener('click', hideError);
+
+      // ── UI State Management ──
+      function setFetching(state) {
+        if (state) {
+          DOM.fetchBtn.disabled = true;
+          DOM.fetchIcon.innerHTML = `<div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>`;
+          DOM.fetchText.textContent = 'Analysiere...';
+          DOM.loadingBox.classList.remove('hidden');
+          hideError();
+        } else {
+          DOM.fetchBtn.disabled = false;
+          DOM.fetchIcon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>`;
+          DOM.fetchText.textContent = 'Video erkennen';
+          DOM.loadingBox.classList.add('hidden');
+        }
+      }
+
+      function setDownloading(state) {
+        isDownloading = state;
+        DOM.downloadBtn.disabled = state;
+        if (state) {
+          DOM.downloadText.textContent = 'Lädt herunter...';
+          DOM.progressBox.classList.remove('hidden');
+          DOM.progressBar.style.width = '0%';
+          DOM.progressPercent.textContent = '0%';
+          DOM.progressSpeed.textContent = 'Starte...';
+          DOM.progressSize.textContent = '-';
+          DOM.downloadBtn.classList.add('opacity-60');
+        } else {
+          DOM.downloadText.textContent = 'Download starten';
+          DOM.progressBox.classList.add('hidden');
+          DOM.downloadBtn.classList.remove('opacity-60');
+        }
+      }
+
+      function updateProgress(percent, speed, size) {
+        const p = Math.min(parseFloat(percent) || 0, 99);
+        DOM.progressBar.style.width = p + '%';
+        DOM.progressPercent.textContent = p.toFixed(1) + '%';
+        DOM.progressSpeed.textContent = speed || '-';
+        DOM.progressSize.textContent = size || '-';
+      }
+
+      // ── Format Button Generation ──
+      function renderFormats(formats) {
+        DOM.formatsGrid.innerHTML = '';
+        if (!formats || formats.length === 0) {
+          DOM.formatsGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 text-sm py-4">Keine Formate verfügbar</div>';
+          DOM.formatCount.textContent = '0';
+          return;
+        }
+
+        DOM.formatCount.textContent = formats.length + ' verfügbar';
+
+        formats.forEach((fmt, index) => {
+          const label = getResolutionLabel(fmt);
+          const size = fmt.filesize || fmt.filesize_approx || 0;
+          const sizeStr = formatFileSize(size);
+          const isAudioOnly = !fmt.vcodec || fmt.vcodec === 'none';
+
+          const btn = document.createElement('button');
+          let btnClass = 'format-btn flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 text-center ';
+          if (fmt._isBest) {
+            btnClass += 'border-yellow-500/40 bg-yellow-500/10 hover:bg-yellow-500/20 hover:border-yellow-400/60 selected';
+          } else if (isAudioOnly) {
+            btnClass += 'border-green-700/30 bg-green-900/20 hover:bg-green-800/40 hover:border-green-600/50 ' + (index === 0 ? 'selected' : '');
+          } else {
+            btnClass += 'border-gray-700/50 bg-gray-800/40 hover:bg-gray-800/80 hover:border-gray-600 ' + (index === 0 ? 'selected' : '');
+          }
+          btn.className = btnClass;
+          btn.dataset.formatId = fmt.format_id;
+
+          let extraInfo = '';
+          if (fmt._isBest) {
+            extraInfo = '<span class="text-[9px] text-yellow-500/70 mt-0.5">' +
+              (fmt._directUrl ? 'Automatisch erkennen' : 'Optimales Format') +
+              '</span>';
+          } else if (isAudioOnly) {
+            extraInfo = '<span class="text-[10px] text-gray-500 mt-0.5">Audio pur</span>';
+          } else {
+            extraInfo = fmt.ext ? `<span class="text-[10px] text-gray-600 mt-0.5 uppercase">${fmt.ext}</span>` : '';
+          }
+
+          btn.innerHTML = `
+            <span class="${fmt._isBest ? 'text-yellow-400' : isAudioOnly ? 'text-green-400' : 'text-primary-400'} mb-1">${getFormatIcon(fmt)}</span>
+            <span class="font-semibold text-sm ${fmt._isBest ? 'text-yellow-200' : isAudioOnly ? 'text-green-300' : 'text-gray-200'}">${label}</span>
+            <div class="flex items-center gap-1 mt-0.5">
+              <span class="text-[10px] text-gray-500">${size > 0 ? sizeStr : fmt._isBest ? 'Auto' : '-'}</span>
+            </div>
+            ${extraInfo}
+          `;
+
+          btn.addEventListener('click', () => {
+            DOM.formatsGrid.querySelectorAll('.format-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedFormatId = fmt.format_id;
+          });
+
+          if (index === 0) {
+            selectedFormatId = fmt.format_id;
+          }
+
+          DOM.formatsGrid.appendChild(btn);
+        });
+      }
+
+      // ── Fetch Video Info ──
+      async function fetchVideoInfo(url) {
+        try {
+          const response = await fetch('/api/info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || data.error) {
+            throw new Error(data.error || 'Fehler beim Abrufen der Video-Informationen');
+          }
+
+          return data;
+        } catch (err) {
+          throw err;
+        }
+      }
+
+      // ── Handle Fetch ──
+      async function handleFetch() {
+        const url = DOM.urlInput.value.trim();
+
+        if (!url) {
+          DOM.urlInput.classList.add('animate-shake');
+          setTimeout(() => DOM.urlInput.classList.remove('animate-shake'), 500);
+          showError('Bitte gib eine gültige Video-URL ein.');
+          return;
+        }
+
+        // Validate URL
+        try {
+          new URL(url);
+        } catch {
+          DOM.urlInput.classList.add('animate-shake');
+          setTimeout(() => DOM.urlInput.classList.remove('animate-shake'), 500);
+          showError('Das sieht nicht nach einer gültigen URL aus. Bitte überprüfe die Eingabe.');
+          return;
+        }
+
+        setFetching(true);
+
+        try {
+          const data = await fetchVideoInfo(url);
+          currentVideoData = data;
+
+          // Show video info
+          DOM.videoInfo.classList.remove('hidden');
+
+          // Thumbnail
+          if (data.thumbnail) {
+            DOM.thumbnailContainer.classList.remove('hidden');
+            DOM.thumbnailImg.src = data.thumbnail;
+            DOM.thumbnailImg.onerror = () => { DOM.thumbnailContainer.classList.add('hidden'); };
+          } else {
+            DOM.thumbnailContainer.classList.add('hidden');
+          }
+
+          // Duration badge
+          if (data.duration) {
+            DOM.durationBadge.textContent = data.duration;
+            DOM.durationBadge.classList.remove('hidden');
+          } else {
+            DOM.durationBadge.classList.add('hidden');
+          }
+
+          // Title
+          DOM.videoTitle.textContent = data.title;
+
+          // Uploader
+          if (data.uploader) {
+            DOM.videoUploader.classList.remove('hidden');
+            DOM.uploaderText.textContent = data.uploader;
+          } else {
+            DOM.videoUploader.classList.add('hidden');
+          }
+
+          // Formats rendern
+          const formats = data.formats || [];
+          renderFormats(formats);
+
+          // Bei nur 1 Format (Direkt-URL) direkt den Download-Knopf hervorheben
+          if (formats.length === 1 && formats[0]._directUrl) {
+            DOM.downloadText.textContent = '⬇ Jetzt herunterladen';
+            DOM.downloadBtn.classList.add('animate-pulse', 'shadow-lg', 'shadow-primary-500/30');
+          } else {
+            DOM.downloadText.textContent = 'Download starten';
+            DOM.downloadBtn.classList.remove('animate-pulse', 'shadow-lg', 'shadow-primary-500/30');
+          }
+
+          // Scroll to video info on mobile
+          DOM.videoInfo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        } catch (err) {
+          showError(err.message || 'Unbekannter Fehler beim Abrufen der Video-Informationen.');
+        } finally {
+          setFetching(false);
+        }
+      }
+
+      // ── Handle Download ──
+      async function handleDownload() {
+        if (isDownloading) return;
+        if (!currentVideoData) {
+          showError('Keine Video-Informationen vorhanden. Bitte zuerst ein Video analysieren.');
+          return;
+        }
+
+        if (!selectedFormatId) {
+          showError('Bitte wähle ein Format aus.');
+          return;
+        }
+
+        setDownloading(true);
+
+        // Indeterminate Progress: solange wir keine Größe wissen, läuft der Balken
+        let indeterminateInterval;
+        let indeterminateStep = 0;
+        function startIndeterminate() {
+          DOM.progressBar.style.width = '30%';
+          DOM.progressPercent.textContent = 'Lade...';
+          DOM.progressSpeed.textContent = 'Starte Download...';
+          DOM.progressSize.textContent = 'Bereite vor...';
+          indeterminateInterval = setInterval(() => {
+            indeterminateStep = (indeterminateStep + 1) % 60;
+            // Pulsierende Breite zwischen 20% und 60%
+            const pulse = 20 + Math.sin(indeterminateStep * 0.1) * 20 + 20;
+            DOM.progressBar.style.width = Math.min(pulse, 95) + '%';
+          }, 200);
+        }
+        function stopIndeterminate() {
+          if (indeterminateInterval) {
+            clearInterval(indeterminateInterval);
+            indeterminateInterval = null;
+          }
+        }
+
+        startIndeterminate();
+
+        try {
+          const response = await fetch('/api/download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              url: currentVideoData.webpageUrl || DOM.urlInput.value.trim(),
+              formatId: selectedFormatId,
+              filename: currentVideoData.title || 'video'
+            })
+          });
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            stopIndeterminate();
+            throw new Error(data.error || 'Download fehlgeschlagen (Status: ' + response.status + ')');
+          }
+
+          // Content-Disposition für den Dateinamen parsen
+          const disposition = response.headers.get('Content-Disposition') || '';
+          const match = disposition.match(/filename\*?=(?:UTF-8'')?([^;\s]+)/i);
+          const suggestedFilename = match ? decodeURIComponent(match[1]) : (currentVideoData.title || 'video') + '.mp4';
+
+          const contentLength = response.headers.get('Content-Length');
+          const total = parseInt(contentLength, 10) || 0;
+
+          if (total > 0) {
+            // Wir kennen die Größe → echtes Progress-Tracking
+            stopIndeterminate();
+            const reader = response.body.getReader();
+            let received = 0;
+            const chunks = [];
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              received += value.length;
+              const percent = Math.min((received / total) * 100, 99);
+              DOM.progressBar.style.width = percent + '%';
+              DOM.progressPercent.textContent = percent.toFixed(1) + '%';
+              DOM.progressSize.textContent = formatFileSize(received) + ' / ' + formatFileSize(total);
+            }
+
+            // Blob download
+            const blob = new Blob(chunks);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = suggestedFilename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            DOM.progressBar.style.width = '100%';
+            DOM.progressPercent.textContent = '100% ✓';
+            DOM.progressSpeed.textContent = 'Download abgeschlossen!';
+          } else {
+            // Keine Content-Length → Stream direkt in Blob, Progress bleibt indeterminat
+            stopIndeterminate();
+            DOM.progressBar.style.width = '50%';
+            DOM.progressPercent.textContent = 'Empfange Daten...';
+            DOM.progressSpeed.textContent = 'yt-dlp streamt das Video...';
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = suggestedFilename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            DOM.progressBar.style.width = '100%';
+            DOM.progressPercent.textContent = '100% ✓';
+            DOM.progressSpeed.textContent = 'Download abgeschlossen!';
+          }
+
+          setTimeout(() => setDownloading(false), 2000);
+
+        } catch (err) {
+          stopIndeterminate();
+          setDownloading(false);
+          showError(err.message || 'Download fehlgeschlagen.');
+        }
+      }
+
+      // ── Event Listeners ──
+      DOM.fetchBtn.addEventListener('click', handleFetch);
+
+      DOM.urlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleFetch();
+        }
+      });
+
+      DOM.downloadBtn.addEventListener('click', handleDownload);
+
+      // Handle paste events - auto-trigger on paste
+      DOM.urlInput.addEventListener('paste', () => {
+        setTimeout(() => {
+          // Don't auto-fetch on paste, user might want to edit
+        }, 100);
+      });
+
+      // ── Keyboard shortcut: Ctrl+Enter for download when info loaded ──
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (currentVideoData && !isDownloading) {
+            handleDownload();
+          } else if (!currentVideoData) {
+            handleFetch();
+          }
+        }
+      });
+
+      console.log('🎬 ClipSaver loaded — ready to download!');
+    })();
+  </script>
+</body>
+</html>

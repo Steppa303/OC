@@ -1,6 +1,29 @@
 # TOOLS.md - Local Notes
 
-## 🎯 Der Orchestrator / Subagent Workflow (Strict & Clean)
+## 🦞 Lesestoff — Anti-Halluzination Plan (24.06.2026)
+
+**Entscheidung:** XTTSv2 bleiben, kein GPT-SoVITS-Wechsel.
+**Strategie:** 3-Stufen-Plan gegen XTTS-Halluzinationen.
+**Doku:** `projects/lesestoff/HANDOVER.md` → Section 13
+
+### Stufe 1: Seed fixieren (sofort)
+- `render.py`: `torch.manual_seed(42)`, `np.random.seed(42)`, `random.seed(42)`
+- Vor TTS-Initialisierung setzen
+- Killt zufällige Prosodie-Halluzinationen
+
+### Stufe 2: RNNoise Post-Processing (failed with arnndn, using noisereduce)
+- `noisereduce` Python-Bibliothek installiert (`pip install noisereduce`)
+- `render.py`: Post-Processing mit `reduce_noise()` nach XTTS-Render
+- Filtert Vocoder-Noise-Floor + leises Babbling
+
+### Stufe 3: Whisper-Timestamped Hallucination Trimmer
+- `whisper-timestamped` → Wort-Timestamps → Input-Text-Match → cutten
+- Nuklearoption für hartnäckige Fälle
+
+### Referenz-Stimme
+- **Aktuelle Default-Referenz:** `referenz_hoffmann.wav`
+- **Pfad in Queue-Service:** `/srv/lesestoff/tts_audio/xtts_reference.wav`
+- **Hoffmann-Stimme** ersetzt die alte Thorsten-Referenz (24.06.2026)
 
 **Prinzip:** Der Main Agent (Proxy) delegiert komplexe Tasks an einen Orchestrator-Subagent.
 

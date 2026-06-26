@@ -1,0 +1,586 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-15T16:33:10.028Z",
+  "entries": {
+    "memory:memory/2026-03-21.md:1:43": {
+      "key": "memory:memory/2026-03-21.md:1:43",
+      "path": "memory/2026-03-21.md",
+      "startLine": 1,
+      "endLine": 43,
+      "source": "memory",
+      "snippet": "# 2026-03-21 - Session Memories ## 🎵 Melodiegenerator (Completed) - **URL:** http://185.217.126.72/melodie-generator/ - **Tech:** Tone.js for audio synthesis - **Features:** - Web Audio API mit PolySynth - Verschiedene Wellenformen (Sine, Square, Sawtooth, Triangle) - BPM, Chaos, Länge einstellbar - Tonarten (Dur, Moll, Pentatonik, Blues, Modes) - Canvas Visualizer - Dark/Light Mode - **Fixes:** - Audio-Context Timing Problem behoben (setTimeout mit 0ms Delay) - Stopp-Button State Fix (isLoading korrekt zurücksetzen) - Loop-Wiederholung mit Tone.Transport.loop = true ## 📊 Agent Dashboard (Completed) - **URL:** http://185.217.126.72/agent-dashboard/ - **Features:** - P",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.471590507030487,
+      "maxScore": 0.39567344188690184,
+      "firstRecalledAt": "2026-04-18T20:18:51.937Z",
+      "lastRecalledAt": "2026-04-19T17:08:27.276Z",
+      "queryHashes": [
+        "32b95717ad22",
+        "506c3ddf02cd",
+        "65dad0bda103",
+        "de2cffbfc165"
+      ],
+      "recallDays": [
+        "2026-04-18",
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "185.217.126.72/melodie-generator",
+        "tone.js",
+        "dark/light",
+        "audio-context",
+        "stopp-button",
+        "loop-wiederholung",
+        "tone.transport.loop",
+        "185.217.126.72/agent-dashboard"
+      ]
+    },
+    "memory:memory/2026-04-18.md:24:50": {
+      "key": "memory:memory/2026-04-18.md:24:50",
+      "path": "memory/2026-04-18.md",
+      "startLine": 24,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "- **Ursache:** UND_ERR_SOCKET (IPv4 Socket Error) – Netzwerkproblem auf Server-Level - Telegram Bot: @ogLobster_bot - Workaround: Gateway restart behebt es temporär ## Heartbeat Session Summary (17.04 - 18.04) - **17.04 ~16:50:** Telegram polling stall (first occurrence) - **17.04 ~17:00:** Gateway restart + `openclaw doctor --fix` (TTS legacy keys migrated) - **18.04 07:10:** Second Telegram stall detected, gateway restarted - **18.04 10:28-11:45:** Multiple gateway restarts, Telegram still not connecting - **18.04 ~11:30:** Telegram watchdog v1-v4 created and iterated (false restart loops) - **18.04 ~11:38:** **ROOT CAUSE FOUND:** `409 Conflict: terminated by other getUpdates request` -",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.8525297135114669,
+      "maxScore": 0.43708910942077633,
+      "firstRecalledAt": "2026-04-18T20:18:57.493Z",
+      "lastRecalledAt": "2026-04-19T17:08:27.276Z",
+      "queryHashes": [
+        "506c3ddf02cd",
+        "de2cffbfc165"
+      ],
+      "recallDays": [
+        "2026-04-18",
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "gateway",
+        "und-err-socket",
+        "server-level",
+        "oglobster-bot",
+        "17.04",
+        "18.04",
+        "28-11",
+        "v1-v4"
+      ]
+    },
+    "memory:memory/2026-04-18.md:1:30": {
+      "key": "memory:memory/2026-04-18.md:1:30",
+      "path": "memory/2026-04-18.md",
+      "startLine": 1,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "## Telegram Polling Stall behoben **Problem:** Gestern (17.04.) um ~16:50 ist das Telegram-Polling gecrasht (\"Polling stall detected\", keine Updates für 115s). IPv4 Socket Errors davor. Gateway hat sich neu gestartet aber Telegram blieb instabil. **Ursache:** - IPv4 Socket Errors (UND_ERR_SOCKET) haben das Polling zum Stalls gebracht - Config-Fehler: `messages.tts: Unrecognized key: \"custom\"` + Legacy TTS-Keys **Fix (18.04. ~07:10):** - `openclaw doctor --fix` → hat Legacy TTS-Keys migriert (messages.tts.edge → messages.tts.providers.microsoft) - `openclaw gateway restart` → Telegram neu connected, läuft wieder stabil **Status:** Telegram ✅ (@ogLobster_bot), Gateway running (PID 584600)",
+      "recallCount": 9,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3.548028510808945,
+      "maxScore": 0.4144205331802368,
+      "firstRecalledAt": "2026-04-18T20:18:57.493Z",
+      "lastRecalledAt": "2026-05-15T16:33:10.028Z",
+      "queryHashes": [
+        "506c3ddf02cd",
+        "65dad0bda103",
+        "de2cffbfc165",
+        "c61f1ff7f159",
+        "58bab0dca553",
+        "7bcc566f4536",
+        "3ef13977a355",
+        "12dd613a3df8",
+        "a26805fbdc9e"
+      ],
+      "recallDays": [
+        "2026-04-18",
+        "2026-04-19",
+        "2026-04-20",
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "gateway",
+        "17.04",
+        "telegram-polling",
+        "und-err-socket",
+        "config-fehler",
+        "messages.tts",
+        "tts-keys",
+        "18.04"
+      ]
+    },
+    "memory:memory/2026-04-19.md:23:50": {
+      "key": "memory:memory/2026-04-19.md:23:50",
+      "path": "memory/2026-04-19.md",
+      "startLine": 23,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "- **Neue Regel:** Code/Bugfix-Erklärungen = Höhlenmensch (minimal), alles andere = normal - SOUL.md: Deutsch. Immer. ## 19.04.2026 ### ElevenLabs TTS konfiguriert - **API Key:** sk_759f14b305c8debc5f3a3c58a2799776347b556bc4cfddfb - **Voice ID:** JBFqnCBsd6RMkjVDRZzb (Rachel) - **Model:** eleven_multilingual_v2 - **Output Format:** mp3_44100_128 - **Config:** `/root/.openclaw/openclaw.json` → `messages.tts.providers.elevenlabs` - **Status:** ✅ Aktiv, ElevenLabs ist selected provider (war vorher Microsoft) - **Config-Format:** `voiceId` (nicht `voice`!), `modelId`, `format` - **Wichtig:** Config-Key muss `providers.elevenlabs` heißen, nicht `providers.elevenlabs.voice` oder ähnliches - **Eins",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36008340418338775,
+      "maxScore": 0.36008340418338775,
+      "firstRecalledAt": "2026-04-19T17:19:06.725Z",
+      "lastRecalledAt": "2026-04-19T17:19:06.725Z",
+      "queryHashes": [
+        "58bab0dca553"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "code/bugfix-erklärungen",
+        "soul.md",
+        "19.04.2026",
+        "eleven-multilingual-v2",
+        "mp3-44100-128",
+        "openclaw/openclaw.json",
+        "config-format",
+        "config-key"
+      ]
+    },
+    "memory:memory/2026-04-19.md:72:98": {
+      "key": "memory:memory/2026-04-19.md:72:98",
+      "path": "memory/2026-04-19.md",
+      "startLine": 72,
+      "endLine": 98,
+      "source": "memory",
+      "snippet": "- `resetAllParams` Destructuring Problem in SyncGridPanel.tsx - Fehlendes `defaultValue` Prop - Rebuilt & deployed ### Performance-Analyse (nicht fixiert – User wollte revert) - Waveform Neuberechnung bei Zoom → OffscreenCanvas Pre-rendering - rAF im Hintergrund → Visibility-Check - backdrop-filter GPU-Last → entfernt - **User:** Alles revertet, Original-Code wiederhergestellt ### Abgeschlossene & Verworfene Projekte - **Kokoro TTS:** Kein deutsches Modell verfügbar (HF 404/private) → verworfen - **Piper TTS:** OpenClaw unterstützt keine shell-basierten TTS-Provider → verworfen - **Adobe Bridge Daemon:** AppleScript Syntax-Error (-2741), persistent → verworfen - **Memory Search:** Disabled",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3337713241577148,
+      "maxScore": 0.3337713241577148,
+      "firstRecalledAt": "2026-04-19T17:19:06.725Z",
+      "lastRecalledAt": "2026-04-19T17:19:06.725Z",
+      "queryHashes": [
+        "58bab0dca553"
+      ],
+      "recallDays": [
+        "2026-04-19"
+      ],
+      "conceptTags": [
+        "syncgridpanel.tsx",
+        "performance-analyse",
+        "pre-rendering",
+        "visibility-check",
+        "backdrop-filter",
+        "gpu-last",
+        "original-code",
+        "404/private"
+      ]
+    },
+    "memory:memory/2026-04-24.md:331:372": {
+      "key": "memory:memory/2026-04-24.md:331:372",
+      "path": "memory/2026-04-24.md",
+      "startLine": 331,
+      "endLine": 372,
+      "source": "memory",
+      "snippet": "- (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - guck mal, ob du auf matthias wechseln kannst. das gong das letzte.mal.nicht. - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +1m Tue 2026-04-21 15:59 GMT+2] [00:00.000 --> 00:04.000] Dann schick mir... - Naja, und eine Sprachnachricht kam hoer ja auch nicht an. nur das da: \"[[tts:JBFqnCBsd6RMkjVDRZzb]]Test, Test, eins, zwei, drei. Matthias... - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +8m Tue 2026-04-21 16:16 GMT+2] [00:00.000 --> 00:02.000] Okay, dann lass... - die lila bubble ist von mir. von dir gan es noch gar keine voicemes",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4121029734611511,
+      "maxScore": 0.4121029734611511,
+      "firstRecalledAt": "2026-05-15T12:37:08.435Z",
+      "lastRecalledAt": "2026-05-15T12:37:08.435Z",
+      "queryHashes": [
+        "3ef13977a355"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "letzte.mal.nicht",
+        "steppa-tg",
+        "00.000",
+        "04.000",
+        "02.000",
+        "keine"
+      ]
+    },
+    "memory:memory/2026-04-22.md:393:434": {
+      "key": "memory:memory/2026-04-22.md:393:434",
+      "path": "memory/2026-04-22.md",
+      "startLine": 393,
+      "endLine": 434,
+      "source": "memory",
+      "snippet": "- (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - wor hatten da zuletzt das Problem, dass wir die native deutschen voices irgendwie nicht benutzen konnten. Weiß aber nicht mehr warum? - guck mal, ob du auf matthias wechseln kannst. das gong das letzte.mal.nicht. - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +1m Tue 2026-04-21 15:59 GMT+2] [00:00.000 --> 00:04.000] Dann schick mir... - Naja, und eine Sprachnachricht kam hoer ja auch nicht an. nur das da: \"[[tts:JBFqnCBsd6RMkjVDRZzb]]Test, Test, eins, zwei, drei. Matthias... - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +8m Tue 20",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3927890926599502,
+      "maxScore": 0.3927890926599502,
+      "firstRecalledAt": "2026-05-15T12:37:08.435Z",
+      "lastRecalledAt": "2026-05-15T12:37:08.435Z",
+      "queryHashes": [
+        "3ef13977a355"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "letzte.mal.nicht",
+        "steppa-tg",
+        "00.000",
+        "04.000",
+        "keine",
+        "summary"
+      ]
+    },
+    "memory:memory/2026-04-23.md:107:148": {
+      "key": "memory:memory/2026-04-23.md:107:148",
+      "path": "memory/2026-04-23.md",
+      "startLine": 107,
+      "endLine": 148,
+      "source": "memory",
+      "snippet": "- (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - wor hatten da zuletzt das Problem, dass wir die native deutschen voices irgendwie nicht benutzen konnten. Weiß aber nicht mehr warum? - guck mal, ob du auf matthias wechseln kannst. das gong das letzte.mal.nicht. - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +1m Tue 2026-04-21 15:59 GMT+2] [00:00.000 --> 00:04.000] Dann schick mir... - Naja, und eine Sprachnachricht kam hoer ja auch nicht an. nur das da: \"[[tts:JBFqnCBsd6RMkjVDRZzb]]Test, Test, eins, zwei, drei. Matthias... - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +8m Tue 20",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3927890926599502,
+      "maxScore": 0.3927890926599502,
+      "firstRecalledAt": "2026-05-15T12:37:08.435Z",
+      "lastRecalledAt": "2026-05-15T12:37:08.435Z",
+      "queryHashes": [
+        "3ef13977a355"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "letzte.mal.nicht",
+        "steppa-tg",
+        "00.000",
+        "04.000",
+        "keine",
+        "summary"
+      ]
+    },
+    "memory:memory/2026-04-29.md:653:698": {
+      "key": "memory:memory/2026-04-29.md:653:698",
+      "path": "memory/2026-04-29.md",
+      "startLine": 653,
+      "endLine": 698,
+      "source": "memory",
+      "snippet": "- Das is jetz kacke vom style her. mit dem scrollbalken - wenn ich speichern drücke, muss der dialog zugehen. - Statt nur dem Anfangsbuchstaben der zugeordneten Person, den ganzen Vornamen anzeigen ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## 📱 Telegram Context (23:30) ## Probleme - und danach finde raus wieso wir ständig an dieses rate Limit gelaufen sind. Weil eigentlich passierte zu der Zeit gar nichts. - dann lasse eine entsprechende Lösung implementieren - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +33m Sat 2026-04-25 14:48 GMT+2] [00:00.000 --> 00:02.000] und Transcript... - [Audio]",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.2124753892421722,
+      "maxScore": 0.4199373692274093,
+      "firstRecalledAt": "2026-05-15T12:37:08.435Z",
+      "lastRecalledAt": "2026-05-15T16:33:10.028Z",
+      "queryHashes": [
+        "3ef13977a355",
+        "12dd613a3df8",
+        "a26805fbdc9e"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "steppa-tg",
+        "00.000",
+        "02.000",
+        "jetz",
+        "kacke",
+        "vom"
+      ]
+    },
+    "memory:memory/2026-04-22.md:49:92": {
+      "key": "memory:memory/2026-04-22.md:49:92",
+      "path": "memory/2026-04-22.md",
+      "startLine": 49,
+      "endLine": 92,
+      "source": "memory",
+      "snippet": "- prüfe mal.im detail wo noch überall chomadb shit bei uns rumlungert. wird davon noch irgendwas benutzt? ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - hallo test? - wo waren? wir stehen geblieben bei der implementation von elevenlabs tts? - wor hatten da zuletzt das Problem, dass wir die native deutschen voices irgendwie nicht benutzen konnten. Weiß aber nicht mehr warum? - guck mal, ob du auf matthias wechseln kannst. das gong das letzte.mal.nicht. - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +1m Tue 2026-04-21 15:59 GMT+2] [00:00.000 --> 00:04.000] Dann schick mir... - Naja, un",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3780297011137008,
+      "maxScore": 0.3780297011137008,
+      "firstRecalledAt": "2026-05-15T12:37:08.435Z",
+      "lastRecalledAt": "2026-05-15T12:37:08.435Z",
+      "queryHashes": [
+        "3ef13977a355"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "mal.im",
+        "ai-summary",
+        "n/a",
+        "letzte.mal.nicht",
+        "steppa-tg",
+        "00.000",
+        "04.000",
+        "prüfe"
+      ]
+    },
+    "memory:memory/2026-05-06.md:327:372": {
+      "key": "memory:memory/2026-05-06.md:327:372",
+      "path": "memory/2026-05-06.md",
+      "startLine": 327,
+      "endLine": 372,
+      "source": "memory",
+      "snippet": "- (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - Konvertierung fehlgeschlagen, Daten bereinigt. - Instagram-Login scheitert an 2FA (Codes verfallen, keine neuen, mögl. IP-Flagging). - Headless-CLI unterstützt kein Opera-VPN. ## Lösungen - Alte Dateien gelöscht. - AgentMail-API für Registrierung genutzt. - Serverseitiger Proxy (UK) aktiviert. - 2FA deaktiviert. ## Entscheidungen - Account „HaterBernd“ wird weitergenutzt. - Proxy statt Browser-VPN bevorzugt. - 2FA vorübergehend abgeschaltet. ## Offene Punkte - Login nach 2FA-Aus testen. - Instagram-Posting-Mechanismus implementieren. --- ## Probleme - lösche die h",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.286242264509201,
+      "maxScore": 0.4553653538227081,
+      "firstRecalledAt": "2026-05-15T14:08:39.774Z",
+      "lastRecalledAt": "2026-05-15T16:33:10.028Z",
+      "queryHashes": [
+        "12dd613a3df8",
+        "c7cd8450a9fa",
+        "a26805fbdc9e"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "instagram-login",
+        "ip-flagging",
+        "headless-cli",
+        "opera-vpn",
+        "agentmail-api",
+        "browser-vpn"
+      ]
+    },
+    "memory:memory/2026-04-22.md:1:36": {
+      "key": "memory:memory/2026-04-22.md:1:36",
+      "path": "memory/2026-04-22.md",
+      "startLine": 1,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "# Daily Memory: 2026-04-22 ## Probleme - hallo test? - wo waren? wir stehen geblieben bei der implementation von elevenlabs tts? - wor hatten da zuletzt das Problem, dass wir die native deutschen voices irgendwie nicht benutzen konnten. Weiß aber nicht mehr warum? - guck mal, ob du auf matthias wechseln kannst. das gong das letzte.mal.nicht. - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +1m Tue 2026-04-21 15:59 GMT+2] [00:00.000 --> 00:04.000] Dann schick mir... - Naja, und eine Sprachnachricht kam hoer ja auch nicht an. nur das da: \"[[tts:JBFqnCBsd6RMkjVDRZzb]]Test, Test, eins, zwei, drei. Matthias... - [Audio] User text: [Telegram Bastian (@Steppa_tg) id:1400987471 +8",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.8154683262109756,
+      "maxScore": 0.41102563738822934,
+      "firstRecalledAt": "2026-05-15T14:08:39.774Z",
+      "lastRecalledAt": "2026-05-15T16:33:10.028Z",
+      "queryHashes": [
+        "12dd613a3df8",
+        "a26805fbdc9e"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "letzte.mal.nicht",
+        "steppa-tg",
+        "00.000",
+        "04.000",
+        "probleme",
+        "hallo",
+        "test",
+        "waren"
+      ]
+    },
+    "memory:memory/2026-04-22.md:132:163": {
+      "key": "memory:memory/2026-04-22.md:132:163",
+      "path": "memory/2026-04-22.md",
+      "startLine": 132,
+      "endLine": 163,
+      "source": "memory",
+      "snippet": "- die lila bubble ist von mir. von dir gan es noch gar keine voicemessage heute. - zuletzt hast du das so gemacht, dass du dir die audiodateien, die da entstanden sind, genommen hast und dann als Datei in telegram geschi... - scheiß erstmal drauf. und stell den TTS wieder auf off - schick mir mal den code von unserem telegram watchdog - prüfe mal.im detail wo noch überall chomadb shit bei uns rumlungert. wird davon noch irgendwas benutzt? ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - hallo test? - wo waren? wir stehen geblieben bei der implementation von elevenlabs tts? - wor hatten da zuletzt das Pro",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.41102563738822934,
+      "maxScore": 0.41102563738822934,
+      "firstRecalledAt": "2026-05-15T14:08:39.774Z",
+      "lastRecalledAt": "2026-05-15T14:08:39.774Z",
+      "queryHashes": [
+        "12dd613a3df8"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "mal.im",
+        "ai-summary",
+        "n/a",
+        "lila",
+        "bubble",
+        "ist",
+        "mir",
+        "dir"
+      ]
+    },
+    "memory:memory/2026-05-08.md:184:233": {
+      "key": "memory:memory/2026-05-08.md:184:233",
+      "path": "memory/2026-05-08.md",
+      "startLine": 184,
+      "endLine": 233,
+      "source": "memory",
+      "snippet": "- ach nee. dann lass. ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N/A) --- ## Probleme - Versuche mal dir selber einen zu erstellen und gib mir im Anschluss Rückmeldung. - agentmail api key: am_us_ecc8afeb2450ef3876d204133788dd7d0d9af0c5d477a4873f5c0d32acca1d0f merk dir das. You have access to AgentMail — ... - so, du hast jetzt einen instagram Account. user: HaterBernd pw:instabernd#Jungle68 - registriert ist der Account mit deiner agentmail Adresse - so, versuche nochmal dich anzumelden. Code: 678378 - ich hatte dir doch eine. code gegeben - ok. und kannst du ein vpn benutzen um unsere vps ip zu verschleiern? Gibt's d",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4939935743808746,
+      "maxScore": 0.4939935743808746,
+      "firstRecalledAt": "2026-05-15T14:09:13.300Z",
+      "lastRecalledAt": "2026-05-15T14:09:13.300Z",
+      "queryHashes": [
+        "c7cd8450a9fa"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "ach",
+        "nee",
+        "dann",
+        "lass",
+        "lösungen",
+        "keine"
+      ]
+    },
+    "memory:memory/2026-05-06.md:364:401": {
+      "key": "memory:memory/2026-05-06.md:364:401",
+      "path": "memory/2026-05-06.md",
+      "startLine": 364,
+      "endLine": 401,
+      "source": "memory",
+      "snippet": "- agentmail api key: am_us_ecc8afeb2450ef3876d204133788dd7d0d9af0c5d477a4873f5c0d32acca1d0f merk dir das. You have access to AgentMail — ... - so, du hast jetzt einen instagram Account. user: HaterBernd pw:instabernd#Jungle68 - registriert ist der Account mit deiner agentmail Adresse - so, versuche nochmal dich anzumelden. Code: 678378 - ich hatte dir doch eine. code gegeben - ok. und kannst du ein vpn benutzen um unsere vps ip zu verschleiern? Gibt's da einen skill für? falls ja. bereite das vor. ich schicke di... - kannst du nicht so'n opera vpn benutzen? - 2fa ist jetzt aus ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4366511613130569,
+      "maxScore": 0.4366511613130569,
+      "firstRecalledAt": "2026-05-15T14:09:13.300Z",
+      "lastRecalledAt": "2026-05-15T14:09:13.300Z",
+      "queryHashes": [
+        "c7cd8450a9fa"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "agentmail",
+        "api",
+        "key",
+        "merk",
+        "dir",
+        "you"
+      ]
+    },
+    "memory:memory/2026-05-06.md:393:430": {
+      "key": "memory:memory/2026-05-06.md:393:430",
+      "path": "memory/2026-05-06.md",
+      "startLine": 393,
+      "endLine": 430,
+      "source": "memory",
+      "snippet": "- agentmail api key: am_us_ecc8afeb2450ef3876d204133788dd7d0d9af0c5d477a4873f5c0d32acca1d0f merk dir das. You have access to AgentMail — ... - so, du hast jetzt einen instagram Account. user: HaterBernd pw:instabernd#Jungle68 - registriert ist der Account mit deiner agentmail Adresse - so, versuche nochmal dich anzumelden. Code: 678378 - ich hatte dir doch eine. code gegeben - ok. und kannst du ein vpn benutzen um unsere vps ip zu verschleiern? Gibt's da einen skill für? falls ja. bereite das vor. ich schicke di... - kannst du nicht so'n opera vpn benutzen? - 2fa ist jetzt aus ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4366511613130569,
+      "maxScore": 0.4366511613130569,
+      "firstRecalledAt": "2026-05-15T14:09:13.300Z",
+      "lastRecalledAt": "2026-05-15T14:09:13.300Z",
+      "queryHashes": [
+        "c7cd8450a9fa"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "agentmail",
+        "api",
+        "key",
+        "merk",
+        "dir",
+        "you"
+      ]
+    },
+    "memory:memory/2026-05-06.md:422:459": {
+      "key": "memory:memory/2026-05-06.md:422:459",
+      "path": "memory/2026-05-06.md",
+      "startLine": 422,
+      "endLine": 459,
+      "source": "memory",
+      "snippet": "- agentmail api key: am_us_ecc8afeb2450ef3876d204133788dd7d0d9af0c5d477a4873f5c0d32acca1d0f merk dir das. You have access to AgentMail — ... - so, du hast jetzt einen instagram Account. user: HaterBernd pw:instabernd#Jungle68 - registriert ist der Account mit deiner agentmail Adresse - so, versuche nochmal dich anzumelden. Code: 678378 - ich hatte dir doch eine. code gegeben - ok. und kannst du ein vpn benutzen um unsere vps ip zu verschleiern? Gibt's da einen skill für? falls ja. bereite das vor. ich schicke di... - kannst du nicht so'n opera vpn benutzen? - 2fa ist jetzt aus ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4366511613130569,
+      "maxScore": 0.4366511613130569,
+      "firstRecalledAt": "2026-05-15T14:09:13.300Z",
+      "lastRecalledAt": "2026-05-15T14:09:13.300Z",
+      "queryHashes": [
+        "c7cd8450a9fa"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "agentmail",
+        "api",
+        "key",
+        "merk",
+        "dir",
+        "you"
+      ]
+    },
+    "memory:memory/2026-05-06.md:451:488": {
+      "key": "memory:memory/2026-05-06.md:451:488",
+      "path": "memory/2026-05-06.md",
+      "startLine": 451,
+      "endLine": 488,
+      "source": "memory",
+      "snippet": "- agentmail api key: am_us_ecc8afeb2450ef3876d204133788dd7d0d9af0c5d477a4873f5c0d32acca1d0f merk dir das. You have access to AgentMail — ... - so, du hast jetzt einen instagram Account. user: HaterBernd pw:instabernd#Jungle68 - registriert ist der Account mit deiner agentmail Adresse - so, versuche nochmal dich anzumelden. Code: 678378 - ich hatte dir doch eine. code gegeben - ok. und kannst du ein vpn benutzen um unsere vps ip zu verschleiern? Gibt's da einen skill für? falls ja. bereite das vor. ich schicke di... - kannst du nicht so'n opera vpn benutzen? - 2fa ist jetzt aus ## Lösungen - (Keine AI-Summary verfügbar, siehe Rohdaten oben) ## Entscheidungen - (N/A) ## Offene Punkte - (N",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4366511613130569,
+      "maxScore": 0.4366511613130569,
+      "firstRecalledAt": "2026-05-15T14:09:13.300Z",
+      "lastRecalledAt": "2026-05-15T14:09:13.300Z",
+      "queryHashes": [
+        "c7cd8450a9fa"
+      ],
+      "recallDays": [
+        "2026-05-15"
+      ],
+      "conceptTags": [
+        "ai-summary",
+        "n/a",
+        "agentmail",
+        "api",
+        "key",
+        "merk",
+        "dir",
+        "you"
+      ]
+    }
+  }
+}

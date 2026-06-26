@@ -1,0 +1,38 @@
+{
+    "posted_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    "failed_ids": [],
+    "retry_counts": {},
+    "history": [
+        {
+            "post_id": 1,
+            "status": "manual",
+            "note": "Already posted before state tracking"
+        },
+        {
+            "post_id": 2,
+            "status": "manual",
+            "note": "Already posted before state tracking"
+        },
+        {
+            "post_id": 3,
+            "status": "manual",
+            "note": "Already posted before state tracking"
+        },
+        {
+            "post_id": 4,
+            "status": "manual",
+            "note": "Already posted before state tracking"
+        },
+        {
+            "post_id": 5,
+            "status": "success",
+            "note": "Pfingsten Special - reel gepostet"
+        }
+    ]
+}

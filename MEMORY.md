@@ -1,6 +1,53 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-05-18 ~17:40_
+_Letzte Aktualisierung: 2026-06-25 ~22:00_
+
+---
+
+## 📚 Lesestoff Runpod GPU Integration (25.06.2026)
+
+**Status:** ✅ Backend + Frontend + Docker mit Models fertig, Image auf GHCR
+**Nächster Schritt:** Runpod Template updaten + E2E-Test
+
+### Files
+- **Worker:** `projects/lesestoff/vendor/xtts/runpod-worker.py` (Chatterbox TTS, GPU)
+- **Dockerfile:** `projects/lesestoff/Dockerfile.kartoffelbox-worker` (mit Models-COPY)
+- **Doku:** `projects/lesestoff/runpod.md`
+- **Secrets:** `.secrets/runpod.env` (NICHT committen)
+
+### Docker Image (25.06.2026)
+- **Image:** `ghcr.io/steppa303/lesestoff-worker:latest` (8.42GB komprimiert)
+- **Tags:** `latest` + `20260625` (SHA: `e6320cada92b`)
+- **Enthält:** PyTorch 2.6.0 + CUDA 12.4 + Chatterbox (3GB) + Kartoffelbox (2GB)
+- **Models in Image:** `COPY models-cache-flat /worker/models` — kein HF-Download beim Start
+- **Template-ID:** `56eejfcekr`
+- **GPU-Typ:** `NVIDIA L4`
+- **Registry Auth:** `ghcr-steppa` (ID `cmqtls3c...`)
+
+### API
+- **User API :3004:** runpod-start/cancel/status/estimate
+- **Internal API :3005:** Job-Fetch, WAV-Upload, Heartbeat, Finished (localhost + Bearer Auth)
+
+### Frontend
+- Runpod-Badge auf Book-Cover + Context-Menü + Cost-Estimator-Dialog
+- RenderDashboard: Local/Runpod Tab-Toggle mit Live-Progress, Kosten, GPU-Typ
+- Hooks: `useRunpod.ts` (TanStack Query)
+
+### DB
+- `runpod_jobs` Tabelle (Status, Heartbeat, GPU-Sekunden)
+- Stale-Erkennung via Heartbeat (10 Min Timeout, Cron alle 5 Min)
+
+### Commits
+- `c931828` — Phase 1: Worker + Docker + Schema
+- `fa159e0` — Phase 2: Backend (DB, Server, Internal API, Queue-Patch)
+- `e1ee35d` — Phase 3: Frontend (Badge, Dialog, Dashboard-Tab, Hooks)
+- `f735d3c` — Phase 4: Docker Image auf GHCR
+
+### Lesson Learned (25.06.2026)
+- Container Crash-Loop auf Runpod: Models müssen IM Image sein, nicht per HF-Download
+- Runpod API v1 Schema geändert: `gpuTypeIds` (Array), `containerDiskInGb`
+- GHCR Registry Credentials als GraphQL-Mutation erstellen (`saveRegistryAuth`)
+- VPS Disk: `docker system prune -af` gibt ~26GB zurück
 
 ---
 

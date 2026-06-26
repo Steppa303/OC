@@ -1,0 +1,13 @@
+{
+  "db": {
+    "host": "localhost",
+    "port": 5432,
+    "dbname": "gzpl_db",
+    "user": "gzpl_admin",
+    "password": "secure_pass_123",
+    "dialect": "postgres"
+  },
+  "server": {
+    "port": 3000
+  }
+}
