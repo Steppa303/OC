@@ -1,26 +1,55 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-06-25 ~22:00_
+_Letzte Aktualisierung: 2026-06-26 ~13:45_
 
 ---
 
 ## 📚 Lesestoff Runpod GPU Integration (25.06.2026)
 
-**Status:** ✅ Backend + Frontend + Docker mit Models fertig, Image auf GHCR
-**Nächster Schritt:** Runpod Template updaten + E2E-Test
+**Status:** ✅ TTS FUNKTIONIERT AUF GPU (Pod rdwdv22w1ndbyb, 26.06.2026 11:23)
+**Letzter Tag:** `20260626.7` (1000 chars, 2048 tokens, upload_chunk fix)
+**Image auf GHCR:** `ghcr.io/steppa303/lesestoff-worker:20260626.7` live
+
+### Performance (Real-World, ~4 it/s auf GPU)
+- Ein Fragment (300 Zeichen) → ~2 Min Sampling
+- Ein Kapitel (20k Zeichen, ~67 Fragmente) → ~2.2h
+- Ein Buch (11 Kapitel) → ~24h → ~$2.40
+- **Chatterbox hat hohen Fragment-Overhead**
+
+### Bugs gefixt (26.06.2026)
+1. **`'text'` KeyError** — Internal API lieferte keine Chapter-Texte
+2. **NLTK `punkt_tab`** — seit NLTK 3.9.4 nicht mehr auto-installiert
+3. **`T3.inference(text=)`** — falsche API, `model.generate()` ist korrekt
+4. **`_api_request()` fehlendes `data=` bei `files=`** → Upload-Chunk 400 Error (fix: `requests.post(url, files=files, data=data)`)
+5. **`internalUpload` vor Definition referenziert** → Node ReferenceError (fix: `internalUpload` = const vor erstem Use)
+
+### Lessons Learned
+- **`model.generate()` statt `t3.inference()`** — `inference()` akzeptiert kein `text`-KWArg
+- **Runpod cached `:latest`** — immer unique Tags pushen + `imageName` im Request
+- **Heartbeat-Retry essential** — Server kann kurz down sein (502), Worker muss retryen
+- **NIE Server restarten während Pod läuft** — killt den kompletten Workflow
+- **Differential Updates** — nur Worker-Layer per `FROM existing + COPY runpod-worker.py` → 1s Build
+- **2000 chars/Fragment klingt kacke** — Chatterbox halluziniert bei zu langem Input. 1000 ist sweet spot
+- **Per-Fragment Upload funktioniert** — PCM-Chunks werden appended, finale WAV wird auf Server generiert
+- **Alte Pods fressen Queue-Einträge** — vor Test DB-Status zurücksetzen (status='pending')
 
 ### Files
 - **Worker:** `projects/lesestoff/vendor/xtts/runpod-worker.py` (Chatterbox TTS, GPU)
+  - Fixes (26.06.): Heartbeat-Retry (3x), Backend-Wait (5 Min), NLTK Fallback, `model.generate()` statt `t3.inference()`
+  - Added: `MAX_FRAGMENTS` env var, Per-Fragment Upload (`upload_chunk`), 2000/1000 chars test
 - **Dockerfile:** `projects/lesestoff/Dockerfile.kartoffelbox-worker` (mit Models-COPY)
+- **Hotfix-Build:** `projects/lesestoff/Dockerfile.worker-hotfix` (5s Build, nur Worker-Layer)
 - **Doku:** `projects/lesestoff/runpod.md`
 - **Secrets:** `.secrets/runpod.env` (NICHT committen)
 
-### Docker Image (25.06.2026)
-- **Image:** `ghcr.io/steppa303/lesestoff-worker:latest` (8.42GB komprimiert)
-- **Tags:** `latest` + `20260625` (SHA: `e6320cada92b`)
-- **Enthält:** PyTorch 2.6.0 + CUDA 12.4 + Chatterbox (3GB) + Kartoffelbox (2GB)
+### Docker Image (26.06.2026 - Update 16:20)
+- **Letzter Tag:** `20260626.7` (1000 chars, 2048 tokens, upload_chunk fix)
+- **Image:** `ghcr.io/steppa303/lesestoff-worker:20260626.7` (8.42GB komprimiert)
+- **Tags:** `latest`, `20260626.7`
+- **Build-Methode:** Differential (nur Worker-Layer via `FROM existing + COPY` → 1s)
+- **Basis:** PyTorch 2.6.0 + CUDA 12.4 + Chatterbox + Kartoffelbox
 - **Models in Image:** `COPY models-cache-flat /worker/models` — kein HF-Download beim Start
-- **Template-ID:** `56eejfcekr`
+- **Template-ID:** `58abhgwvj2` (Aktualisiert, vorher `56eejfcekr`)
 - **GPU-Typ:** `NVIDIA L4`
 - **Registry Auth:** `ghcr-steppa` (ID `cmqtls3c...`)
 
