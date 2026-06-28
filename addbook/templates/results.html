@@ -2,212 +2,248 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>AddBook — Ergebnisse</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            surface: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    .card-glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.1); }
-    .card-glass:hover { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 0 30px rgba(99, 102, 241, 0.1); }
-    .shimmer { background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
-    .btn-primary:hover { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .fade-in { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .status-badge { transition: all 0.3s ease; }
-    .cover-placeholder { background: linear-gradient(135deg, #1e293b, #334155); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+    /* Header */
+    .header { border-bottom: 2px solid #111; padding-bottom: 12px; margin-bottom: 20px; }
+    .header h1 { font-size: 22px; font-weight: bold; }
+    .header .subtitle { font-size: 14px; color: #555; margin-top: 4px; }
+
+    /* Results list — single column for e-ink */
+    .results { list-style: none; }
+    .result {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #ccc;
+      align-items: flex-start;
+    }
+    .result:last-child { border-bottom: none; }
+
+    /* Cover — small for e-ink speed */
+    .cover-wrap {
+      flex-shrink: 0;
+      width: 80px;
+      height: 110px;
+      background: #eee;
+      border: 1px solid #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .cover-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .cover-placeholder {
+      font-size: 28px;
+      color: #999;
+    }
+
+    /* Info */
+    .info { flex: 1; min-width: 0; }
+    .title { font-size: 17px; font-weight: bold; margin-bottom: 2px; }
+    .author { font-size: 14px; color: #444; margin-bottom: 4px; }
+    .meta { font-size: 12px; color: #777; margin-bottom: 10px; }
+
+    /* Big button for e-ink touch */
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      font-family: inherit;
+      background: #111;
+      color: #fff;
+      border: 2px solid #111;
+      cursor: pointer;
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { background: #444; }
+    .btn:disabled { background: #ccc; border-color: #ccc; color: #666; cursor: default; }
+
+    /* Status */
+    .status {
+      margin-top: 6px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+    .status-ok { color: #111; font-weight: bold; }
+    .status-err { color: #555; }
+    .status-wait { color: #777; }
+
+    /* Empty state */
+    .empty { text-align: center; padding: 60px 20px; }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 18px; color: #555; }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding-top: 12px;
+      border-top: 1px solid #ccc;
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+    }
+
+    /* Link styling */
+    a { color: #111; }
   </style>
 </head>
-<body class="bg-surface-950 text-gray-100 min-h-screen">
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <!-- Header -->
-    <header class="mb-8 fade-in">
-      <div class="flex items-center gap-3 mb-2">
-        <span class="text-3xl">📚</span>
-        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          AddBook
-        </h1>
-      </div>
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4">
-        <div>
-          <p class="text-gray-300 text-lg">
-            Ergebnisse für: <span class="font-semibold text-white" id="queryDisplay"></span>
-          </p>
-          <p class="text-gray-500 text-sm" id="resultInfo"></p>
-        </div>
-        <div class="text-gray-500 text-xs" id="timestamp"></div>
-      </div>
-    </header>
-
-    <!-- Results Grid -->
-    <div id="results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Cards rendered by JS -->
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 id="queryDisplay"></h1>
+      <div class="subtitle" id="resultInfo"></div>
     </div>
 
-    <!-- Empty state -->
-    <div id="emptyState" class="hidden text-center py-20">
-      <div class="text-6xl mb-4">🔍</div>
-      <p class="text-gray-400 text-lg">Keine Ergebnisse gefunden</p>
-      <p class="text-gray-500 text-sm mt-2">Versuche einen anderen Suchbegriff</p>
+    <ul class="results" id="results"></ul>
+
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="empty-icon">📚</div>
+      <div class="empty-text">Keine Ergebnisse gefunden</div>
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-12 text-center text-gray-600 text-xs border-t border-gray-800 pt-6">
-      addbook.steppa.online · Bücher werden automatisch an deinen Kindle gesendet
-    </footer>
+    <div class="footer">addbook.steppa.online</div>
   </div>
 
   <script>
-    // Injected by server
     const __BOOKS__ = [];
     const __RESULT_ID__ = "";
     const __QUERY__ = "";
     const __TIMESTAMP__ = "";
 
-    const statusMap = {
-      queued:    { text: 'Warteschlange...', color: 'text-gray-400', icon: '⏳' },
-      downloading: { text: 'Wird heruntergeladen...', color: 'text-blue-400', icon: '📥' },
-      sending:   { text: 'Wird an Kindle gesendet...', color: 'text-purple-400', icon: '📧' },
-      done:      { text: '✅ Erfolgreich an Kindle gesendet!', color: 'text-emerald-400', icon: '✅' },
-      failed:    { text: 'Fehlgeschlagen', color: 'text-red-400', icon: '❌' }
+    const statusText = {
+      queued: '⏳ Warteschlange…',
+      downloading: '📥 Wird heruntergeladen…',
+      sending: '📧 Wird an Kindle gesendet…',
+      done: '✅ Erfolgreich an Kindle gesendet!',
+      failed: '❌ Fehlgeschlagen'
     };
 
-    function renderResults() {
-      const container = document.getElementById('results');
-      const emptyState = document.getElementById('emptyState');
-
-      // Set header info
+    function render() {
       document.getElementById('queryDisplay').textContent = __QUERY__;
-      document.getElementById('resultInfo').textContent = `${__BOOKS__.length} Bücher gefunden`;
-
-      if (__TIMESTAMP__) {
-        const d = new Date(__TIMESTAMP__);
-        document.getElementById('timestamp').textContent = d.toLocaleString('de-DE');
-      }
+      document.getElementById('resultInfo').textContent = __BOOKS__.length + ' Bücher gefunden';
 
       if (__BOOKS__.length === 0) {
-        emptyState.classList.remove('hidden');
+        document.getElementById('emptyState').style.display = '';
         return;
       }
 
-      container.innerHTML = '';
-      __BOOKS__.forEach((book, index) => {
-        const card = document.createElement('div');
-        card.className = 'card-glass rounded-xl p-5 fade-in transition-all duration-300';
-        card.style.animationDelay = `${index * 50}ms`;
+      const ul = document.getElementById('results');
+      ul.innerHTML = '';
 
-        const coverHtml = book.coverUrl
-          ? `<img src="${book.coverUrl}" alt="Cover" class="w-full h-48 object-contain rounded-lg mb-4 bg-surface-900" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-48 cover-placeholder rounded-lg flex items-center justify-center text-4xl mb-4\\'>📖</div>'">`
-          : `<div class="w-full h-48 cover-placeholder rounded-lg flex items-center justify-center text-4xl mb-4">📖</div>`;
+      __BOOKS__.forEach((book, i) => {
+        const li = document.createElement('li');
+        li.className = 'result';
+
+        const cover = book.coverUrl
+          ? '<img src="' + esc(book.coverUrl) + '" alt="" loading="lazy">'
+          : '<span class="cover-placeholder">📖</span>';
 
         const meta = [book.year, book.language, book.format, book.size].filter(Boolean).join(' · ');
 
-        card.innerHTML = `
-          ${coverHtml}
-          <h2 class="text-lg font-semibold text-white mb-1 line-clamp-2">${escapeHtml(book.title || 'Unbekannt')}</h2>
-          <p class="text-gray-400 text-sm mb-2">${escapeHtml(book.author || 'Unbekannter Autor')}</p>
-          ${meta ? `<p class="text-gray-500 text-xs mb-4">${escapeHtml(meta)}</p>` : ''}
-          <button
-            id="btn-${index}"
-            class="btn-primary w-full py-2.5 px-4 rounded-lg text-white font-medium text-sm transition-all duration-200"
-            onclick="downloadBook(${index})"
-          >
-            📥 Zu Kindle senden
-          </button>
-          <div id="status-${index}" class="mt-3 text-sm text-center min-h-[1.5rem]"></div>
-        `;
-        container.appendChild(card);
+        li.innerHTML =
+          '<div class="cover-wrap">' + cover + '</div>' +
+          '<div class="info">' +
+            '<div class="title">' + esc(book.title || 'Unbekannt') + '</div>' +
+            '<div class="author">' + esc(book.author || 'Unbekannter Autor') + '</div>' +
+            (meta ? '<div class="meta">' + esc(meta) + '</div>' : '') +
+            '<button class="btn" id="btn-' + i + '" onclick="dl(' + i + ')">📥 Zu Kindle senden</button>' +
+            '<div class="status" id="st-' + i + '"></div>' +
+          '</div>';
+
+        ul.appendChild(li);
       });
     }
 
-    function downloadBook(index) {
-      const book = __BOOKS__[index];
-      const btn = document.getElementById(`btn-${index}`);
-      const statusEl = document.getElementById(`status-${index}`);
+    function dl(i) {
+      var book = __BOOKS__[i];
+      var btn = document.getElementById('btn-' + i);
+      var st = document.getElementById('st-' + i);
 
       btn.disabled = true;
-      btn.textContent = '⏳ Wird verarbeitet...';
-      statusEl.innerHTML = '<span class="text-gray-400">Download wird gestartet...</span>';
+      btn.textContent = '⏳ Bitte warten…';
+      st.textContent = '';
+      st.className = 'status';
 
       fetch('/api/download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           resultId: __RESULT_ID__,
-          index,
+          index: i,
           md5: book.md5,
           title: book.title,
           author: book.author || ''
         })
       })
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) {
-          showError(index, data.error);
-          return;
-        }
-        pollStatus(data.id, index);
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) { fail(i, data.error); return; }
+        poll(data.id, i);
       })
-      .catch(err => showError(index, 'Netzwerkfehler: ' + err.message));
+      .catch(function(e) { fail(i, 'Netzwerkfehler: ' + e.message); });
     }
 
-    function pollStatus(downloadId, index) {
-      const btn = document.getElementById(`btn-${index}`);
-      const statusEl = document.getElementById(`status-${index}`);
+    function poll(id, i) {
+      var btn = document.getElementById('btn-' + i);
+      var st = document.getElementById('st-' + i);
 
       function check() {
-        fetch(`/api/status/${downloadId}`)
-          .then(r => r.json())
-          .then(data => {
-            const info = statusMap[data.status] || statusMap.queued;
-            statusEl.innerHTML = `<span class="${info.color}">${info.icon} ${info.text}</span>`;
+        fetch('/api/status/' + id)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            st.textContent = statusText[data.status] || '⏳…';
+            st.className = 'status status-wait';
 
             if (data.status === 'done') {
               btn.textContent = '✅ Gesendet';
-              btn.className = btn.className.replace('btn-primary', 'bg-emerald-600');
+              st.className = 'status status-ok';
               return;
             }
             if (data.status === 'failed') {
-              showError(index, data.error || 'Unbekannter Fehler');
+              fail(i, data.error || 'Unbekannter Fehler');
               return;
             }
             setTimeout(check, 2000);
           })
-          .catch(() => setTimeout(check, 3000));
+          .catch(function() { setTimeout(check, 3000); });
       }
       check();
     }
 
-    function showError(index, msg) {
-      const btn = document.getElementById(`btn-${index}`);
-      const statusEl = document.getElementById(`status-${index}`);
+    function fail(i, msg) {
+      var btn = document.getElementById('btn-' + i);
+      var st = document.getElementById('st-' + i);
       btn.disabled = false;
       btn.textContent = '📥 Erneut versuchen';
-      statusEl.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(msg)}</span>`;
+      st.textContent = '❌ ' + msg;
+      st.className = 'status status-err';
     }
 
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    function esc(s) {
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
     }
 
-    document.addEventListener('DOMContentLoaded', renderResults);
+    document.addEventListener('DOMContentLoaded', render);
   </script>
 </body>
 </html>

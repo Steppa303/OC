@@ -47,22 +47,23 @@ app.get('/', (req, res) => {
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>AddBook</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; background: #fff; color: #111; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .wrap { text-align: center; padding: 40px; max-width: 500px; }
+    h1 { font-size: 28px; margin-bottom: 16px; }
+    p { font-size: 16px; color: #444; margin-bottom: 8px; line-height: 1.5; }
+    code { background: #eee; padding: 2px 6px; font-size: 15px; }
   </style>
 </head>
-<body class="bg-gray-950 text-gray-100 flex items-center justify-center min-h-screen">
-  <div class="text-center p-8 max-w-lg">
-    <div class="text-7xl mb-6">📚</div>
-    <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-4">AddBook</h1>
-    <p class="text-gray-400 text-lg mb-2">Schreib <span class="text-indigo-400 font-mono">Buch: Titel</span> auf deinen Kindle Scribe</p>
-    <p class="text-gray-500 text-sm">und du bekommst einen Telegram-Link mit Suchergebnissen.</p>
-    <p class="text-gray-500 text-sm">Klick auf "Zu Kindle senden" — fertig.</p>
-    <div class="mt-8 text-gray-600 text-xs">addbook.steppa.online</div>
+<body>
+  <div class="wrap">
+    <h1>📚 AddBook</h1>
+    <p>Schreib <code>Buch: Titel</code> auf deinen Kindle Scribe</p>
+    <p>und du bekommst einen Telegram-Link mit Suchergebnissen.</p>
+    <p>Klick auf "Zu Kindle senden" — fertig.</p>
   </div>
 </body>
 </html>`);
@@ -236,15 +237,13 @@ function renderTemplate(template, data) {
 
 function getErrorPage(title, message) {
   return `<!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
 <title>${title}</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head><body class="bg-gray-950 text-gray-100 flex items-center justify-center min-h-screen">
-<div class="text-center p-8">
-  <div class="text-6xl mb-4">📚</div>
-  <h1 class="text-2xl font-bold mb-2">${title}</h1>
-  <p class="text-gray-400">${message}</p>
-  <p class="text-gray-500 text-sm mt-4">addbook.steppa.online</p>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Georgia,serif;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}.wrap{text-align:center;padding:40px}h1{font-size:22px;margin-bottom:8px}p{font-size:15px;color:#555}</style>
+</head><body>
+<div class="wrap">
+  <h1>${title}</h1>
+  <p>${message}</p>
 </div>
 </body></html>`;
 }
