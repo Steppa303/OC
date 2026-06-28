@@ -70,6 +70,35 @@ app.get('/', (req, res) => {
 });
 
 // ============================================================
+// Open Library proxy (CORS for Kindle browser)
+// ============================================================
+app.get('/api/bookinfo', async (req, res) => {
+  const { title, author } = req.query;
+  if (!title) return res.status(400).json({ error: 'title required' });
+
+  try {
+    const https = require('https');
+    const query = encodeURIComponent(title);
+    const url = `https://openlibrary.org/search.json?title=${query}&limit=3&fields=key,title,author_name,first_publish_year,subject,description`;
+
+    https.get(url, { headers: { 'User-Agent': 'AddBook/1.0' } }, (upstream) => {
+      let data = '';
+      upstream.on('data', (c) => data += c);
+      upstream.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          res.json(parsed);
+        } catch (e) {
+          res.status(502).json({ error: 'invalid upstream response' });
+        }
+      });
+    }).on('error', (e) => res.status(502).json({ error: e.message }));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============================================================
 // Results page
 // ============================================================
 app.get('/r', (req, res) => {

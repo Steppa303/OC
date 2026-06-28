@@ -34,8 +34,8 @@
     /* Cover — small for e-ink speed */
     .cover-wrap {
       flex-shrink: 0;
-      width: 80px;
-      height: 110px;
+      width: 160px;
+      height: 220px;
       background: #eee;
       border: 1px solid #bbb;
       display: flex;
@@ -58,6 +58,35 @@
     .title { font-size: 17px; font-weight: bold; margin-bottom: 2px; }
     .author { font-size: 14px; color: #444; margin-bottom: 4px; }
     .meta { font-size: 12px; color: #777; margin-bottom: 10px; }
+
+    /* Info panel */
+    .info-btn {
+      display: inline-block;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+      color: #111;
+      border: 2px solid #111;
+      cursor: pointer;
+      margin-right: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .info-btn:active { background: #eee; }
+    .details {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #333;
+    }
+    .details.open { display: block; }
+    .details h3 { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+    .details p { margin-bottom: 8px; }
+    .details .source { font-size: 11px; color: #999; margin-top: 8px; }
 
     /* Big button for e-ink touch */
     .btn {
@@ -158,14 +187,27 @@
 
         const meta = [book.year, book.language, book.format, book.size].filter(Boolean).join(' · ');
 
+        var btns =
+            '<button class="btn" id="btn-' + i + '" onclick="dl(' + i + ')">📥 Zu Kindle senden</button>' +
+            '<button class="info-btn" onclick="toggleInfo(' + i + ')">ℹ️ Mehr Infos</button>';
+
+        var desc = book.description || '';
+        // Clean up description (remove Anna's Archive formatting)
+        desc = desc.replace(/[\u{1F4D5}-\u{1F4DA}\u{1F680}]/gu, '').replace(/·/g, '').trim();
+
         li.innerHTML =
           '<div class="cover-wrap">' + cover + '</div>' +
           '<div class="info">' +
             '<div class="title">' + esc(book.title || 'Unbekannt') + '</div>' +
             '<div class="author">' + esc(book.author || 'Unbekannter Autor') + '</div>' +
             (meta ? '<div class="meta">' + esc(meta) + '</div>' : '') +
-            '<button class="btn" id="btn-' + i + '" onclick="dl(' + i + ')">📥 Zu Kindle senden</button>' +
+            btns +
             '<div class="status" id="st-' + i + '"></div>' +
+            '<div class="details" id="det-' + i + '">' +
+              '<h3>Klappentext</h3>' +
+              '<p id="det-text-' + i + '">' + (desc ? esc(desc) : '<em>Wird geladen…</em>') + '</p>' +
+              '<div class="source" id="det-src-' + i + '"></div>' +
+            '</div>' +
           '</div>';
 
         ul.appendChild(li);
@@ -241,6 +283,54 @@
       var d = document.createElement('div');
       d.textContent = s;
       return d.innerHTML;
+    }
+
+    function toggleInfo(i) {
+      var det = document.getElementById('det-' + i);
+      det.classList.toggle('open');
+      // Fetch from Open Library if not already loaded
+      var book = __BOOKS__[i];
+      var textEl = document.getElementById('det-text-' + i);
+      var srcEl = document.getElementById('det-src-' + i);
+      if (textEl.dataset.loaded) return;
+      fetchOpenLibrary(book, i);
+    }
+
+    function fetchOpenLibrary(book, i) {
+      var textEl = document.getElementById('det-text-' + i);
+      var srcEl = document.getElementById('det-src-' + i);
+      var query = (book.title || '').replace(/[^a-zA-Z0-9\s]/g, '').trim();
+      if (!query) return;
+
+      fetch('/api/bookinfo?title=' + encodeURIComponent(query))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          textEl.dataset.loaded = '1';
+          if (!data.docs || !data.docs.length) {
+            if (!textEl.textContent.trim() || textEl.querySelector('em')) {
+              textEl.innerHTML = '<em>Keine weiteren Informationen gefunden.</em>';
+            }
+            return;
+          }
+          var doc = data.docs[0];
+          var info = [];
+          if (doc.author_name) info.push('<strong>Autor:</strong> ' + esc(doc.author_name.join(', ')));
+          if (doc.first_publish_year) info.push('<strong>Ersterscheinung:</strong> ' + doc.first_publish_year);
+          if (doc.subject && doc.subject.length) {
+            var tags = doc.subject.slice(0, 8).map(function(s) { return esc(s); }).join(', ');
+            info.push('<strong>Themen:</strong> ' + tags);
+          }
+          if (info.length) {
+            textEl.innerHTML = info.join('<br>');
+          }
+          srcEl.textContent = 'Quelle: Open Library';
+        })
+        .catch(function() {
+          textEl.dataset.loaded = '1';
+          if (!textEl.textContent.trim() || textEl.querySelector('em')) {
+            textEl.innerHTML = '<em>Infos konnten nicht geladen werden.</em>';
+          }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', render);
