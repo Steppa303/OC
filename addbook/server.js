@@ -70,6 +70,21 @@ app.get('/', (req, res) => {
 });
 
 // ============================================================
+// Trigger sync manually
+// ============================================================
+app.post('/api/sync', (req, res) => {
+  const syncScript = path.join(__dirname, 'addbook_sync.py');
+  execFile('python3', [syncScript], { timeout: 120000 }, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Sync error:', stderr);
+      return res.status(500).json({ error: 'Sync failed', details: stderr });
+    }
+    console.log('Sync completed');
+    res.json({ status: 'ok', output: stdout.slice(-500) });
+  });
+});
+
+// ============================================================
 // Open Library proxy (CORS for Kindle browser)
 // ============================================================
 app.get('/api/bookinfo', async (req, res) => {

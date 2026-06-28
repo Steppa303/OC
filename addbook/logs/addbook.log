@@ -155,3 +155,25 @@ UnboundLocalError: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is
 2026-06-28 20:50:07,198 INFO Found 2 p-gen files in folder
 2026-06-28 20:50:07,198 INFO Processed 0 files this run
 2026-06-28 20:50:07,200 INFO === addbook_sync end ===
+2026-06-28 20:59:49,777 INFO === addbook_sync start ===
+2026-06-28 20:59:51,076 INFO MCP session initialized (id=7df3256b-2ed4-4044-a245-c37ccaa71e30)
+2026-06-28 20:59:52,316 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:59:54,728 INFO Found 3 p-gen files in folder
+2026-06-28 20:59:54,729 INFO Processing: p-gen  - Kindle (1).txt (ID: 1r6ejvjsUMa8FXsN0GAOAkHzfU7K4ma68)
+2026-06-28 20:59:58,057 INFO Downloaded 25 bytes via S3 URL
+2026-06-28 20:59:58,058 INFO Downloaded 25 chars from p-gen  - Kindle (1).txt
+2026-06-28 20:59:58,059 INFO Extracted title: Der Schwarm
+2026-06-28 20:59:59,520 INFO Found 50 books for 'Der Schwarm'
+2026-06-28 20:59:59,521 INFO Generated results JSON: /srv/addbook/results/latest.json
+2026-06-28 20:59:59,656 INFO Telegram message sent
+2026-06-28 20:59:59,660 INFO Telegram sent for p-gen  - Kindle (1).txt
+2026-06-28 21:00:00,530 ERROR Move failed: unknown
+2026-06-28 21:00:00,530 WARNING Could not move p-gen  - Kindle (1).txt to archive (notification was sent)
+2026-06-28 21:00:00,531 INFO Processed 1 files this run
+2026-06-28 21:00:00,533 INFO === addbook_sync end ===
+2026-06-28 21:00:01,649 INFO === addbook_sync start ===
+2026-06-28 21:00:03,362 INFO MCP session initialized (id=572b5edd-d190-4311-a67d-6ec746b6141d)
+2026-06-28 21:00:12,073 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:00:15,164 INFO Found 3 p-gen files in folder
+2026-06-28 21:00:15,164 INFO Processed 0 files this run
+2026-06-28 21:00:15,180 INFO === addbook_sync end ===
