@@ -209,3 +209,15 @@ UnboundLocalError: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is
 2026-06-28 21:10:16,497 WARNING Could not move p-gen  - Kindle (3).txt to archive (notification was sent)
 2026-06-28 21:10:16,506 INFO Processed 1 files this run
 2026-06-28 21:10:16,510 INFO === addbook_sync end ===
+2026-06-28 21:15:01,914 INFO === addbook_sync start ===
+2026-06-28 21:15:03,198 INFO MCP session initialized (id=f2aa9649-9d92-45b8-82ea-acd822a675b2)
+2026-06-28 21:15:04,609 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:15:07,301 INFO Found 5 p-gen files in folder
+2026-06-28 21:15:07,303 INFO Processed 0 files this run
+2026-06-28 21:15:07,305 INFO === addbook_sync end ===
+2026-06-28 21:20:01,760 INFO === addbook_sync start ===
+2026-06-28 21:20:05,732 INFO MCP session initialized (id=ac1f9942-bc19-41a1-91ac-4ab7bd8d97be)
+2026-06-28 21:20:07,018 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:20:10,059 INFO Found 5 p-gen files in folder
+2026-06-28 21:20:10,059 INFO Processed 0 files this run
+2026-06-28 21:20:10,068 INFO === addbook_sync end ===

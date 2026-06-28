@@ -89,7 +89,7 @@ Dune                 ← Titel in Zeile 3
 8. Datei in `p-gen-archiv` Unterordner verschieben (nicht löschen)
 9. State in `.addbook_state.json` speichern (Idempotenz)
 
-**Cron:** `*/5 * * * *` (alle 5 Minuten via `curl -X POST http://localhost:3006/api/sync`)
+**Cron:** `*/2 * * * *` (alle 2 Minuten via `curl -X POST http://localhost:3006/api/sync`)
 
 ### 3. Anna's Archive Suche (`scraper/search.py`)
 
