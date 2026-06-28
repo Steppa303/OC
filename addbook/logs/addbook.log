@@ -221,3 +221,21 @@ UnboundLocalError: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is
 2026-06-28 21:20:10,059 INFO Found 5 p-gen files in folder
 2026-06-28 21:20:10,059 INFO Processed 0 files this run
 2026-06-28 21:20:10,068 INFO === addbook_sync end ===
+2026-06-28 21:22:01,309 INFO === addbook_sync start ===
+2026-06-28 21:22:02,637 INFO MCP session initialized (id=e65f1ea1-b392-412a-9a38-9d31c1add074)
+2026-06-28 21:22:05,764 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:22:08,131 INFO Found 5 p-gen files in folder
+2026-06-28 21:22:08,131 INFO Processed 0 files this run
+2026-06-28 21:22:08,133 INFO === addbook_sync end ===
+2026-06-28 21:24:01,407 INFO === addbook_sync start ===
+2026-06-28 21:24:02,706 INFO MCP session initialized (id=e4ed7047-0962-4255-992b-ba09d9eeb49f)
+2026-06-28 21:24:03,869 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:24:06,994 INFO Found 5 p-gen files in folder
+2026-06-28 21:24:06,994 INFO Processed 0 files this run
+2026-06-28 21:24:06,996 INFO === addbook_sync end ===
+2026-06-28 21:24:56,892 INFO === addbook_sync start ===
+2026-06-28 21:24:57,943 INFO MCP session initialized (id=4ff743c1-393d-423c-86df-8cd8c9ec98ca)
+2026-06-28 21:24:59,178 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 21:25:02,197 INFO Found 5 p-gen files in folder
+2026-06-28 21:25:02,197 INFO Processed 0 files this run
+2026-06-28 21:25:02,199 INFO === addbook_sync end ===

@@ -70,7 +70,62 @@ app.get('/', (req, res) => {
 });
 
 // ============================================================
-// Trigger sync manually
+// Renew Drive Watch (called by cron, expires every 24h)
+// ============================================================
+app.post('/api/renew-watch', async (req, res) => {
+  const watchFile = path.join(__dirname, '.drive-watch.json');
+  let watchData = {};
+  try { watchData = JSON.parse(fs.readFileSync(watchFile, 'utf8')); } catch {}
+
+  // Stop old watch
+  if (watchData.channelId && watchData.resourceId) {
+    try {
+      const https = require('https');
+      // We can't easily stop via Composio in a GET handler, so we just create a new one
+    } catch {}
+  }
+
+  // Create new watch via Composio MCP (reuse sync script)
+  const syncScript = path.join(__dirname, 'renew_watch.py');
+  execFile('python3', [syncScript], { timeout: 30000 }, (error, stdout, stderr) => {
+    if (error) {
+      console.error('Watch renewal error:', stderr);
+      return res.status(500).json({ error: 'Renewal failed', details: stderr });
+    }
+    try {
+      const result = JSON.parse(stdout);
+      res.json(result);
+    } catch {
+      res.json({ status: 'ok', output: stdout });
+    }
+  });
+});
+
+// ============================================================
+// Google Drive Webhook (Push Notifications)
+// ============================================================
+app.post('/api/drive-webhook', (req, res) => {
+  // Google sends headers: X-Goog-Channel-ID, X-Goog-Resource-State, etc.
+  const state = req.headers['x-goog-resource-state'];
+  const channelToken = req.headers['x-goog-channel-token'];
+
+  console.log(`🔔 Drive webhook: state=${state}`);
+
+  // Only trigger sync on 'change' or 'add' events
+  if (state === 'change' || state === 'add') {
+    const syncScript = path.join(__dirname, 'addbook_sync.py');
+    execFile('python3', [syncScript], { timeout: 120000 }, (error, stdout, stderr) => {
+      if (error) console.error('Webhook sync error:', stderr);
+      else console.log('Webhook sync done');
+    });
+  }
+
+  // Always respond 200 quickly (Google expects fast response)
+  res.status(200).end();
+});
+
+// ============================================================
+// Sync manually
 // ============================================================
 app.post('/api/sync', (req, res) => {
   const syncScript = path.join(__dirname, 'addbook_sync.py');
