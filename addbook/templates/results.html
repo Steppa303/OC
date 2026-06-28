@@ -191,10 +191,6 @@
             '<button class="btn" id="btn-' + i + '" onclick="dl(' + i + ')">📥 Zu Kindle senden</button>' +
             '<button class="info-btn" onclick="toggleInfo(' + i + ')">ℹ️ Mehr Infos</button>';
 
-        var desc = book.description || '';
-        // Clean up description (remove Anna's Archive formatting)
-        desc = desc.replace(/[\u{1F4D5}-\u{1F4DA}\u{1F680}]/gu, '').replace(/·/g, '').trim();
-
         li.innerHTML =
           '<div class="cover-wrap">' + cover + '</div>' +
           '<div class="info">' +
@@ -204,8 +200,7 @@
             btns +
             '<div class="status" id="st-' + i + '"></div>' +
             '<div class="details" id="det-' + i + '">' +
-              '<h3>Klappentext</h3>' +
-              '<p id="det-text-' + i + '">' + (desc ? esc(desc) : '<em>Wird geladen…</em>') + '</p>' +
+              '<p id="det-text-' + i + '"><em>Wird geladen…</em></p>' +
               '<div class="source" id="det-src-' + i + '"></div>' +
             '</div>' +
           '</div>';
@@ -299,37 +294,50 @@
     function fetchOpenLibrary(book, i) {
       var textEl = document.getElementById('det-text-' + i);
       var srcEl = document.getElementById('det-src-' + i);
-      var query = (book.title || '').replace(/[^a-zA-Z0-9\s]/g, '').trim();
-      if (!query) return;
+      // Clean title: remove series numbers, subtitles in parens, special chars
+      var raw = (book.title || '');
+      var query = raw
+        .replace(/\s*[-–•]\s*.*/g, '')  // remove everything after dash/separator
+        .replace(/\s*\(.*\)/g, '')       // remove parenthesized text
+        .replace(/\s*\[.*\]/g, '')       // remove bracketed text
+        .replace(/[^a-zA-Z0-9äöüÄÖÜß\s]/g, '')
+        .trim();
+      if (query.length < 2) query = raw.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+      if (query.length < 2) { textEl.innerHTML = '<em>Kein Titel vorhanden.</em>'; return; }
 
       fetch('/api/bookinfo?title=' + encodeURIComponent(query))
         .then(function(r) { return r.json(); })
         .then(function(data) {
           textEl.dataset.loaded = '1';
           if (!data.docs || !data.docs.length) {
-            if (!textEl.textContent.trim() || textEl.querySelector('em')) {
-              textEl.innerHTML = '<em>Keine weiteren Informationen gefunden.</em>';
-            }
+            textEl.innerHTML = '<em>Keine Informationen gefunden.</em>';
             return;
           }
           var doc = data.docs[0];
-          var info = [];
-          if (doc.author_name) info.push('<strong>Autor:</strong> ' + esc(doc.author_name.join(', ')));
-          if (doc.first_publish_year) info.push('<strong>Ersterscheinung:</strong> ' + doc.first_publish_year);
+          var parts = [];
+          // Description (klappentext)
+          var desc = doc.description;
+          if (typeof desc === 'string' && desc.length > 30) {
+            parts.push('<strong>Klappentext:</strong><br>' + esc(desc));
+          } else if (Array.isArray(desc) && desc.length && desc[0].length > 30) {
+            parts.push('<strong>Klappentext:</strong><br>' + esc(desc[0]));
+          }
+          if (doc.author_name) parts.push('<strong>Autor:</strong> ' + esc(doc.author_name.join(', ')));
+          if (doc.first_publish_year) parts.push('<strong>Ersterscheinung:</strong> ' + doc.first_publish_year);
           if (doc.subject && doc.subject.length) {
             var tags = doc.subject.slice(0, 8).map(function(s) { return esc(s); }).join(', ');
-            info.push('<strong>Themen:</strong> ' + tags);
+            parts.push('<strong>Themen:</strong> ' + tags);
           }
-          if (info.length) {
-            textEl.innerHTML = info.join('<br>');
+          if (parts.length) {
+            textEl.innerHTML = parts.join('<br><br>');
+          } else {
+            textEl.innerHTML = '<em>Keine Detailinformationen verfügbar.</em>';
           }
           srcEl.textContent = 'Quelle: Open Library';
         })
         .catch(function() {
           textEl.dataset.loaded = '1';
-          if (!textEl.textContent.trim() || textEl.querySelector('em')) {
-            textEl.innerHTML = '<em>Infos konnten nicht geladen werden.</em>';
-          }
+          textEl.innerHTML = '<em>Infos konnten nicht geladen werden.</em>';
         });
     }
 
