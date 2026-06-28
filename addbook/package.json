@@ -1,0 +1,17 @@
+{
+  "name": "addbook",
+  "version": "1.0.0",
+  "description": "Kindle Scribe to Book Search to Send to Kindle",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1",
+    "morgan": "^1.10.0",
+    "better-sqlite3": "^9.4.3"
+  }
+}

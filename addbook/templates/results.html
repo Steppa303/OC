@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AddBook — Ergebnisse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .card-glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.1); }
+    .card-glass:hover { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 0 30px rgba(99, 102, 241, 0.1); }
+    .shimmer { background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .btn-primary:hover { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .status-badge { transition: all 0.3s ease; }
+    .cover-placeholder { background: linear-gradient(135deg, #1e293b, #334155); }
+  </style>
+</head>
+<body class="bg-surface-950 text-gray-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-3xl">📚</span>
+        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          AddBook
+        </h1>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-4">
+        <div>
+          <p class="text-gray-300 text-lg">
+            Ergebnisse für: <span class="font-semibold text-white" id="queryDisplay"></span>
+          </p>
+          <p class="text-gray-500 text-sm" id="resultInfo"></p>
+        </div>
+        <div class="text-gray-500 text-xs" id="timestamp"></div>
+      </div>
+    </header>
+
+    <!-- Results Grid -->
+    <div id="results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden text-center py-20">
+      <div class="text-6xl mb-4">🔍</div>
+      <p class="text-gray-400 text-lg">Keine Ergebnisse gefunden</p>
+      <p class="text-gray-500 text-sm mt-2">Versuche einen anderen Suchbegriff</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-gray-600 text-xs border-t border-gray-800 pt-6">
+      addbook.steppa.online · Bücher werden automatisch an deinen Kindle gesendet
+    </footer>
+  </div>
+
+  <script>
+    // Injected by server
+    const __BOOKS__ = [];
+    const __RESULT_ID__ = "";
+    const __QUERY__ = "";
+    const __TIMESTAMP__ = "";
+
+    const statusMap = {
+      queued:    { text: 'Warteschlange...', color: 'text-gray-400', icon: '⏳' },
+      downloading: { text: 'Wird heruntergeladen...', color: 'text-blue-400', icon: '📥' },
+      sending:   { text: 'Wird an Kindle gesendet...', color: 'text-purple-400', icon: '📧' },
+      done:      { text: '✅ Erfolgreich an Kindle gesendet!', color: 'text-emerald-400', icon: '✅' },
+      failed:    { text: 'Fehlgeschlagen', color: 'text-red-400', icon: '❌' }
+    };
+
+    function renderResults() {
+      const container = document.getElementById('results');
+      const emptyState = document.getElementById('emptyState');
+
+      // Set header info
+      document.getElementById('queryDisplay').textContent = __QUERY__;
+      document.getElementById('resultInfo').textContent = `${__BOOKS__.length} Bücher gefunden`;
+
+      if (__TIMESTAMP__) {
+        const d = new Date(__TIMESTAMP__);
+        document.getElementById('timestamp').textContent = d.toLocaleString('de-DE');
+      }
+
+      if (__BOOKS__.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      container.innerHTML = '';
+      __BOOKS__.forEach((book, index) => {
+        const card = document.createElement('div');
+        card.className = 'card-glass rounded-xl p-5 fade-in transition-all duration-300';
+        card.style.animationDelay = `${index * 50}ms`;
+
+        const coverHtml = book.coverUrl
+          ? `<img src="${book.coverUrl}" alt="Cover" class="w-full h-48 object-contain rounded-lg mb-4 bg-surface-900" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-48 cover-placeholder rounded-lg flex items-center justify-center text-4xl mb-4\\'>📖</div>'">`
+          : `<div class="w-full h-48 cover-placeholder rounded-lg flex items-center justify-center text-4xl mb-4">📖</div>`;
+
+        const meta = [book.year, book.language, book.format, book.size].filter(Boolean).join(' · ');
+
+        card.innerHTML = `
+          ${coverHtml}
+          <h2 class="text-lg font-semibold text-white mb-1 line-clamp-2">${escapeHtml(book.title || 'Unbekannt')}</h2>
+          <p class="text-gray-400 text-sm mb-2">${escapeHtml(book.author || 'Unbekannter Autor')}</p>
+          ${meta ? `<p class="text-gray-500 text-xs mb-4">${escapeHtml(meta)}</p>` : ''}
+          <button
+            id="btn-${index}"
+            class="btn-primary w-full py-2.5 px-4 rounded-lg text-white font-medium text-sm transition-all duration-200"
+            onclick="downloadBook(${index})"
+          >
+            📥 Zu Kindle senden
+          </button>
+          <div id="status-${index}" class="mt-3 text-sm text-center min-h-[1.5rem]"></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function downloadBook(index) {
+      const book = __BOOKS__[index];
+      const btn = document.getElementById(`btn-${index}`);
+      const statusEl = document.getElementById(`status-${index}`);
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Wird verarbeitet...';
+      statusEl.innerHTML = '<span class="text-gray-400">Download wird gestartet...</span>';
+
+      fetch('/api/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          resultId: __RESULT_ID__,
+          index,
+          md5: book.md5,
+          title: book.title,
+          author: book.author || ''
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          showError(index, data.error);
+          return;
+        }
+        pollStatus(data.id, index);
+      })
+      .catch(err => showError(index, 'Netzwerkfehler: ' + err.message));
+    }
+
+    function pollStatus(downloadId, index) {
+      const btn = document.getElementById(`btn-${index}`);
+      const statusEl = document.getElementById(`status-${index}`);
+
+      function check() {
+        fetch(`/api/status/${downloadId}`)
+          .then(r => r.json())
+          .then(data => {
+            const info = statusMap[data.status] || statusMap.queued;
+            statusEl.innerHTML = `<span class="${info.color}">${info.icon} ${info.text}</span>`;
+
+            if (data.status === 'done') {
+              btn.textContent = '✅ Gesendet';
+              btn.className = btn.className.replace('btn-primary', 'bg-emerald-600');
+              return;
+            }
+            if (data.status === 'failed') {
+              showError(index, data.error || 'Unbekannter Fehler');
+              return;
+            }
+            setTimeout(check, 2000);
+          })
+          .catch(() => setTimeout(check, 3000));
+      }
+      check();
+    }
+
+    function showError(index, msg) {
+      const btn = document.getElementById(`btn-${index}`);
+      const statusEl = document.getElementById(`status-${index}`);
+      btn.disabled = false;
+      btn.textContent = '📥 Erneut versuchen';
+      statusEl.innerHTML = `<span class="text-red-400">❌ ${escapeHtml(msg)}</span>`;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderResults);
+  </script>
+</body>
+</html>

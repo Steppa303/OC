@@ -1,0 +1,145 @@
+2026-06-28 19:30:07,228 INFO === addbook_sync start ===
+2026-06-28 19:30:08,607 INFO MCP session initialized (id=d61b5077-62f1-44da-9a48-ce3828bf18d8)
+2026-06-28 19:30:10,467 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 19:30:11,715 WARNING Could not find folder 'p-gen-archiv'
+2026-06-28 19:30:13,388 INFO Created archive folder (ID: 1fs5jys08IVqvWo1ikIg4V83cSWLnwJow)
+2026-06-28 19:30:14,626 INFO Found 0 p-gen files in folder
+2026-06-28 19:30:14,626 INFO No new p-gen files found
+2026-06-28 19:30:14,628 INFO === addbook_sync end ===
+2026-06-28 19:40:01,200 INFO === addbook_sync start ===
+2026-06-28 19:40:03,037 INFO MCP session initialized (id=52cecef2-33cf-4568-bdc5-bec50f3dda77)
+2026-06-28 19:40:04,228 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 19:40:07,024 INFO Found 0 p-gen files in folder
+2026-06-28 19:40:07,024 INFO No new p-gen files found
+2026-06-28 19:40:07,026 INFO === addbook_sync end ===
+2026-06-28 19:50:01,358 INFO === addbook_sync start ===
+2026-06-28 19:50:02,953 INFO MCP session initialized (id=55adb2c7-c100-432f-9bb1-38d5698f5ec2)
+2026-06-28 19:50:04,242 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 19:50:07,138 INFO Found 2 p-gen files in folder
+2026-06-28 19:50:07,138 INFO Processing: p-gen  - Kindle.txt (ID: 1AW9KdUwsFJC0xTZmp0r25XNm-wm1gSGM)
+2026-06-28 19:50:09,464 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 19:50:09,468 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 19:50:09,468 WARNING No book title found in p-gen  - Kindle.txt
+2026-06-28 19:50:09,470 INFO Processing: p-gen  - Kindle.pdf (ID: 1QAaTDrx6DU-ZIXjrVqyWvwF9X5_PAjc2)
+2026-06-28 19:50:11,790 INFO Downloaded 91513 bytes via S3 URL
+2026-06-28 19:50:12,378 INFO Downloaded 86781 chars from p-gen  - Kindle.pdf
+2026-06-28 19:50:12,381 WARNING No book title found in p-gen  - Kindle.pdf
+2026-06-28 19:50:12,382 INFO Processed 0 files this run
+2026-06-28 19:50:12,384 INFO === addbook_sync end ===
+2026-06-28 20:00:02,220 INFO === addbook_sync start ===
+2026-06-28 20:00:04,074 INFO MCP session initialized (id=68720ca4-82f9-4a5f-8df5-b59e33eacf24)
+2026-06-28 20:00:05,723 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:00:13,685 INFO Found 2 p-gen files in folder
+2026-06-28 20:00:13,685 INFO Processed 0 files this run
+2026-06-28 20:00:13,688 INFO === addbook_sync end ===
+2026-06-28 20:10:02,017 INFO === addbook_sync start ===
+2026-06-28 20:10:03,656 INFO MCP session initialized (id=98bab9e6-f4f3-4c55-99ae-4fbef4f17d92)
+2026-06-28 20:10:05,066 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:10:08,095 INFO Found 2 p-gen files in folder
+2026-06-28 20:10:08,095 INFO Processed 0 files this run
+2026-06-28 20:10:08,097 INFO === addbook_sync end ===
+2026-06-28 20:20:01,833 INFO === addbook_sync start ===
+2026-06-28 20:20:04,674 INFO MCP session initialized (id=8f03a8bd-ec95-4fa4-ace3-7f892c0f2b6f)
+2026-06-28 20:20:05,959 INFO === addbook_sync start ===
+2026-06-28 20:20:07,438 INFO MCP session initialized (id=996899aa-9d00-43b4-a08c-6ee85f839fb6)
+2026-06-28 20:20:07,592 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:20:08,713 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:20:11,306 INFO Found 2 p-gen files in folder
+2026-06-28 20:20:11,307 INFO Processing: p-gen  - Kindle.txt (ID: 1ID9N0nIV4EXeADDrT2kIo8H__aooxkxB)
+2026-06-28 20:20:11,372 INFO Found 2 p-gen files in folder
+2026-06-28 20:20:11,373 INFO Processing: p-gen  - Kindle.txt (ID: 1ID9N0nIV4EXeADDrT2kIo8H__aooxkxB)
+2026-06-28 20:20:13,560 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 20:20:13,562 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 20:20:13,564 INFO Extracted title: Dan Brown
+2026-06-28 20:20:14,312 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 20:20:14,314 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 20:20:14,314 INFO Extracted title: Dan Brown
+2026-06-28 20:20:15,221 ERROR Unexpected error: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 563, in main
+    process_files()
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 512, in process_files
+    books = search_result.get("results", [])
+            ^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-06-28 20:20:15,223 INFO === addbook_sync end ===
+2026-06-28 20:20:16,062 ERROR Unexpected error: 'list' object has no attribute 'get'
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 563, in main
+    process_files()
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 512, in process_files
+    books = search_result.get("results", [])
+            ^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+2026-06-28 20:20:16,064 INFO === addbook_sync end ===
+2026-06-28 20:20:30,286 INFO === addbook_sync start ===
+2026-06-28 20:20:31,519 INFO MCP session initialized (id=0cfe391c-03d4-4479-9598-f6b3fc4b4f63)
+2026-06-28 20:20:32,925 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:20:35,515 INFO Found 2 p-gen files in folder
+2026-06-28 20:20:35,516 INFO Processing: p-gen  - Kindle.txt (ID: 1ID9N0nIV4EXeADDrT2kIo8H__aooxkxB)
+2026-06-28 20:20:37,535 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 20:20:37,537 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 20:20:37,538 INFO Extracted title: Dan Brown
+2026-06-28 20:20:39,729 INFO Found 50 books for 'Dan Brown'
+2026-06-28 20:20:39,732 INFO Generated results JSON: /srv/addbook/results/4f11fc46-1b0b-4323-bcb6-bce5f68ffe7a.json
+2026-06-28 20:20:39,733 ERROR Unexpected error: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is not associated with a value
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 563, in main
+    process_files()
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 533, in process_files
+    if send_telegram_message(result_id, title, len(books)):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/addbook/addbook_sync.py", line 349, in send_telegram_message
+    if not TELEGRAM_BOT_TOKEN:
+           ^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is not associated with a value
+2026-06-28 20:20:39,734 INFO === addbook_sync end ===
+2026-06-28 20:20:52,777 INFO === addbook_sync start ===
+2026-06-28 20:20:53,971 INFO MCP session initialized (id=f2955f4a-0f5d-4d40-8cef-66ac118b289a)
+2026-06-28 20:20:55,288 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:20:57,947 INFO Found 2 p-gen files in folder
+2026-06-28 20:20:57,948 INFO Processing: p-gen  - Kindle.txt (ID: 1ID9N0nIV4EXeADDrT2kIo8H__aooxkxB)
+2026-06-28 20:21:00,160 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 20:21:00,168 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 20:21:00,168 INFO Extracted title: Dan Brown
+2026-06-28 20:21:01,383 INFO Found 50 books for 'Dan Brown'
+2026-06-28 20:21:01,385 INFO Generated results JSON: /srv/addbook/results/e387a42a-67b2-4994-aaae-ca5da5abab8a.json
+2026-06-28 20:21:01,387 ERROR No Telegram bot token found in openclaw.json
+2026-06-28 20:21:01,388 WARNING Telegram attempt 1 failed, waiting 2s...
+2026-06-28 20:21:03,389 ERROR No Telegram bot token found in openclaw.json
+2026-06-28 20:21:03,389 WARNING Telegram attempt 2 failed, waiting 4s...
+2026-06-28 20:21:07,390 ERROR No Telegram bot token found in openclaw.json
+2026-06-28 20:21:07,390 WARNING Telegram attempt 3 failed, waiting 8s...
+2026-06-28 20:21:15,395 ERROR Failed to send Telegram for p-gen  - Kindle.txt after 3 attempts
+2026-06-28 20:21:15,396 INFO Processing: p-gen  - Kindle.pdf (ID: 1QAaTDrx6DU-ZIXjrVqyWvwF9X5_PAjc2)
+2026-06-28 20:21:17,790 INFO Downloaded 91513 bytes via S3 URL
+2026-06-28 20:21:18,330 INFO Downloaded 86781 chars from p-gen  - Kindle.pdf
+2026-06-28 20:21:18,334 WARNING No book title found in p-gen  - Kindle.pdf
+2026-06-28 20:21:18,334 INFO Processed 0 files this run
+2026-06-28 20:21:18,337 INFO === addbook_sync end ===
+2026-06-28 20:21:34,142 INFO === addbook_sync start ===
+2026-06-28 20:21:35,352 INFO MCP session initialized (id=d04bc155-2ea5-4a18-8d35-3f72730feab3)
+2026-06-28 20:21:36,691 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:21:39,726 INFO Found 2 p-gen files in folder
+2026-06-28 20:21:39,726 INFO Processing: p-gen  - Kindle.txt (ID: 1ID9N0nIV4EXeADDrT2kIo8H__aooxkxB)
+2026-06-28 20:21:42,079 INFO Downloaded 23 bytes via S3 URL
+2026-06-28 20:21:42,081 INFO Downloaded 23 chars from p-gen  - Kindle.txt
+2026-06-28 20:21:42,081 INFO Extracted title: Dan Brown
+2026-06-28 20:21:43,389 INFO Found 50 books for 'Dan Brown'
+2026-06-28 20:21:43,391 INFO Generated results JSON: /srv/addbook/results/29d33014-4460-499e-8122-90dacc06e86f.json
+2026-06-28 20:21:53,528 INFO Telegram message sent
+2026-06-28 20:21:53,530 INFO Telegram sent for p-gen  - Kindle.txt
+2026-06-28 20:21:54,347 ERROR Move failed: unknown
+2026-06-28 20:21:54,354 WARNING Could not move p-gen  - Kindle.txt to archive (notification was sent)
+2026-06-28 20:21:54,364 INFO Processing: p-gen  - Kindle.pdf (ID: 1QAaTDrx6DU-ZIXjrVqyWvwF9X5_PAjc2)
+2026-06-28 20:21:56,676 INFO Downloaded 91513 bytes via S3 URL
+2026-06-28 20:21:57,191 INFO Downloaded 86781 chars from p-gen  - Kindle.pdf
+2026-06-28 20:21:57,194 WARNING No book title found in p-gen  - Kindle.pdf
+2026-06-28 20:21:57,194 INFO Processed 1 files this run
+2026-06-28 20:21:57,197 INFO === addbook_sync end ===
+2026-06-28 20:30:01,419 INFO === addbook_sync start ===
+2026-06-28 20:30:02,958 INFO MCP session initialized (id=2e053ffd-c70a-47bb-ac90-6b7653f983d4)
+2026-06-28 20:30:04,577 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:30:07,156 INFO Found 2 p-gen files in folder
+2026-06-28 20:30:07,159 INFO Processed 0 files this run
+2026-06-28 20:30:07,164 INFO === addbook_sync end ===
