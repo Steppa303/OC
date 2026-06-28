@@ -79,20 +79,35 @@ app.get('/api/bookinfo', async (req, res) => {
   try {
     const https = require('https');
     const query = encodeURIComponent(title);
-    const url = `https://openlibrary.org/search.json?title=${query}&limit=3&fields=key,title,author_name,first_publish_year,subject,description`;
 
-    https.get(url, { headers: { 'User-Agent': 'AddBook/1.0' } }, (upstream) => {
-      let data = '';
-      upstream.on('data', (c) => data += c);
-      upstream.on('end', () => {
-        try {
-          const parsed = JSON.parse(data);
-          res.json(parsed);
-        } catch (e) {
-          res.status(502).json({ error: 'invalid upstream response' });
-        }
+    function fetchOL(lang) {
+      return new Promise((resolve, reject) => {
+        const url = lang
+          ? `https://openlibrary.org/search.json?title=${query}&limit=3&language=${lang}&fields=key,title,author_name,first_publish_year,subject,description`
+          : `https://openlibrary.org/search.json?title=${query}&limit=3&fields=key,title,author_name,first_publish_year,subject,description`;
+        https.get(url, { headers: { 'User-Agent': 'AddBook/1.0' } }, (upstream) => {
+          let data = '';
+          upstream.on('data', (c) => data += c);
+          upstream.on('end', () => {
+            try { resolve(JSON.parse(data)); } catch { resolve({ docs: [] }); }
+          });
+        }).on('error', reject);
       });
-    }).on('error', (e) => res.status(502).json({ error: e.message }));
+    }
+
+    // Try German first, then any language
+    let result = await fetchOL('ger');
+    if (!result.docs || !result.docs.length || !result.docs[0].description) {
+      const fallback = await fetchOL();
+      if (fallback.docs && fallback.docs.length) {
+        if (!result.docs || !result.docs.length) {
+          result = fallback;
+        } else if (!result.docs[0].description && fallback.docs[0].description) {
+          result.docs[0].description = fallback.docs[0].description;
+        }
+      }
+    }
+    res.json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

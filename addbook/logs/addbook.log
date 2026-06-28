@@ -149,3 +149,9 @@ UnboundLocalError: cannot access local variable 'TELEGRAM_BOT_TOKEN' where it is
 2026-06-28 20:40:07,047 INFO Found 2 p-gen files in folder
 2026-06-28 20:40:07,048 INFO Processed 0 files this run
 2026-06-28 20:40:07,060 INFO === addbook_sync end ===
+2026-06-28 20:50:01,317 INFO === addbook_sync start ===
+2026-06-28 20:50:02,895 INFO MCP session initialized (id=eae2ebc9-26f2-4221-843b-9079eb97042c)
+2026-06-28 20:50:04,255 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-06-28 20:50:07,198 INFO Found 2 p-gen files in folder
+2026-06-28 20:50:07,198 INFO Processed 0 files this run
+2026-06-28 20:50:07,200 INFO === addbook_sync end ===
