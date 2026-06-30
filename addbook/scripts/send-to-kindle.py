@@ -43,9 +43,10 @@ else:
 with open(file_path, 'rb') as f:
     file_data = f.read()
 
-# Sanitize filename for Amazon
-sanitized_title = re.sub(r'[\\/:*?"<>|!•·●◆◇■□▲△▼▽○◉◈☆★♪♫£€¥§™®©@#%^&+=~`]', '', title)[:80].strip()
-sanitized_title = re.sub(r'\s+', ' ', sanitized_title)
+# Sanitize filename for Amazon - strip all non-ASCII
+sanitized_title = re.sub(r'[^\x20-\x7E]', '', title)[:60].strip()
+sanitized_title = re.sub(r'[\\/:*?"<>|!•·●◆◇■□▲△▼▽○◉◈☆★♪♫£€¥§™®©@#%^&+=~`]', '', sanitized_title)[:60].strip()
+sanitized_title = re.sub(r'\s+', ' ', sanitized_title).strip()
 if not sanitized_title:
     sanitized_title = 'Dokument'
 filename = f"{sanitized_title}{file_ext}"
@@ -53,7 +54,11 @@ filename = f"{sanitized_title}{file_ext}"
 # Send via AgentMail
 client = AgentMail(api_key=api_key)
 
+# For PDF: append "Convert" to trigger Amazon's PDF-to-Kindle conversion
+# For EPUB: subject = title is fine
 subject = title
+if ext == '.pdf':
+    subject = f"{title} [Convert]"
 body = f"An Kindle gesendet: {title}"
 if author:
     body += f" von {author}"

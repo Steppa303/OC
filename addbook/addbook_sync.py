@@ -565,62 +565,51 @@ def process_recipe_trigger(file_id: str, file_name: str, query: str, count: int)
     Dedup per query: never send the same recipe URL twice.
     Returns True if at least one recipe was successfully sent to Kindle.
     """
+    clean = "".join(c for c in query if c.isascii() and (c.isalnum() or c in " _-'")).strip()[:40] or "Rezept"
     recipe_state = load_recipe_state()
-    exclude_urls = set(recipe_state.get(query, []))
+    exclude_urls = set(recipe_state.get(clean, []))
 
-    log.info("🍳 Recipe search: '%s' (need %d, %d excluded URLs)", query, count, len(exclude_urls))
+    log.info("🍳 Search: '%s' (need %d, %d excluded)", clean, count, len(exclude_urls))
 
-    recipes = run_recipe_search(query, count, exclude_urls)
+    recipes = run_recipe_search(clean, count, exclude_urls)
     if not recipes:
         log.warning("No ≥4.2⭐ recipes found for '%s'", query)
         send_telegram_simple(
-            f"🍳 *Keine Rezepte gefunden* für '{query}'\n"
-            f"Keine Rezepte mit ≥ 4.2⭐ Bewertung gefunden."
+            f"🍳 *Keine Rezepte gefunden* für '{clean}'\n"
+            f"Keine Rezepte mit ≥ 4.2⭐ gefunden."
         )
         return False
 
     found_count = len(recipes)
-    log.info("Found %d recipes for '%s'", found_count, query)
+    log.info("Found %d recipes for '%s'", found_count, clean)
 
     # Generate PDF
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    safe_query = "".join(c if c.isalnum() or c in " -_" else "" for c in query)[:50].strip()
-    pdf_filename = f"rezept-{safe_query}-{timestamp}.pdf"
+    pdf_filename = f"rezept-{clean}-{time.strftime('%Y%m%d-%H%M%S')}.pdf"
     pdf_path = str(RECIPE_PDF_DIR / pdf_filename)
 
     pdf_result = generate_recipe_pdf(recipes, pdf_path)
     if not pdf_result:
-        log.error("PDF generation failed for '%s'", query)
-        send_telegram_simple(
-            f"🍳 *PDF-Fehler* für '{query}'\n"
-            f"{found_count} Rezepte gefunden, aber PDF-Erstellung fehlgeschlagen."
-        )
+        log.error("PDF gen failed for '%s'", clean)
+        send_telegram_simple(f"🍳 *PDF-Fehler* für '{clean}'")
         return False
 
     # Send to Kindle
-    pdf_title = f"🍳 {query} ({found_count}x)"
+    pdf_title = f"Rezepte: {clean} ({found_count}x)"
     sent = send_pdf_to_kindle(pdf_path, pdf_title)
 
     if sent:
         # Dedup: mark all sent URLs
         new_urls = [r["url"] for r in recipes if r.get("url")]
-        recipe_state[query] = list(set(recipe_state.get(query, []) + new_urls))
+        recipe_state[clean] = list(set(recipe_state.get(clean, []) + new_urls))
         save_recipe_state(recipe_state)
 
-        ratings = ", ".join(f"{r.get('title','?')} ({r.get('rating',0)}⭐)" for r in recipes)
+        ratings = ", ".join(f"{r.get('title','?')} ({r.get('rating',0)}*)" for r in recipes)
         log.info("✅ Recipes sent to Kindle: %s", ratings)
-        send_telegram_simple(
-            f"🍳 *{found_count} Rezepte gesendet* für '{query}'\n"
-            f"{ratings}"
-        )
+        send_telegram_simple(f"🍳 *{found_count} Rezepte gesendet* für '{clean}'\n{ratings}")
         return True
     else:
-        log.error("Failed to send recipe PDF to Kindle for '%s'", query)
-        send_telegram_simple(
-            f"🍳 *Kindle-Versand fehlgeschlagen* für '{query}'\n"
-            f"PDF wurde erstellt, aber Versand fehlgeschlagen.\n"
-            f"Datei: {pdf_path}"
-        )
+        log.error("Kindle send failed for '%s'", clean)
+        send_telegram_simple(f"🍳 *Fehler* Kindle-Versand für '{clean}' fehlgeschlagen.")
         return False
 
 # ============================================================
@@ -685,6 +674,11 @@ def process_files():
         # Step 5: Check for recipe trigger (independent of book trigger)
         recipe_info = parse_content_for_recipe(content)
         recipe_processed = False
+
+        # Mark as processing NOW to prevent race conditions (cron every 2min)
+        state[fid] = {"name": fname, "processed_at": time.time(), "status": "processing"}
+        save_state(state)
+
         if recipe_info:
             rquery, rcount = recipe_info
             log.info("🍳 Recipe trigger: query='%s', count=%d", rquery, rcount)
