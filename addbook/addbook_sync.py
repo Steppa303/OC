@@ -336,27 +336,50 @@ def parse_content_to_title(text: str) -> Optional[str]:
 def parse_content_for_recipe(text: str) -> Optional[tuple]:
     """
     Parse content for 'Rezept:' trigger.
-    Format: "Rezept: Suchbegriff 3x" or "Rezept: Suchbegriff"
+    Supports single-line and multi-line formats:
+      "Rezept: Suchbegriff 3x"
+      "Rezept:" + next line "Suchbegriff 3"
+
+    Multiplier:
+      "Query 3x", "Query x3", "Query 3"  (bare number at end counts)
     Returns (query, count) or None. Default count = 1.
     """
     lines = [l.strip() for l in text.splitlines() if l.strip()]
-    for line in lines:
-        if line.lower().startswith("rezept:"):
-            rest = line[7:].strip()
-            if not rest:
+    for i, line in enumerate(lines):
+        if not line.lower().startswith("rezept:"):
+            continue
+
+        rest = line[7:].strip()
+        if not rest:
+            if i + 1 < len(lines):
+                rest = lines[i + 1].strip()
+            else:
                 continue
-            m = re.search(r'(\d+)x\s*$', rest)
-            count = 1
-            query = rest
-            if m:
-                count = int(m.group(1))
-                query = rest[:m.start()].strip()
-            m2 = re.search(r'x(\d+)\s*$', query)
-            if m2:
-                count = int(m2.group(1))
-                query = query[:m2.start()].strip()
+        if not rest:
+            continue
+
+        count = 1
+        query = rest
+
+        # "Query 3x"
+        m = re.search(r'(\d+)x\s*$', rest)
+        if m:
+            count = int(m.group(1))
+            query = rest[:m.start()].strip()
+        # "Query x3"
+        elif (m := re.search(r'x(\d+)\s*$', rest)):
+            count = int(m.group(1))
+            query = rest[:m.start()].strip()
+        # Bare "Query 3" at end
+        elif (m := re.search(r'\s+(\d+)$', rest)):
+            count = int(m.group(1))
+            query = rest[:m.start()].strip()
+
+        if query:
+            # Strip trailing special characters (checkmarks, bullets)
+            query = re.sub(r'[\s\u2713\u2714\u2716-\u271A\u271D\u274C\u2705\u2605\u2606]+$', '', query).strip()
             if query:
-                return (query, count)
+                return (query, max(count, 1))
     return None
 
 # ============================================================
