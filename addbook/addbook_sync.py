@@ -226,7 +226,8 @@ def download_file(mcp: MCPClient, file_id: str) -> str:
             r = req_lib.get(s3url, timeout=30)
             r.raise_for_status()
             log.info("Downloaded %d bytes via S3 URL", len(r.content))
-            return r.text
+            # Explicit UTF-8 decode — requests' r.text auto-detects wrong encoding
+            return r.content.decode("utf-8")
         except Exception as e:
             log.error("Failed to fetch S3 URL: %s", e)
             return ""

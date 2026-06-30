@@ -145,7 +145,7 @@ body {
 
 
 def _embed_image_as_base64(image_url: str) -> Optional[str]:
-    """Download image and return as data: URI, or None."""
+    """Download image, resize for Kindle, return data: URI or None."""
     if not image_url:
         return None
     import requests
@@ -153,8 +153,28 @@ def _embed_image_as_base64(image_url: str) -> Optional[str]:
         r = requests.get(image_url, timeout=10,
                          headers={"User-Agent": "Mozilla/5.0"})
         r.raise_for_status()
+        raw = r.content
         ctype = r.headers.get("Content-Type", "image/jpeg")
-        b64 = base64.b64encode(r.content).decode()
+
+        if len(raw) > 50000:
+            import io
+            from PIL import Image
+            try:
+                img = Image.open(io.BytesIO(raw))
+                if img.mode == 'RGBA':
+                    img = img.convert('RGB')
+                # Kindle-friendly: max 400px width, JPEG quality 70
+                if img.width > 400:
+                    ratio = 400.0 / img.width
+                    img = img.resize((400, int(img.height * ratio)), Image.LANCZOS)
+                buf = io.BytesIO()
+                img.save(buf, format='JPEG', quality=70, optimize=True)
+                b64 = base64.b64encode(buf.getvalue()).decode()
+                return f"data:image/jpeg;base64,{b64}"
+            except Exception:
+                pass
+        # Small enough or PIL failed — embed as-is
+        b64 = base64.b64encode(raw).decode()
         return f"data:{ctype};base64,{b64}"
     except Exception as e:
         log.debug("Image fetch failed: %s", e)
