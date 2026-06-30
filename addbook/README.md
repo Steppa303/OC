@@ -1,8 +1,8 @@
 # 📚 AddBook
 
-**Kindle Scribe → Buchsuche → Send to Kindle**
+**Kindle Scribe → Buchsuche + Rezeptsuche → Kindle**
 
-Schreib `Buch: Titel` auf deinen Kindle Scribe, bekomm automatisch Suchergebnisse als E-Ink-optimierte Webseite, und sende Bücher mit einem Klick auf deinen Kindle.
+Schreib `Buch: Titel` oder `Rezept: Suchbegriff 2x` auf deinen Kindle Scribe, und alles passiert automatisch.
 
 **URL:** `addbook.steppa.online`
 
@@ -22,20 +22,28 @@ Cron (alle 5 Min) / POST /api/sync
         ▼
 addbook_sync.py
   ├─ Composio MCP → Google Drive API
-  ├─ Content parsen → "Buch: TITEL" extrahieren
-  ├─ Anna's Archive Suche (search.py)
-  ├─ Ergebnis-JSON speichern (/srv/addbook/results/latest.json)
-  ├─ Telegram-Nachricht mit Link senden
-  └─ Datei in "p-gen-archiv" verschieben
-        │
-        ▼
+  ├─ Content parsen → Trigger erkennen
+  │
+  ├─ [Trigger "Buch:"] ─────────────────────────┐
+  │  ├─ Anna's Archive Suche (search.py)        │
+  │  ├─ Ergebnis-JSON speichern                 │
+  │  ├─ Telegram-Link senden                    │
+  │  └─ User klickt → Download + Send to Kindle │
+  │                                             │
+  ├─ [Trigger "Rezept:"] ───────────────────────┤
+  │  ├─ DuckDuckGo Rezeptsuche                  │
+  │  ├─ Filter ≥ 4.2⭐ (JSON-LD)               │
+  │  ├─ WeasyPrint PDF (A5, Zutaten, Steps)    │
+  │  └─ Send to Kindle (direkt, kein Klick)     │
+  │                                             │
+  └─ Datei → "p-gen-archiv" verschieben         │
+                                                ▼
 Express Server (Port 3006)
   ├─ GET /          → Landing Page
   ├─ GET /r         → Ergebnisseite (E-Ink optimiert)
   ├─ POST /api/search   → Manuelle Suche
-  ├─ POST /api/download → EPUB holen + an Kindle senden
+  ├─ POST /api/download → EPUB holen + an Kindle
   ├─ GET /api/status/:id → Download-Status
-  ├─ GET /api/bookinfo   → Open Library Proxy (Klappentext)
   └─ POST /api/sync      → Sync manuell triggern
         │
         ▼
@@ -50,96 +58,81 @@ Caddy (addbook.steppa.online → localhost:3006)
 
 | Endpoint | Methode | Beschreibung |
 |----------|---------|--------------|
-| `/` | GET | Landing Page (E-Ink optimiert) |
-| `/r` | GET | Letzte Suchergebnisse als E-Ink-optimierte HTML-Seite |
-| `/api/search` | POST | Anna's Archive Suche starten, speichert nach `latest.json` |
-| `/api/download` | POST | EPUB herunterladen + automatisch an Kindle senden |
-| `/api/status/:id` | GET | Download-Status abfragen (queued → downloading → sending → done) |
-| `/api/bookinfo` | GET | Open Library Proxy für Klappentext (CORS-frei) |
-| `/api/sync` | POST | Google Drive Sync manuell triggern |
+| `/` | GET | Landing Page |
+| `/r` | GET | Letzte Suchergebnisse (E-Ink optimiert) |
+| `/api/search` | POST | Anna's Archive Suche starten |
+| `/api/download` | POST | EPUB + automatisch an Kindle senden |
+| `/api/status/:id` | GET | Download-Status (queued → downloading → sending → done) |
+| `/api/sync` | POST | Google Drive Sync triggern |
 | `/health` | GET | Healthcheck |
 
-**Port:** 3006
-**Service:** `systemctl {start|stop|restart|status} addbook`
+**Port:** 3006 · **Service:** `systemctl addbook`
 
 ### 2. Google Drive Monitor (`addbook_sync.py`)
 
-Überwacht den Google Drive Ordner "Kindle Scribe" auf Dateien die mit `p-gen` beginnt.
+Scannt "Kindle Scribe" Ordner auf `p-gen*` Dateien.
 
-**Content-Parsing:**
+**Content-Parsing (Trigger):**
 ```
-1                    ← Seitenzahl (ignoriert)
-Buch: Dune           ← Titel in gleicher Zeile
-```
-oder:
-```
-1                    ← Seitenzahl (ignoriert)
-Buch:                ← nur "Buch:" in Zeile 2
-Dune                 ← Titel in Zeile 3
+1                       ← Seitenzahl (ignoriert)
+Buch: Dune              ← Buch-Suche → Telegram-Link
+Oder:
+Rezept: Nudeln 3x       ← Rezept-Suche → PDF → Kindle direkt
+Oder beides:
+Buch: Italienische Küche
+Rezept: Pasta 2x
 ```
 
 **Flow:**
 1. Composio MCP → Google Drive "Kindle Scribe" Ordner scannen
 2. `p-gen*` Dateien finden (case-insensitive)
 3. Content herunterladen (via S3-URL von Composio)
-4. "Buch:" Zeile parsen → Titel extrahieren
-5. Anna's Archive Suche (Python subprocess)
-6. Ergebnis als JSON speichern (`/srv/addbook/results/latest.json`)
-7. Telegram-Nachricht mit Link an Bastian senden
-8. Datei in `p-gen-archiv` Unterordner verschieben (nicht löschen)
-9. State in `.addbook_state.json` speichern (Idempotenz)
+4. Trigger parsen (`Buch:` / `Rezept:`)
+5. Buch: Anna's Archive → JSON → Telegram-Link
+6. Rezept: DuckDuckGo → PDF → Kindle direkt
+7. Datei in `p-gen-archiv` verschieben
+8. State in `.addbook_state.json` speichern
 
-**Cron:** `*/2 * * * *` (alle 2 Minuten via `curl -X POST http://localhost:3006/api/sync`)
+**Cron:** `*/5 * * * * curl -s -X POST http://localhost:3006/api/sync > /dev/null 2>&1`
 
-### 3. Anna's Archive Suche (`scraper/search.py`)
+### 3. Recipe Pipeline (`recipes/`)
 
-Sucht auf Anna's Archive nach Büchern. Gibt JSON-Array zurück mit:
-- `md5` — Hash für Download
-- `title`, `author` — Metadaten
-- `format`, `size`, `language`, `year` — Details
-- `coverUrl` — Cover-Bild URL
-- `description` — Metadaten-String (kein Klappentext)
+**Trigger:** `Rezept: Suchbegriff 2x` im Datei-Content
 
-**Mirrors:** annas-archive.gl, .li, .pm, .org (Fallback-Chain)
-**Sprache:** Standard `de`, Format `epub`
+**Pipeline:**
+1. `parse_content_for_recipe()` → extrahiert `(query, count)`
+2. **`recipes/recipe_search.py`** → DuckDuckGo Suche, Schema.org JSON-LD Parsing
+3. **Rating-Filter:** `aggregateRating.ratingValue ≥ 4.2/5`
+4. **Dedup:** via `recipes/.recipe_state.json` (nie 2x gleiches Rezept)
+5. **`recipes/recipe_pdf.py`** → WeasyPrint PDF (A5, Coverpage, Zutatenbox, Step-by-Step, Bild)
+6. **`scripts/send-to-kindle.py`** → PDF per AgentMail an Kindle
+7. Telegram: "🍳 3 Rezepte gesendet für 'Chicken Tikka Masala'"
 
-### 4. EPUB Download (`scripts/anna-browser-download.sh`)
+**Multiplier:** `Rezept: Nudeln 3x` → 3 Rezepte in 1 PDF
+**Quellen:** International (DuckDuckGo via ddgs), keine Social-Media/Videosites
 
-Lädt EPUB über Libgen-Download-Links (direkte CDN-URLs).
-Prüft Magic Bytes (PK\x03\x04) für valide EPUBs.
+### 4. Buchsuche (`scraper/search.py`)
 
-### 5. Send to Kindle (`scripts/send-to-kindle.py`)
+Sucht auf Anna's Archive nach Büchern (4 Mirrors, Fallback-Chain).
+Gibt JSON: `md5`, `title`, `author`, `format`, `size`, `language`, `year`, `coverUrl`
 
-Sendet EPUB per AgentMail an `bastianlewin_213e22@kindle.com`.
-- Von Inbox: `bastians_assistent@agentmail.to`
-- Amazon SES als Versand-Provider
-- Dateiname wird bereinigt (keine Sonderzeichen)
+### 5. EPUB Download (`scripts/anna-browser-download.sh`)
 
-### 6. Frontend (E-Ink optimiert)
+Lädt EPUB via Libgen-CDN, prüft Magic Bytes (`PK\x03\x04`).
+
+### 6. Send to Kindle (`scripts/send-to-kindle.py`)
+
+Sendet EPUB oder PDF per AgentMail an `bastianlewin_213e22@kindle.com`.
+- Von: `bastians_assistent@agentmail.to`
+- Automatische File-Type Erkennung (.epub → application/epub+zip, .pdf → application/pdf)
+
+### 7. Frontend (E-Ink optimiert)
 
 **Design-Prinzipien für Kindle Scribe:**
-- Weißer Hintergrund (kein Dark Mode — E-Ink kann das nicht)
-- Serif-Font (Georgia) — angenehm auf E-Paper
-- Kleine Cover (160×220px) — schnelles Rendering
-- Große Buttons (14px Padding) — easy tippbar
-- Keine Gradienten/Animationen — E-Ink kann das nicht
-- Single-Column Layout — kein horizontales Scrollen
-- Hoher Kontrast — schwarz auf weiß
-- Kein Tailwind CDN im Frontend — reines CSS
-
-**Funktionen:**
-- Ergebnisliste mit Cover, Titel, Autor, Format, Größe
-- "📥 Zu Kindle senden" Button pro Ergebnis
-- "ℹ️ Mehr Infos" Button → Open Library Klappentext
-- Live-Status beim Download (⏳ → 📥 → 📧 → ✅)
-- Retry-Button bei Fehlern
-
-### 7. Open Library Proxy (`/api/bookinfo`)
-
-Server-seitiger Proxy für Open Library API (umgeht CORS-Beschränkungen).
-- Versucht zuerst deutsche Edition (`language=ger`)
-- Fallback auf alle Sprachen
-- Liefert: Klappentext (description), Autor, Ersterscheinung, Themen
+- Weißer Hintergrund, Serif-Font (Georgia), hoher Kontrast
+- Kleine Cover (160×220px) für schnelles Rendering
+- Große Buttons (14px Padding), Single-Column Layout
+- Kein Tailwind CDN, reines CSS
 
 ---
 
@@ -147,27 +140,37 @@ Server-seitiger Proxy für Open Library API (umgeht CORS-Beschränkungen).
 
 ```
 addbook/
-├── addbook.md                    # Plan
-├── README.md                     # Diese Datei
-├── package.json                  # Dependencies
-├── server.js                     # Express Server (Port 3006)
-├── addbook_sync.py               # Google Drive Monitor (Cron)
-├── .addbook_state.json           # Verarbeitete Dateien
+├── README.md                       # Diese Datei
+├── addbook.md                      # Plan/Architektur
+├── package.json                    # Node.js Dependencies
+├── server.js                       # Express Server (Port 3006)
+├── addbook_sync.py                 # Google Drive Monitor (Cron)
+├── .addbook_state.json             # Verarbeitete Dateien
+├── addbook_sync.py                 # Main Sync Script
+├── .drive-watch.json               # Drive Watch Channel
 ├── scraper/
-│   └── search.py                 # Anna's Archive Suche
+│   └── search.py                   # Anna's Archive Suche
+├── recipes/
+│   ├── recipe_search.py            # Rezeptsuche (DDGS + JSON-LD)
+│   ├── recipe_pdf.py               # PDF-Generator (WeasyPrint)
+│   └── .recipe_state.json          # Dedup-State
 ├── scripts/
-│   ├── anna-browser-download.sh  # EPUB Download
-│   └── send-to-kindle.py         # Kindle Versand
+│   ├── anna-browser-download.sh    # EPUB Download
+│   └── send-to-kindle.py           # Kindle Versand (EPUB + PDF)
 ├── templates/
-│   └── results.html              # E-Ink-optimiertes Frontend
+│   └── results.html                # E-Ink-optimiertes Frontend
+├── public/
+├── node_modules/
 └── logs/
-    └── addbook.log               # Sync-Log
+    └── addbook.log                 # Sync-Log
 
 /srv/addbook/
 ├── results/
-│   └── latest.json               # Letzte Suchergebnisse
-└── epubs/
-    └── *.epub                    # Temporäre Downloads
+│   └── latest.json                 # Letzte Suchergebnisse
+├── epubs/
+│   └── *.epub                      # Temporäre Downloads
+└── recipe_pdfs/
+    └── rezept-*.pdf                # Generierte Rezept-PDFs
 ```
 
 ---
@@ -186,21 +189,19 @@ addbook/
 | Service | Zweck | Auth |
 |---------|-------|------|
 | Composio MCP | Google Drive Zugriff | OAuth (`/root/.openclaw/mcp-oauth/composio-*.json`) |
+| DuckDuckGo (ddgs) | Rezeptsuche | Keine |
 | Anna's Archive | Büchersuche + Download | Keine (öffentlich) |
-| Open Library | Klappentext/Infos | Keine (öffentlich) |
 | AgentMail | Kindle-Versand | API Key |
 | Telegram Bot | Benachrichtigung | Bot Token |
 
 ### Caddy
-
 ```caddy
 addbook.steppa.online {
     reverse_proxy localhost:3006
 }
 ```
 
-### systemd Service
-
+### systemd
 ```ini
 # /etc/systemd/system/addbook.service
 [Unit]
@@ -218,104 +219,66 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-### Cron
-
-```
-*/5 * * * * curl -s -X POST http://localhost:3006/api/sync > /dev/null 2>&1
-```
-
 ---
 
 ## Nutzung
 
-### Automatisch (via Kindle Scribe)
-1. Neue Notiz auf dem Kindle Scribe erstellen
-2. Inhalt: `Buch: Der Name des Windes` (oder nur `Buch:` + Titel in nächster Zeile)
-3. Datei wird automatisch in den "Kindle Scribe" Drive-Ordner syncen
-4. Innerhalb von 5 Min: Telegram-Nachricht mit Link zu den Ergebnissen
-5. Link im Kindle Browser öffnen → Ergebnisse sehen
-6. "📥 Zu Kindle senden" klicken → Buch kommt auf den Kindle
+### Bücher (automatisch via Telegram-Link)
+1. Neue Notiz auf Scribe: `Buch: Der Name des Windes`
+2. Automatisch syncen → Telegram-Link → Link öffnen
+3. "📥 Zu Kindle senden" klicken → EPUB auf dem Kindle
+
+### Rezepte (vollautomatisch)
+1. Neue Notiz: `Rezept: Chicken Tikka Masala 2x`
+2. Automatisch syncen → PDF wird generiert + direkt an Kindle gesendet
+3. Telegram: "🍳 2 Rezepte gesendet für 'Chicken Tikka Masala'"
 
 ### Manuell (via API)
 ```bash
-# Suche triggern
 curl -X POST http://localhost:3006/api/search \
   -H "Content-Type: application/json" \
   -d '{"query": "Dune", "lang": "de", "ext": "epub"}'
 
-# Sync triggern (prüft Drive auf neue p-gen Dateien)
 curl -X POST http://localhost:3006/api/sync
-
-# Download + Send to Kindle
-curl -X POST http://localhost:3006/api/download \
-  -H "Content-Type: application/json" \
-  -d '{"md5": "...", "title": "Buchtitel", "author": "Autor"}'
-
-# Status prüfen
-curl http://localhost:3006/api/status/<download-id>
 ```
 
 ---
 
 ## Betrieb
 
-### Befehle
-
 ```bash
 # Server
-systemctl start addbook
-systemctl stop addbook
-systemctl restart addbook
-systemctl status addbook
+systemctl {start|stop|restart|status} addbook
 
 # Logs
-journalctl -u addbook -f                    # Server-Logs
-tail -f /root/.local/.openclaw/workspace/addbook/logs/addbook.log  # Sync-Logs
+journalctl -u addbook -f                              # Server
+tail -f addbook/logs/addbook.log                      # Sync
 
-# Cron
-crontab -l | grep addbook                    # Cron prüfen
+# Cron prüfen
+crontab -l | grep addbook
 
 # Manueller Sync
 curl -X POST http://localhost:3006/api/sync
-
-# DNS prüfen
-dig +short addbook.steppa.online
-curl -s https://addbook.steppa.online/health
 ```
 
 ### Bekannte Probleme
 
-1. **PDF-Dateien werden übersprungen** — Kindle Scribe kann auch PDFs erzeugen, aber die sind Binärdaten und der Parser kann "Buch:" nicht extrahieren. Workaround: Nur Text-Notizen verwenden.
-
-2. **Open Library hat wenige deutsche Bücher** — Klappentexte kommen primär auf Englisch. Bei bekannten Titeln (Dune, Inferno etc.) gibt es oft eine englische Beschreibung.
-
-3. **Archiv-Verschiebung fehlschlägt** — Die Google Drive API braucht manchmal die explizite Parent-ID. Workaround: Dateien werden als "processed" markiert und nicht erneut verarbeitet.
-
-4. **DNS-Propagation** — Bei DNS-Änderungen kann es bis zu 24h dauern, bis alle Resolver aktualisiert sind. Cloudflare-Proxy beschleunigt das.
-
----
-
-## Git
-
-Lokale Commits im Workspace-Repo:
-```bash
-cd /root/.local/.openclaw/workspace
-git log --oneline addbook/
-```
+1. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs. Nur Text-Notizen verwenden.
+2. **Archiv-Verschiebung** — Google Drive API braucht manchmal explizite Parent-ID. State verhindert Doppelverarbeitung.
+3. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
 
 ---
 
 ## Technologie-Stack
 
-| Komponente | Tech | Version |
-|------------|------|---------|
-| Server | Node.js + Express | 4.18+ |
-| Frontend | Vanilla HTML/CSS/JS | — |
-| Fonts | Georgia (System Serif) | — |
-| Drive Monitor | Python 3 + Composio MCP | — |
-| Suche | Python 3 + BeautifulSoup | — |
-| Download | Bash + curl | — |
-| Kindle Versand | Python 3 + AgentMail SDK | — |
-| Reverse Proxy | Caddy | 2.x |
-| DNS | Cloudflare | — |
-| Service | systemd | — |
+| Komponente | Tech |
+|------------|------|
+| Server | Node.js + Express |
+| Frontend | Vanilla HTML/CSS/JS |
+| Drive Monitor | Python 3 + Composio MCP |
+| Buchsuche | Python + BeautifulSoup (Anna's Archive) |
+| Rezeptsuche | Python + ddgs + JSON-LD (Schema.org) |
+| PDF-Gen | Python + WeasyPrint |
+| Kindle Versand | Python + AgentMail SDK |
+| Reverse Proxy | Caddy |
+| Service | systemd |

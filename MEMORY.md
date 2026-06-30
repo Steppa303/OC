@@ -78,6 +78,69 @@ _Letzte Aktualisierung: 2026-06-26 ~13:45_
 - GHCR Registry Credentials als GraphQL-Mutation erstellen (`saveRegistryAuth`)
 - VPS Disk: `docker system prune -af` gibt ~26GB zurück
 
+## 📅 Scribe & AddBook — Google Drive Webhooks (29.06.2026)
+
+**Zweck:** Echtzeit-Verarbeitung von Kindle Scribe Notizen via Google Drive Push Notifications
+**Status:** ✅ Beide aktiv (Webhook-basiert, kein Polling)
+
+### Scribe (w-termine → ICS → Apple Kalender)
+- Drive Push Notification → `lesestoff.steppa.online/api/scribe/webhook` → `scribe_sync.py`
+- FastAPI Webhook-Server auf Port 3009 (systemd: `scribe-webhook.service`)
+- Channel-ID: `4310d081-4ae9-493a-b8c2-e258c99655cb`
+- Latenz: ~4 Sekunden nach Upload
+
+### AddBook (p-gen* → Buchsuche → Telegram → Kindle)
+- Drive Push Notification → `addbook.steppa.online/api/drive-webhook` → `addbook_sync.py`
+- Express Server auf Port 3006 (bestehend, kein Caddy Auth)
+- Channel-ID: `addbook-drive-watch-1782716723`
+- Gleiche Ressource-ID: `GmowZyszFwEcn3sHGH8cRX9-uXw` (gleicher Drive, verschiedene Channels)
+
+### Files:
+- `scribe/scribe_sync.py` — w-termine Sync
+- `scribe/scribe_webhook.py` — FastAPI Webhook (Port 3009)
+- `scribe/.webhook_channel.json` — Drive Watch Channel State (Scribe)
+- `addbook/addbook_sync.py` — p-gen Sync
+- `addbook/renew_watch.py` — Channel-Renewal (AddBook)
+- `addbook/.drive-watch.json` — Drive Watch Channel State (AddBook)
+
+### Renewal-Crons (alle 12h, OpenClaw Cron Jobs):
+- `scribe-channel-renewal` — Erneuert Scribe Channel
+- `addbook-channel-renewal` — Erneuert AddBook Channel
+
+### w-mail (Stichpunkte → E-Mail, via Cron):
+- Script: `scribe/mail_sync.py`
+- ⚠️ OpenRouter Key muss erneuert werden (401 bei Chat-Completions)
+
+### Tech:
+- Composio MCP (streamable-http) für Google Drive
+- AgentMail SDK (inbox: guenther88@agentmail.to)
+- OAuth: `/root/.openclaw/mcp-oauth/composio-83fbe197920e85c5.json`
+
+---
+
+## 🍳 AddBook Recipe Pipeline (30.06.2026)
+
+**Status:** ✅ Aktiv (in addbook_sync.py integriert)
+**Trigger:** `Rezept: Suchbegriff 2x` im p-gen Datei-Content (parallel zu `Buch:`)
+
+### Pipeline:
+1. `addbook_sync.py` erkennt `Rezept:` → extrahiert (query, count)
+2. `recipes/recipe_search.py` — DuckDuckGo Suche, JSON-LD Schema.org Parsing
+3. Filter: `aggregateRating.ratingValue >= 4.2/5`
+4. `recipes/recipe_pdf.py` — WeasyPrint PDF (A5, Cover, Zutaten, Steps, Bild)
+5. `scripts/send-to-kindle.py` — PDF per AgentMail an Kindle
+6. Dedup via `recipes/.recipe_state.json` (nie 2x gleiches Rezept)
+7. Telegram: "🍳 X Rezepte gesendet für 'Query'"
+
+### Neue Dateien:
+- `addbook/recipes/recipe_search.py` — Rezeptsuche (ddgs, schema.org)
+- `addbook/recipes/recipe_pdf.py` — PDF-Generator (WeasyPrint)
+- `addbook/recipes/.recipe_state.json` — Dedup-State
+
+### Geänderte Dateien:
+- `addbook/addbook_sync.py` — Komplett neugeschrieben, beide Trigger
+- `addbook/scripts/send-to-kindle.py` — Unterstützt jetzt auch PDFs
+
 ---
 
 ## 🦞 Infrastruktur & Setup
@@ -271,10 +334,75 @@ _Stand: 20.05.2026 ~10:15. Image Model Wechsel: Gemini → qwen-image-2.0-pro. H
 - Primary: `bailian/qwen-image-2.0-pro`
 - Fallbacks: `bailian/qwen-image-2.0`, `bailian/wan2.7-image-pro`
 
-## 📅 Heute (20.05.2026) - Wichtige Events
-- **09:00:** Reel "Hustle Culture Autopsie" nachgeholt (MoviePy-Abhängigkeit installiert)
-- **09:45:** openclaw.json auf Alibaba Token Plan umgestellt
-- **10:15:** Bildgenerierung von Gemini auf qwen-image-2.0-pro umgestellt
+## 🌐 Composio MCP Integration (27.06.2026)
 
-### User Status
-- Bastian ist online
+**Status:** ✅ Konfiguriert & OAuth authorized
+**URL:** `https://connect.composio.dev/mcp`
+**Transport:** `streamable-http`
+**Auth:** OAuth (tokens + client info gespeichert)
+
+### Verbundene Services:
+- ✅ Google Drive
+- ✅ Google Calendar
+- ✅ Google Docs
+
+### Wie's funktioniert:
+Composio ist eine Meta-Schicht — 7 feste Tools, über die alle Integrationen laufen:
+- `composio__COMPOSIO_SEARCH_TOOLS` → nach Tool suchen (z.B. "google drive list files")
+- `composio__COMPOSIO_MULTI_EXECUTE_TOOL` → Tool ausführen
+- `composio__COMPOSIO_GET_TOOL_SCHEMAS` → Tool-Schemas abrufen
+- `composio__COMPOSIO_MANAGE_CONNECTIONS` → Connections verwalten
+- `composio__COMPOSIO_WAIT_FOR_CONNECTIONS`
+- `composio__COMPOSIO_REMOTE_BASH_TOOL`
+- `composio__COMPOSIO_REMOTE_WORKBENCH`
+
+### Nutzung:
+1. `composio__COMPOSIO_SEARCH_TOOLS` mit Query aufrufen → findet passende Tools (z.B. `GOOGLEDRIVE_LIST_FILES`)
+2. `composio__COMPOSIO_MULTI_EXECUTE_TOOL` mit Tool-Name + Params aufrufen
+
+### Wichtig:
+- Die Tools sind als native MCP-Tools im Agent-Runtime verfügbar
+- Subagents (openrouter/auto) können die Tools nutzen, brauchen aber klare Anweisungen
+- OAuth-Flow lief über agent-browser auf dem VPS (Port 8989 war von Sonarr belegt → Redirect auf VPS-localhost abgefangen)
+
+### Beispiel (funktioniert 27.06.2026):
+Ordner "Kindle Scribe" auf Google Drive gefunden:
+- 📁 Arbeit/ (Unterordner)
+- 📁 Privat/ (Unterordner)
+- 📄 Schnellnotizen - Kindle.txt (80 Bytes)
+- 📄 W-Termine - Kindle.txt (57 Bytes)
+
+---
+
+## 📅 Scribe Projekt (27.06.2026)
+
+**Zweck:** Automatische Verarbeitung von Kindle Scribe Termin-Notizen → Apple Kalender
+**Status:** ✅ Aktiv (Cron alle 10 Min)
+
+### Workflow:
+1. Composio MCP prüft Google Drive Ordner „Kindle Scribe“ auf neue `w-termine*` Dateien
+2. Datei wird heruntergeladen (via S3-URL von Composio)
+3. Inhalt wird geparst (DD.MM.YY + HH:MM-HH:MM Uhr Format)
+4. ICS-Kalenderdatei wird generiert (Python `ics` lib)
+5. Email mit ICS-Anhang wird an `bastian.lewin@polizeiakademie.de` gesendet (AgentMail SDK)
+6. Originaldatei wird aus Drive gelöscht
+7. State wird in `.scribe_state.json` gespeichert (Idempotenz)
+
+### Files:
+- `scribe/scribe_sync.py` — Hauptskript
+- `scribe/.scribe_state.json` — Verarbeitete Dateien
+- `scribe/drive.md` — Plan + Architektur
+- `scribe/logs/scribe.log` — Logfile
+- `/tmp/scribe-cron.log` — Cron-Output
+
+### Cron:
+```
+*/10 * * * * /usr/bin/python3 /root/.local/.openclaw/workspace/scribe/scribe_sync.py >> /tmp/scribe-cron.log 2>&1
+```
+
+### Tech:
+- Composio MCP (streamable-http) für Google Drive API
+- AgentMail SDK für Email-Versand (inbox: guenther88@agentmail.to)
+- Python `ics` lib für ICS-Generierung
+- OAuth Token: `/root/.openclaw/mcp-oauth/composio-83fbe197920e85c5.json`
+

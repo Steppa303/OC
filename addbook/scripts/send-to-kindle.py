@@ -3,7 +3,7 @@
 Usage: python3 send-to-kindle.py <book_title> <epub_path> [author]
 """
 
-import sys, os, json, base64, re
+import sys, os, json, base64, re, mimetypes
 
 # Load AgentMail API key from OpenClaw config
 config = json.load(open('/root/.openclaw/openclaw.json'))
@@ -16,34 +16,45 @@ KINDLE_EMAIL = 'bastianlewin_213e22@kindle.com'
 FROM_INBOX = 'bastians_assistent@agentmail.to'
 
 if len(sys.argv) < 3:
-    print(json.dumps({"error": "Usage: send-to-kindle.py <title> <epub_path> [author]"}))
+    print(json.dumps({"error": "Usage: send-to-kindle.py <title> <file_path> [author]"}))
     sys.exit(1)
 
 title = sys.argv[1]
-epub_path = sys.argv[2]
+file_path = sys.argv[2]
 author = sys.argv[3] if len(sys.argv) > 3 else ''
 
-# Read EPUB file
-if not os.path.exists(epub_path):
-    print(json.dumps({"error": f"EPUB file not found: {epub_path}"}))
+if not os.path.exists(file_path):
+    print(json.dumps({"error": f"File not found: {file_path}"}))
     sys.exit(1)
 
-with open(epub_path, 'rb') as f:
-    epub_data = f.read()
+# Detect file type from extension (supports epub and pdf)
+ext = os.path.splitext(file_path)[1].lower()
+if ext == '.pdf':
+    content_type = 'application/pdf'
+    file_ext = '.pdf'
+elif ext == '.epub':
+    content_type = 'application/epub+zip'
+    file_ext = '.epub'
+else:
+    # Fallback: guess by mimetypes
+    content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
+    file_ext = ext
 
-# Use the actual book title as filename, not the server UUID name
-# Amazon mag keine Sonderzeichen in Dateinamen
+with open(file_path, 'rb') as f:
+    file_data = f.read()
+
+# Sanitize filename for Amazon
 sanitized_title = re.sub(r'[\\/:*?"<>|!•·●◆◇■□▲△▼▽○◉◈☆★♪♫£€¥§™®©@#%^&+=~`]', '', title)[:80].strip()
 sanitized_title = re.sub(r'\s+', ' ', sanitized_title)
 if not sanitized_title:
-    sanitized_title = 'Buch'
-filename = f"{sanitized_title}.epub"
+    sanitized_title = 'Dokument'
+filename = f"{sanitized_title}{file_ext}"
 
 # Send via AgentMail
 client = AgentMail(api_key=api_key)
 
 subject = title
-body = f"An Kindle gesendet aus der Lesestoff Bibliothek: {title}"
+body = f"An Kindle gesendet: {title}"
 if author:
     body += f" von {author}"
 
@@ -55,8 +66,8 @@ try:
         text=body,
         attachments=[{
             "filename": filename,
-            "content": base64.b64encode(epub_data).decode(),
-            "content_type": "application/epub+zip"
+            "content": base64.b64encode(file_data).decode(),
+            "content_type": content_type
         }]
     )
     print(json.dumps({
