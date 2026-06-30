@@ -95,6 +95,8 @@ Rezept: Pasta 2x
 
 **Cron:** `*/5 * * * * curl -s -X POST http://localhost:3006/api/sync > /dev/null 2>&1`
 
+**Race Condition Guard:** File Lock via `fcntl.flock()` — zwei parallele Cron-Instanzen blockieren sich gegenseitig.
+
 ### 3. Recipe Pipeline (`recipes/`)
 
 **Trigger:** `Rezept: Suchbegriff 2x` im Datei-Content
@@ -266,6 +268,8 @@ curl -X POST http://localhost:3006/api/sync
 1. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs. Nur Text-Notizen verwenden.
 2. **Archiv-Verschiebung** — Google Drive API braucht manchmal explizite Parent-ID. State verhindert Doppelverarbeitung.
 3. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
+4. **Rezept-PDF: `[Convert]` im Subject** — Amazon konvertiert PDFs nur mit "Convert" im Betreff. Wird automatisch gesetzt.
+5. **Keine Bilder auf groÃŸen Rezeptseiten** — Pillow skaliert auf max 400px Breite, damit Kindle-kompatibel (< 200KB PDF).
 
 ---
 

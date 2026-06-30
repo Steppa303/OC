@@ -20,6 +20,7 @@ import base64
 import re
 import subprocess
 import tempfile
+import fcntl
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
@@ -616,7 +617,29 @@ def process_recipe_trigger(file_id: str, file_name: str, query: str, count: int)
 # Main Workflow
 # ============================================================
 def process_files():
-    """Main processing loop."""
+    """Main processing loop with file lock (race condition guard)."""
+    # File lock: only one instance at a time
+    lock_path = BASE_DIR / ".sync.lock"
+    try:
+        lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (IOError, OSError):
+        log.info("Another sync instance is already running, skipping")
+        return
+
+    try:
+        _process_files_inner()
+    finally:
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+            os.close(lock_fd)
+            lock_path.unlink(missing_ok=True)
+        except:
+            pass
+
+
+def _process_files_inner():
+    """Actual sync logic (wrapped by file lock)."""
     state = load_state()
     mcp = MCPClient(MCP_URL, str(OAUTH_FILE))
 

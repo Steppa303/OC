@@ -141,6 +141,16 @@ _Letzte Aktualisierung: 2026-06-26 ~13:45_
 - `addbook/addbook_sync.py` — Komplett neugeschrieben, beide Trigger
 - `addbook/scripts/send-to-kindle.py` — Unterstützt jetzt auch PDFs
 
+### Bugs gefixt (Race Condition, Encoding, Kindle):
+1. **Race Condition**: Zwei Cron-Instanzen parallel → `fcntl.flock()` File Lock
+2. **Encoding**: `r.content.decode('utf-8')` statt `r.text` → Mojibake weg
+3. **Scribe Multi-Line**: `Rezept:` + Query auf nächster Zeile
+4. **Checkmark**: Trailing `✔` gecleaned aus Query
+5. **Bare Number**: `Rezept: Pasta 5` ohne `x` erkannt
+6. **PDF-Größe**: Pillow resize auf max 400px + JPEG 70 → ~150KB statt 500KB
+7. **Kindle Convert**: Subject `[Convert]` für PDF-Konvertierung
+8. **Dedup Key**: ASCII-only clean() für recipe_state (kein Mojibake mehr)
+
 ---
 
 ## 🦞 Infrastruktur & Setup
