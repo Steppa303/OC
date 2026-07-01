@@ -661,6 +661,20 @@ def process_question_trigger(file_id: str, file_name: str, question: str) -> boo
         send_telegram_simple(f"❌ *Agent-Fehler* für Frage\n`{question[:80]}`\n\n_{answer}_")
         return False
 
+    # 🔥 CRITICAL: Validate answer quality – reject hallucinated garbage
+    try:
+        import sys as _sys
+        _sys.path.insert(0, str(BASE_DIR / "ask"))
+        from ask_agent import _is_valid_answer as _check_quality
+        if not _check_quality(answer):
+            log.error("Agent returned garbage (failed quality check): %s", answer[:100])
+            send_telegram_simple(f"❌ *Antwort-Qualitätsproblem* für Frage\n`{question[:80]}`\n\nAntwort war unbrauchbar (halluziniert).")
+            return False
+    except ImportError:
+        log.warning("Could not import ask_agent quality check, skipping")
+    except Exception as _qe:
+        log.warning("Quality check error (non-fatal): %s", _qe)
+
     log.info("Got answer: %d chars", len(answer))
 
     # Step 4: Generate PDF

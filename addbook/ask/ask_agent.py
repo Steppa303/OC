@@ -8,7 +8,7 @@ Usage:
 Output JSON: {"question": "...", "answer": "..."}
 """
 
-import json, logging, subprocess, tempfile, os, sys, time
+import json, logging, subprocess, os, sys, time, re
 from pathlib import Path
 from typing import Optional
 
@@ -29,6 +29,87 @@ MODEL_TIER_4 = "openrouter/openai/gpt-oss-120b:free"
 
 # Full fallback chain – tries each model in order until one responds
 FALLBACK_CHAIN = [MODEL_TIER_1, MODEL_TIER_2, MODEL_TIER_3, MODEL_TIER_4]
+
+# Common German words for quality sniffing (top ~40 most frequent)
+GERMAN_WORDS = {
+    "der", "die", "das", "ist", "und", "ein", "eine", "nicht", "sich", "auch",
+    "auf", "für", "mit", "als", "bei", "von", "aus", "nach", "werden", "wird",
+    "hat", "haben", "sind", "dass", "durch", "zur", "zum", "diese", "dieser",
+    "einen", "einer", "dem", "den", "des", "sie", "es", "ich", "wie", "oder",
+    "aber", "nur", "noch", "schon", "bis", "um", "an", "im", "am", "kann",
+    "wurde", "wären", "hätte", "sehr", "viel", "wenig", "groß", "klein",
+}
+
+# System prompt leakage patterns – if reply starts with these, it's garbage
+LEAKAGE_PATTERNS = [
+    r"^The user wants",
+    r"^I'll help",
+    r"^Here(?:'s| is) (?:a |the |my |)comprehensive",
+    r"^I cannot",
+    r"^I'm not able",
+    r"^As an AI",
+]
+
+# Minimum ratio of German words / total words in first 100 tokens
+MIN_GERMAN_RATIO = 0.15
+
+
+def _is_valid_answer(text: str) -> bool:
+    """
+    Validate that an answer is actually useful German content, not
+    hallucinated token garbage or system prompt leakage.
+
+    Checks:
+    1. Minimum length (100 chars)
+    2. No binary/control characters
+    3. No system prompt leakage
+    4. Contains German words (ratio check)
+    5. Not mostly English gibberish
+    """
+    if not text or len(text) < 100:
+        return False
+
+    # Check for binary / control characters (outside normal ASCII + unicode)
+    binary_count = sum(1 for c in text if ord(c) < 32 and c not in '\n\r\t')
+    total_chars = len(text)
+    if binary_count > 0.02 * total_chars and binary_count > 5:
+        log.warning("Garbage detect: too many control chars (%d)", binary_count)
+        return False
+
+    # Check for system prompt leakage
+    for pattern in LEAKAGE_PATTERNS:
+        if re.search(pattern, text, re.IGNORECASE):
+            log.warning("Garbage detect: system prompt leakage: %s", pattern)
+            return False
+
+    # Check for random ASCII noise: words with >5 consecutive non-alphabetic chars
+    noise_patterns = re.findall(r'[^a-zA-ZäßöüÄÖÜẞ\s]{6,}', text)
+    if noise_patterns and sum(len(p) for p in noise_patterns) > 0.3 * total_chars:
+        log.warning("Garbage detect: too much ASCII noise")
+        return False
+
+    # Check for excessive symbol-to-text ratio (>40% non-alpha = likely garbage)
+    alpha = sum(1 for c in text if c.isalpha() or c.isspace())
+    if alpha / total_chars < 0.5:
+        log.warning("Garbage detect: <50%% alphabetic (%.0f%% alpha)", 100 * alpha / total_chars)
+        return False
+
+    # German word ratio check on first 500 chars
+    sample = text[:500].lower()
+    words = re.findall(r'[a-zA-ZäöüßÄÖÜ]+', sample)
+    if words:
+        german_hits = sum(1 for w in words if w in GERMAN_WORDS)
+        ratio = german_hits / len(words)
+        if ratio < MIN_GERMAN_RATIO:
+            log.warning("Garbage detect: low German word ratio (%.0f%% hits, need >=%.0f%%)",
+                        100 * ratio, 100 * MIN_GERMAN_RATIO)
+            return False
+
+    # Check for the "Fehler:" prefix
+    if text.startswith("Fehler:") or text.startswith("Error:"):
+        return False
+
+    return True
 
 
 def _run_agent(prompt: str, session_key: str, model: str, timeout: int) -> Optional[str]:
@@ -88,8 +169,9 @@ def ask_agent(question: str, model: str = None, timeout: int = 120) -> str:
     """
     Send a question to the OpenClaw agent CLI and return the answer text.
 
-    Tries models in FALLBACK_CHAIN order until one responds.
-    Each model gets its own session key to avoid state bleed.
+    Tries models in FALLBACK_CHAIN order until one responds with
+    valid German content (quality-checked). Each model gets its own
+    session key to avoid state bleed.
     """
     session_base = f"addbook-frage-{int(time.time())}"
 
@@ -119,7 +201,7 @@ def ask_agent(question: str, model: str = None, timeout: int = 120) -> str:
         f"Frage:\n{question}"
     )
 
-    # Try each model in the chain until one works
+    # Try each model in the chain until one produces valid content
     chain = model.split(",") if model else FALLBACK_CHAIN
     if isinstance(chain, str):
         chain = [chain]
@@ -131,11 +213,14 @@ def ask_agent(question: str, model: str = None, timeout: int = 120) -> str:
         label = f"tier{idx+1}" if len(chain) > 1 else ""
         skey = f"{session_base}-{label}" if label else session_base
         reply = _run_agent(prompt, skey, m, timeout)
-        if reply:
+        if reply and _is_valid_answer(reply):
             return reply
-        log.warning("Model %s failed, trying next in chain...", m)
+        if reply:
+            log.warning("Model %s returned garbage (%d chars), trying next...", m, len(reply))
+        else:
+            log.warning("Model %s failed, trying next in chain...", m)
 
-    log.error("All %d models in chain failed for question", len(chain))
+    log.error("All %d models in chain failed or returned garbage for question", len(chain))
     return "Fehler: Alle Modelle haben versagt. Bitte später erneut versuchen."
 
 

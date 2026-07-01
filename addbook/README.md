@@ -33,7 +33,8 @@ addbook_sync.py
   ├─ [Trigger "Frage:"] ────────────────────────┤
   │  ├─ Free Model Chain (ask_agent.py)         │
   │  ├─ Deep Research Report (1.5k-4k chars)   │
-  │  ├─ WeasyPrint PDF + Guard (kein Fehler:)  │
+  │  ├─ Quality Check (kein Garbage!)           │
+  │  ├─ WeasyPrint PDF                         │
   │  └─ Send to Kindle (direkt, kein Klick)     │
   │                                             │
   ├─ [Trigger "Rezept:"] ───────────────────────┤
@@ -84,20 +85,20 @@ Scannt "Kindle Scribe" Ordner auf `p-gen*` Dateien.
 Buch: Dune              ← Buch-Suche → Telegram-Link
 Oder:
 Rezept: Nudeln 3x       ← Rezept-Suche → PDF → Kindle direkt
-Oder beides:
-Buch: Italienische Küche
-Rezept: Pasta 2x
+Oder:
+Frage: Was ist...       ← Deep Research → PDF → Kindle direkt
+Oder alles zusammen.
 ```
 
 **Flow:**
 1. Composio MCP → Google Drive "Kindle Scribe" Ordner scannen
 2. `p-gen*` Dateien finden (case-insensitive)
 3. Content herunterladen (via S3-URL von Composio)
-4. Trigger parsen (`Buch:` / `Rezept:`)
+4. Trigger parsen (`Buch:` / `Frage:` / `Rezept:`)
 5. Buch: Anna's Archive → JSON → Telegram-Link
-6. Rezept: DuckDuckGo → PDF → Kindle direkt
-7. Datei in `p-gen-archiv` verschieben
-8. State in `.addbook_state.json` speichern
+6. Frage: Free Model Chain → Quality Check → PDF → Kindle
+7. Rezept: DuckDuckGo → PDF → Kindle direkt
+8. Datei in `p-gen-archiv` verschieben
 
 **Cron:** `*/5 * * * * curl -s -X POST http://localhost:3006/api/sync > /dev/null 2>&1`
 
@@ -110,14 +111,14 @@ Rezept: Pasta 2x
 **Pipeline:**
 1. `parse_content_for_question()` → extrahiert Frage-Text (Multi-Line Support)
 2. `ask_agent.py` → OpenClaw-CLI mit Free Model Chain
-3. **Free Model Chain (Fallback):**
+3. **Free Model Chain (Fallback bei Fehler + Garbage):**
    - `nemotron-3-super-120b-a12b:free` — Primary (bewährt, ~52-106s)
    - `nemotron-3-ultra-550b-a55b:free` — 550B max depth
    - `gemma-4-31b-it:free` — Quality Score 65
    - `gpt-oss-120b:free` — OpenAI open-weight
 4. `answer_pdf.py` → WeasyPrint PDF (A5, Coverpage, Frage+Antwort, Quellenverzeichnis)
 5. `scripts/send-to-kindle.py` → PDF per AgentMail an Kindle
-6. **Guard:** `answer.startswith("Fehler:")` → bricht ab, kein Kindle-Versand!
+6. **Quality Check:** `_is_valid_answer()` in ask_agent.py + double layer in addbook_sync.py
 7. Telegram: "❓ Frage beantwortet: 'Suchbegriff'" mit Preview
 
 **Timeout:** 300s pro Modell, gesamte Pipeline max ~20 Min
@@ -161,6 +162,21 @@ Sendet EPUB oder PDF per AgentMail an `bastianlewin_213e22@kindle.com`.
 - Große Buttons (14px Padding), Single-Column Layout
 - Kein Tailwind CDN, reines CSS
 
+### 9. Quality Check (`ask/ask_agent.py` \_is_valid_answer)
+
+**Warum:** Nemotron Super halluziniert manchmal Token-Suppe statt Inhalt. Der alte `startswith("Fehler:")` Guard hat Garbage-Antworten nicht gefangen.
+
+**Checks (alle hart):**
+1. **Minimallänge** ≥ 100 Zeichen
+2. **Keine Steuerzeichen** (>2% Control-Chars = Garbage)
+3. **Kein System-Prompt-Leakage** ("The user wants...", "As an AI...", "I'll help...")
+4. **Deutsch-Ratio** ≥ 15% deutsche Stoppwörter in ersten 500 Zeichen
+5. **ASCII-Noise** Keine langen >5er Nicht-Alphabet-Ketten
+6. **Alphabetic Ratio** ≥ 50% Buchstaben/Whitespace
+7. **Error Prefix** "Fehler:" oder "Error:"
+
+**Double Layer:** `ask_agent.py` (Chain überspringt Garbage → nächstes Model) + `addbook_sync.py` (validiert nochmal vor PDF/Kindle).
+
 ---
 
 ## Dateistruktur
@@ -174,7 +190,7 @@ addbook/
 ├── addbook_sync.py                 # Google Drive Monitor (Cron)
 ├── .addbook_state.json             # Verarbeitete Dateien
 ├── ask/
-│   ├── ask_agent.py                # Frage-Engine + Free Model Chain
+│   ├── ask_agent.py                # Frage-Engine + Free Model Chain + Quality Check
 │   └── answer_pdf.py               # PDF für Antworten
 ├── scraper/
 │   └── search.py                   # Anna's Archive Suche
@@ -298,13 +314,13 @@ curl -X POST http://localhost:3006/api/sync
 
 ### Bekannte Probleme
 
-1. **Error-Guard (07/2026)** — `process_question_trigger()` checkt `answer.startswith("Fehler:")` → verhindert Garbage-PDFs auf dem Kindle. Der alte Check `len(answer) < 10` war zu schwach.
-2. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs. Nur Text-Notizen verwenden.
-3. **Archiv-Verschiebung** — Google Drive API braucht manchmal explizite Parent-ID. State verhindert Doppelverarbeitung.
-4. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
-5. **Rezept-PDF: `[Convert]` im Subject** — Amazon konvertiert PDFs nur mit "Convert" im Betreff. Wird automatisch gesetzt.
-6. **Free Model Rate Limits** — Gemma 4 31B, GPT-OSS 120B und Nemotron Ultra 550B sind oft ratelimited. Chain fallt auf Nemotron Super zurück.
-7. **Keine Bilder auf großen Rezeptseiten** — Pillow skaliert auf max 400px Breite, damit Kindle-kompatibel (< 200KB PDF).
+1. **Error-Guard (07/2026)** — `process_question_trigger()` checkt `answer.startswith("Fehler:")` → verhindert Garbage-PDFs. Der alte Check `len(answer) < 10` war zu schwach.
+2. **Quality Check (07/2026)** — `_is_valid_answer()` filtert halluzinierte Token-Suppe (System-Prompt-Leakage, Steuerzeichen, zu wenig Deutsch). Double Layer: Chain skip + addbook_sync guard.
+3. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs.
+4. **Free Model Rate Limits** — Gemma 4 31B, GPT-OSS 120B und Nemotron Ultra 550B sind oft ratelimited. Chain fallt auf Nemotron Super zurück.
+5. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
+6. **Rezept-PDF: `[Convert]` im Subject** — Amazon konvertiert PDFs nur mit "Convert" im Betreff.
+7. **Keine Bilder auf großen Rezeptseiten** — Pillow skaliert auf max 400px Breite.
 
 ---
 
@@ -315,6 +331,7 @@ curl -X POST http://localhost:3006/api/sync
 | Server | Node.js + Express |
 | Frontend | Vanilla HTML/CSS/JS |
 | Drive Monitor | Python 3 + Composio MCP |
+| Frage-Pipeline | Python + OpenClaw CLI + Free Models |
 | Buchsuche | Python + BeautifulSoup (Anna's Archive) |
 | Rezeptsuche | Python + ddgs + JSON-LD (Schema.org) |
 | PDF-Gen | Python + WeasyPrint |
