@@ -1,8 +1,8 @@
 # 📚 AddBook
 
-**Kindle Scribe → Buchsuche + Rezeptsuche → Kindle**
+**Kindle Scribe → Buchsuche + Rezeptsuche + Fragen → Kindle**
 
-Schreib `Buch: Titel` oder `Rezept: Suchbegriff 2x` auf deinen Kindle Scribe, und alles passiert automatisch.
+Schreib `Buch: Titel`, `Rezept: Suchbegriff 2x` oder `Frage: Was ist...` auf deinen Kindle Scribe, und alles passiert automatisch.
 
 **URL:** `addbook.steppa.online`
 
@@ -29,6 +29,12 @@ addbook_sync.py
   │  ├─ Ergebnis-JSON speichern                 │
   │  ├─ Telegram-Link senden                    │
   │  └─ User klickt → Download + Send to Kindle │
+  │                                             │
+  ├─ [Trigger "Frage:"] ────────────────────────┤
+  │  ├─ Free Model Chain (ask_agent.py)         │
+  │  ├─ Deep Research Report (1.5k-4k chars)   │
+  │  ├─ WeasyPrint PDF + Guard (kein Fehler:)  │
+  │  └─ Send to Kindle (direkt, kein Klick)     │
   │                                             │
   ├─ [Trigger "Rezept:"] ───────────────────────┤
   │  ├─ DuckDuckGo Rezeptsuche                  │
@@ -97,7 +103,26 @@ Rezept: Pasta 2x
 
 **Race Condition Guard:** File Lock via `fcntl.flock()` — zwei parallele Cron-Instanzen blockieren sich gegenseitig.
 
-### 3. Recipe Pipeline (`recipes/`)
+### 3. Question Pipeline (`ask/`)
+
+**Trigger:** `Frage: Was ist...` im Datei-Content (parallel zu `Buch:` und `Rezept:`)
+
+**Pipeline:**
+1. `parse_content_for_question()` → extrahiert Frage-Text (Multi-Line Support)
+2. `ask_agent.py` → OpenClaw-CLI mit Free Model Chain
+3. **Free Model Chain (Fallback):**
+   - `nemotron-3-super-120b-a12b:free` — Primary (bewährt, ~52-106s)
+   - `nemotron-3-ultra-550b-a55b:free` — 550B max depth
+   - `gemma-4-31b-it:free` — Quality Score 65
+   - `gpt-oss-120b:free` — OpenAI open-weight
+4. `answer_pdf.py` → WeasyPrint PDF (A5, Coverpage, Frage+Antwort, Quellenverzeichnis)
+5. `scripts/send-to-kindle.py` → PDF per AgentMail an Kindle
+6. **Guard:** `answer.startswith("Fehler:")` → bricht ab, kein Kindle-Versand!
+7. Telegram: "❓ Frage beantwortet: 'Suchbegriff'" mit Preview
+
+**Timeout:** 300s pro Modell, gesamte Pipeline max ~20 Min
+
+### 4. Recipe Pipeline (`recipes/`)
 
 **Trigger:** `Rezept: Suchbegriff 2x` im Datei-Content
 
@@ -113,22 +138,22 @@ Rezept: Pasta 2x
 **Multiplier:** `Rezept: Nudeln 3x` → 3 Rezepte in 1 PDF
 **Quellen:** International (DuckDuckGo via ddgs), keine Social-Media/Videosites
 
-### 4. Buchsuche (`scraper/search.py`)
+### 5. Buchsuche (`scraper/search.py`)
 
 Sucht auf Anna's Archive nach Büchern (4 Mirrors, Fallback-Chain).
 Gibt JSON: `md5`, `title`, `author`, `format`, `size`, `language`, `year`, `coverUrl`
 
-### 5. EPUB Download (`scripts/anna-browser-download.sh`)
+### 6. EPUB Download (`scripts/anna-browser-download.sh`)
 
 Lädt EPUB via Libgen-CDN, prüft Magic Bytes (`PK\x03\x04`).
 
-### 6. Send to Kindle (`scripts/send-to-kindle.py`)
+### 7. Send to Kindle (`scripts/send-to-kindle.py`)
 
 Sendet EPUB oder PDF per AgentMail an `bastianlewin_213e22@kindle.com`.
 - Von: `bastians_assistent@agentmail.to`
 - Automatische File-Type Erkennung (.epub → application/epub+zip, .pdf → application/pdf)
 
-### 7. Frontend (E-Ink optimiert)
+### 8. Frontend (E-Ink optimiert)
 
 **Design-Prinzipien für Kindle Scribe:**
 - Weißer Hintergrund, Serif-Font (Georgia), hoher Kontrast
@@ -148,8 +173,9 @@ addbook/
 ├── server.js                       # Express Server (Port 3006)
 ├── addbook_sync.py                 # Google Drive Monitor (Cron)
 ├── .addbook_state.json             # Verarbeitete Dateien
-├── addbook_sync.py                 # Main Sync Script
-├── .drive-watch.json               # Drive Watch Channel
+├── ask/
+│   ├── ask_agent.py                # Frage-Engine + Free Model Chain
+│   └── answer_pdf.py               # PDF für Antworten
 ├── scraper/
 │   └── search.py                   # Anna's Archive Suche
 ├── recipes/
@@ -171,8 +197,10 @@ addbook/
 │   └── latest.json                 # Letzte Suchergebnisse
 ├── epubs/
 │   └── *.epub                      # Temporäre Downloads
-└── recipe_pdfs/
-    └── rezept-*.pdf                # Generierte Rezept-PDFs
+├── recipe_pdfs/
+│   └── rezept-*.pdf                # Generierte Rezept-PDFs
+└── answer_pdfs/
+    └── antwort-*.pdf               # Generierte Frage-Antwort-PDFs
 ```
 
 ---
@@ -235,6 +263,11 @@ WantedBy=multi-user.target
 2. Automatisch syncen → PDF wird generiert + direkt an Kindle gesendet
 3. Telegram: "🍳 2 Rezepte gesendet für 'Chicken Tikka Masala'"
 
+### Fragen (vollautomatisch, Deep Research)
+1. Neue Notiz: `Frage: Was ist der Sinn des Lebens?`
+2. Automatisch syncen → Free Model Chain → Deep-Research-Report → PDF an Kindle
+3. Telegram: "❓ Frage beantwortet: 'Was ist der Sinn des Lebens?'" mit Preview
+
 ### Manuell (via API)
 ```bash
 curl -X POST http://localhost:3006/api/search \
@@ -265,11 +298,13 @@ curl -X POST http://localhost:3006/api/sync
 
 ### Bekannte Probleme
 
-1. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs. Nur Text-Notizen verwenden.
-2. **Archiv-Verschiebung** — Google Drive API braucht manchmal explizite Parent-ID. State verhindert Doppelverarbeitung.
-3. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
-4. **Rezept-PDF: `[Convert]` im Subject** — Amazon konvertiert PDFs nur mit "Convert" im Betreff. Wird automatisch gesetzt.
-5. **Keine Bilder auf groÃŸen Rezeptseiten** — Pillow skaliert auf max 400px Breite, damit Kindle-kompatibel (< 200KB PDF).
+1. **Error-Guard (07/2026)** — `process_question_trigger()` checkt `answer.startswith("Fehler:")` → verhindert Garbage-PDFs auf dem Kindle. Der alte Check `len(answer) < 10` war zu schwach.
+2. **PDF-Dateien statt .txt** — Kindle Scribe kann PDFs erzeugen. Parser überspringt Binär-PDFs. Nur Text-Notizen verwenden.
+3. **Archiv-Verschiebung** — Google Drive API braucht manchmal explizite Parent-ID. State verhindert Doppelverarbeitung.
+4. **Rezept-Dedup** — Gleicher Query bekommt immer neue Rezepte (nie wiederholte URLs).
+5. **Rezept-PDF: `[Convert]` im Subject** — Amazon konvertiert PDFs nur mit "Convert" im Betreff. Wird automatisch gesetzt.
+6. **Free Model Rate Limits** — Gemma 4 31B, GPT-OSS 120B und Nemotron Ultra 550B sind oft ratelimited. Chain fallt auf Nemotron Super zurück.
+7. **Keine Bilder auf großen Rezeptseiten** — Pillow skaliert auf max 400px Breite, damit Kindle-kompatibel (< 200KB PDF).
 
 ---
 

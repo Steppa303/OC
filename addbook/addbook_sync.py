@@ -31,6 +31,8 @@ BASE_DIR = Path(__file__).parent
 STATE_FILE = BASE_DIR / ".addbook_state.json"
 RECIPE_STATE_FILE = BASE_DIR / "recipes" / ".recipe_state.json"
 RECIPE_PDF_DIR = Path("/srv/addbook/recipe_pdfs")
+ANSWER_PDF_DIR = Path("/srv/addbook/answer_pdfs")
+QA_TEMP_DIR = Path("/tmp/addbook-qa")
 LOG_FILE = BASE_DIR / "logs" / "addbook.log"
 OAUTH_FILE = Path("/root/.openclaw/mcp-oauth/composio-83fbe197920e85c5.json")
 MCP_URL = "https://connect.composio.dev/mcp"
@@ -335,6 +337,48 @@ def parse_content_to_title(text: str) -> Optional[str]:
             return None
     return None
 
+def parse_content_for_question(text: str) -> Optional[str]:
+    """
+    Parse content for 'Frage:' trigger.
+    Returns the question text (may be multi-line) or None.
+    Supports:
+      "Frage: Was ist der Sinn des Lebens?"
+      "Frage:" + next line "Was ist der Sinn..."
+    Reads all subsequent lines until file end.
+    """
+    lines = text.splitlines()
+    in_question = False
+    question_lines = []
+
+    for i, raw_line in enumerate(lines):
+        line = raw_line.strip()
+
+        if in_question:
+            # Stop if we hit a new trigger word (case-insensitive start of line)
+            if line.lower().startswith(("buch:", "rezept:", "frage:")):
+                break
+            if line:
+                question_lines.append(line)
+            continue
+
+        if not line.lower().startswith("frage:"):
+            continue
+
+        rest = line[6:].strip()
+        if rest:
+            question_lines.append(rest)
+        in_question = True
+
+    if not question_lines:
+        return None
+
+    question = " ".join(question_lines).strip()
+    # Strip trailing special characters
+    question = re.sub(r'[\s\u2713\u2714\u2716-\u271A\u271D\u274C\u2705\u2605\u2606✔✅]+$', '', question).strip()
+
+    return question if len(question) >= 5 else None
+
+
 def parse_content_for_recipe(text: str) -> Optional[tuple]:
     """
     Parse content for 'Rezept:' trigger.
@@ -557,6 +601,122 @@ def generate_results_json(title: str, books: List[Dict]) -> str:
     return str(output_file)
 
 # ============================================================
+# Question Pipeline
+# ============================================================
+def process_question_trigger(file_id: str, file_name: str, question: str) -> bool:
+    """
+    Handle 'Frage:' trigger: ask agent → generate PDF → send to Kindle.
+    Returns True on success.
+    """
+    import subprocess as _sp
+
+    # Sanitize for filename
+    clean_q = "".join(c for c in question if c.isascii() and (c.isalnum() or c in " _-'")).strip()[:50] or "Frage"
+
+    log.info("❓ Question trigger: '%s' (%d chars)", clean_q, len(question))
+
+    # Step 1: Run temp dir
+    QA_TEMP_DIR.mkdir(parents=True, exist_ok=True)
+    input_file = QA_TEMP_DIR / f"q_{int(time.time())}.json"
+    output_pdf = ANSWER_PDF_DIR / f"antwort-{clean_q}-{time.strftime('%Y%m%d-%H%M%S')}.pdf"
+    ANSWER_PDF_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Step 2: Ask the agent
+    log.info("🤖 Asking OpenClaw agent...")
+    ask_cmd = [
+        "python3",
+        str(BASE_DIR / "ask" / "ask_agent.py"),
+        "--question", question,
+        "--output", str(input_file),
+        "--timeout", "300",
+    ]
+    try:
+        result = _sp.run(ask_cmd, capture_output=True, text=True, timeout=350)
+        if result.returncode != 0:
+            log.error("Agent call failed: %s", result.stderr[:500])
+            send_telegram_simple(f"❌ *Frage-Fehler*: Agent-Aufruf fehlgeschlagen\n`{question[:80]}`")
+            return False
+    except Exception as e:
+        log.error("Agent call exception: %s", e)
+        send_telegram_simple(f"❌ *Frage-Fehler*: {e}\n`{question[:80]}`")
+        return False
+
+    # Step 3: Load agent response
+    try:
+        with open(input_file) as f:
+            qa_data = json.load(f)
+    except Exception as e:
+        log.error("Could not load agent output: %s", e)
+        return False
+
+    answer = qa_data.get("answer", "").strip()
+    if not answer or len(answer) < 10:
+        log.warning("Empty answer from agent")
+        send_telegram_simple(f"❌ *Leere Antwort* für Frage\n`{question[:80]}`")
+        return False
+
+    # 🔥 CRITICAL: Check for error fallback text – don't send garbage to Kindle!
+    if answer.startswith("Fehler:") or answer.startswith("Error:"):
+        log.error("Agent returned error: %s", answer[:100])
+        send_telegram_simple(f"❌ *Agent-Fehler* für Frage\n`{question[:80]}`\n\n_{answer}_")
+        return False
+
+    log.info("Got answer: %d chars", len(answer))
+
+    # Step 4: Generate PDF
+    pdf_temp = QA_TEMP_DIR / f"pdf_{int(time.time())}.json"
+    pdf_data = {"question": question, "answer": answer}
+    pdf_temp.write_text(json.dumps(pdf_data, ensure_ascii=False))
+
+    pdf_cmd = [
+        "python3",
+        str(BASE_DIR / "ask" / "answer_pdf.py"),
+        "--input", str(pdf_temp),
+        "--output", str(output_pdf),
+    ]
+    try:
+        pdf_result = _sp.run(pdf_cmd, capture_output=True, text=True, timeout=30)
+        if pdf_result.returncode != 0:
+            log.error("PDF gen failed: %s", pdf_result.stderr[:500])
+            send_telegram_simple(f"❌ *PDF-Fehler* für '{clean_q}'")
+            return False
+    except Exception as e:
+        log.error("PDF gen exception: %s", e)
+        return False
+
+    if not output_pdf.exists():
+        log.error("PDF not generated at %s", output_pdf)
+        return False
+
+    log.info("PDF generated: %s (%d bytes)", output_pdf, output_pdf.stat().st_size)
+
+    # Step 5: Send to Kindle
+    pdf_title = f"Frage: {clean_q}"
+    sent = send_pdf_to_kindle(str(output_pdf), pdf_title)
+
+    if sent:
+        log.info("✅ Q&A sent to Kindle: %s", clean_q)
+        # Truncate answer for Telegram preview
+        answer_preview = answer[:200].replace("\n", " ").strip()
+        try:
+            send_telegram_simple(
+                f"❓ *Frage beantwortet*: '{clean_q}'\n\n"
+                f"*Antwort*: {answer_preview}…\n\n"
+                f"📬 An Kindle gesendet."
+            )
+        except Exception as tel_e:
+            log.warning("Telegram notification failed (non-fatal): %s", tel_e)
+        return True
+    else:
+        log.error("Kindle send failed for '%s'", clean_q)
+        try:
+            send_telegram_simple(f"❌ *Kindle-Fehler* für '{clean_q}'")
+        except Exception:
+            pass
+        return False
+
+
+# ============================================================
 # Recipe Pipeline Main Entry
 # ============================================================
 def process_recipe_trigger(file_id: str, file_name: str, query: str, count: int) -> bool:
@@ -679,8 +839,17 @@ def _process_files_inner():
         fname = f["name"]
 
         if fid in state:
-            log.debug("Skipping already processed: %s", fname)
-            continue
+            prev = state[fid]
+            prev_status = prev.get("status", "")
+            prev_time = prev.get("processed_at", 0)
+            age = time.time() - prev_time
+
+            # Retry stale processing files after 15 minutes
+            if prev_status == "processing" and age > 900:
+                log.warning("Stale processing entry for %s (%.0f min old), retrying", fname, age / 60)
+            else:
+                log.debug("Skipping already processed: %s (status=%s, age=%.0fs)", fname, prev_status, age)
+                continue
 
         log.info("Processing: %s (ID: %s)", fname, fid)
 
@@ -694,13 +863,34 @@ def _process_files_inner():
 
         log.info("Downloaded %d chars from %s", len(content), fname)
 
-        # Step 5: Check for recipe trigger (independent of book trigger)
-        recipe_info = parse_content_for_recipe(content)
-        recipe_processed = False
+        # Step 5: Check for question trigger
+        question_text = parse_content_for_question(content)
+        question_processed = False
 
-        # Mark as processing NOW to prevent race conditions (cron every 2min)
+        # Mark as processing NOW to prevent race conditions
         state[fid] = {"name": fname, "processed_at": time.time(), "status": "processing"}
         save_state(state)
+
+        if question_text:
+            log.info("❓ Question trigger found: '%s'", question_text[:100])
+            question_processed = process_question_trigger(fid, fname, question_text)
+
+            if question_processed and not parse_content_to_title(content) and not parse_content_for_recipe(content):
+                # Question-only file → archive and done
+                if move_file(mcp, fid, archive_id, current_parents=folder_id):
+                    log.info("Moved %s to archive (question)", fname)
+                state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done"}
+                save_state(state)
+                processed_count += 1
+                continue
+            elif question_processed:
+                # File has question AND other triggers
+                log.info("Question processed, continuing for other triggers")
+                state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done_also_other"}
+
+        # Step 6: Check for recipe trigger (independent of book trigger)
+        recipe_info = parse_content_for_recipe(content)
+        recipe_processed = False
 
         if recipe_info:
             rquery, rcount = recipe_info
@@ -720,11 +910,11 @@ def _process_files_inner():
                 log.info("Recipe processed, file also has book trigger — continuing")
                 state[fid] = {"name": fname, "processed_at": time.time(), "status": "recipe_done_also_book"}
 
-        # Step 6: Parse book title
+        # Step 7: Parse book title
         title = parse_content_to_title(content)
         if not title:
-            if recipe_info:
-                continue  # Already handled as recipe-only
+            if recipe_info or question_processed:
+                continue  # Already handled as recipe/question-only
             log.warning("No trigger found in %s", fname)
             state[fid] = {"name": fname, "processed_at": time.time(), "status": "no_title"}
             save_state(state)
@@ -732,7 +922,7 @@ def _process_files_inner():
 
         log.info("Extracted title: %s", title)
 
-        # Step 7: Run book search
+        # Step 8: Run book search
         search_result = run_book_search(title)
         if isinstance(search_result, dict) and "error" in search_result:
             log.error("Book search failed for '%s': %s", title, search_result["error"])
@@ -749,7 +939,7 @@ def _process_files_inner():
 
         log.info("Found %d books for '%s'", len(books), title)
 
-        # Step 8: Generate results JSON
+        # Step 9: Generate results JSON
         json_path = generate_results_json(title, books)
         if not json_path:
             log.error("Failed to generate results for '%s'", title)
@@ -757,7 +947,7 @@ def _process_files_inner():
             save_state(state)
             continue
 
-        # Step 9: Send Telegram notification
+        # Step 10: Send Telegram notification
         sent = False
         for attempt in range(1, MAX_RETRIES + 1):
             if send_telegram_book_link(title, len(books)):
