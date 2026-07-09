@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --tg-bg-color: var(--tg-theme-bg-color, #1e1e2e);
+  --tg-text-color: var(--tg-theme-text-color, #cdd6f4);
+  --tg-hint-color: var(--tg-theme-hint-color, #6c7086);
+  --tg-link-color: var(--tg-theme-link-color, #89b4fa);
+  --tg-button-color: var(--tg-theme-button-color, #f38ba8);
+  --tg-button-text-color: var(--tg-theme-button-text-color, #1e1e2e);
+  --tg-secondary-bg-color: var(--tg-theme-secondary-bg-color, #181825);
+  --tg-accent-color: var(--tg-theme-accent-text-color, #f5c2e7);
+  --tg-section-bg-color: var(--tg-theme-section-bg-color, #1e1e2e);
+  --tg-section-header-text-color: var(--tg-theme-section-header-text-color, #a6adc8);
+  --tg-subtitle-text-color: var(--tg-theme-subtitle-text-color, #6c7086);
+  --tg-destructive-text-color: var(--tg-theme-destructive-text-color, #f38ba8);
+  --tg-header-bg-color: var(--tg-theme-header-bg-color, #1e1e2e);
+  --tg-bottom-bar-bg-color: var(--tg-theme-bottom-bar-bg-color, #181825);
+  --tg-safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --tg-content-safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --tg-content-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--tg-bg-color);
+    color: var(--tg-text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--tg-hint-color);
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: var(--tg-safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: var(--tg-safe-area-inset-bottom);
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glass-hover {
+    transition: all 0.2s ease;
+  }
+  .glass-hover:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .card-gradient {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+}
