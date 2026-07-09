@@ -379,7 +379,23 @@ Cloudflare DNS: proxied=true (Flexible SSL)
 - Backend verwendet `nzbhydra2` Docker-Hostname für NZB-Links (SAB läuft in Docker)
 - Queue-API ist unauthentifiziert (Search auch), nur Download braucht JWT
 
+### Cover Image Handling
+- NZBGeek liefert Cover-URLs im `attr[].@attributes.name="coverurl"` Format
+- `extractCoverUrl()` Funktion durchsucht zuerst direkte Felder (`poster`, `poster_url`, `coverurl`), dann `attr` Array (unterstützt sowohl `@attributes` von Geek als auch `attributes` von Hydra)
+- Dedup merged `poster_url` (behält Cover wenn eine Quelle eine hat)
+- Sortierung boostet Results mit Poster (Cover zuerst)
+- Frontend: `<img onError>` → fällt auf Emoji-Placeholder zurück
+
 ## 13. Changelog
+
+### Revision 5 (2026-07-09)
+- **🔍 Cover Images gefixt:** NZBGeek liefert Cover-URLs im `attr[]` Array (nicht top-level)
+- **Fix `extractCoverUrl()`:** Durchsucht `attr` Array mit `@attributes` (Geek) und `attributes` (Hydra)
+- **Fix Dedup:** Überschreibt `poster_url` nicht mehr bei Hydra-First-Sort — merge jetzt Covers von Geek in Hydra-Results
+- **Fix Sortierung:** Boostet Results mit `poster_url` (Cover zuerst in den Top-20)
+- **Fix Frontend:** `<img onError>` Handler in ResultCard + DetailPage — bei Ladefehlern Fallback auf Emoji-Placeholder
+- **Neugebuildet:** `npm run build` (dist fresh, keine alten Assets mehr)
+- **Debug Logs entfernt:** search.js wieder sauber
 
 ### Revision 4 (2026-07-09)
 - **JS UI Mini App hinzugefügt:** React Frontend + Express Backend

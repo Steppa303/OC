@@ -61,6 +61,8 @@ export default function DetailPage() {
     }
   };
 
+  const [imgFailed, setImgFailed] = useState(false);
+
   const mediaType = result.media_type || 'other';
   const color = GENRE_COLORS[mediaType] || GENRE_COLORS.other;
 
@@ -85,8 +87,13 @@ export default function DetailPage() {
       <div
         className="w-full aspect-[2/3] rounded-2xl mb-4 overflow-hidden relative card-gradient flex items-center justify-center"
       >
-        {result.poster_url ? (
-          <img src={result.poster_url} alt={result.title} className="w-full h-full object-cover" />
+        {result.poster_url && !imgFailed ? (
+          <img
+            src={result.poster_url}
+            alt={result.title}
+            className="w-full h-full object-cover"
+            onError={() => setImgFailed(true)}
+          />
         ) : (
           <div className="text-6xl opacity-30">🎬</div>
         )}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Download, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +22,7 @@ export default function ResultGrid({ results }: Props) {
 function ResultCard({ result, index }: { result: SearchResult; index: number }) {
   const navigate = useNavigate();
   const haptic = safeHapticFeedback();
+  const [imgFailed, setImgFailed] = useState(false);
 
   const handleClick = () => {
     haptic?.impactOccurred('light');
@@ -52,8 +54,13 @@ function ResultCard({ result, index }: { result: SearchResult; index: number }) 
     >
       {/* Poster Area */}
       <div className="aspect-[2/3] relative flex items-center justify-center" style={{ backgroundColor: 'var(--tg-secondary-bg-color)' }}>
-        {result.poster_url ? (
-          <img src={result.poster_url} alt={result.title} className="w-full h-full object-cover" />
+        {result.poster_url && !imgFailed ? (
+          <img
+            src={result.poster_url}
+            alt={result.title}
+            className="w-full h-full object-cover"
+            onError={() => setImgFailed(true)}
+          />
         ) : (
           <span className="text-3xl opacity-20">
             {result.media_type === 'movie' ? '🎬' : result.media_type?.includes('tv') || result.media_type === 'serie' ? '📺' : '📦'}

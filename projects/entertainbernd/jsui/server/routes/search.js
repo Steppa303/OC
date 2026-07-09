@@ -79,6 +79,24 @@ async function safeFetch(url, timeoutMs = 15000) {
   }
 }
 
+/** Extract coverurl from newznab attr array */
+function extractCoverUrl(item) {
+  // Direct fields first
+  if (item.poster) return item.poster;
+  if (item.poster_url) return item.poster_url;
+  if (item.coverurl) return item.coverurl;
+  // attr array — newznab standard
+  // NZBGeek: attr[] = { '@attributes': { name, value } }
+  // NZBHydra2: attr[] = { 'attributes': { name, value } }
+  if (Array.isArray(item.attr)) {
+    for (const a of item.attr) {
+      const attrs = a['@attributes'] || a.attributes || a;
+      if (attrs && attrs.name === 'coverurl' && attrs.value) return attrs.value;
+    }
+  }
+  return null;
+}
+
 /** Map newznab result item to unified format */
 function mapResult(item) {
   const size = parseInt(item.size, 10) || 0;
@@ -93,7 +111,7 @@ function mapResult(item) {
     language: detectLanguage(title),
     source: item.source || 'unknown',
     pub_date: item.pubDate || item.pub_date || null,
-    poster_url: item.poster || item.poster_url || item.coverurl || null,
+    poster_url: extractCoverUrl(item),
     rating: parseFloat(item.rating) || 0,
     grabs: parseInt(item.grabs, 10) || 0,
     link: item.link || '',
@@ -148,19 +166,37 @@ router.get('/', async (req, res) => {
     }
   }
 
+  console.log('[search] sources before dedup:', sources.length, 'geek:', sources.filter(s => s.source === 'nzbgeek').length, 'hydra:', sources.filter(s => s.source === 'nzbhydra2').length, 'with_poster:', sources.filter(s => s.poster_url).length);
+
   // Deduplicate by normalized title
-  const seen = new Set();
-  const deduped = [];
+  const seen = new Map();
   for (const r of sources) {
     const norm = normalizeTitle(r.title);
-    if (!seen.has(norm)) {
-      seen.add(norm);
-      deduped.push(r);
+    const existing = seen.get(norm);
+    if (!existing) {
+      seen.set(norm, r);
+    } else {
+      // Merge poster_url from Geek if Hydra doesn't have one
+      if (!existing.poster_url && r.poster_url) {
+        existing.poster_url = r.poster_url;
+      }
+      // Keep the one with higher grabs
+      if (r.grabs > existing.grabs) {
+        r.poster_url = existing.poster_url || r.poster_url;
+        seen.set(norm, r);
+      }
     }
   }
+  const deduped = Array.from(seen.values());
 
-  // Sort by grabs desc then rating desc
-  deduped.sort((a, b) => b.grabs - a.grabs || b.rating - a.rating);
+  // Sort: poster_url first, then by grabs desc, then rating desc
+  deduped.sort((a, b) => {
+    // Results with poster first
+    if (a.poster_url && !b.poster_url) return -1;
+    if (!a.poster_url && b.poster_url) return 1;
+    // Then by grabs desc
+    return b.grabs - a.grabs || b.rating - a.rating;
+  });
 
   // Paginate
   const total = deduped.length;
