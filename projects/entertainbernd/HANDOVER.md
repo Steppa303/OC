@@ -1,6 +1,6 @@
 # 🦞 EntertainBernd – Übergabedokument
 
-_Stand: 2026-07-09, Revision 3_
+_Stand: 2026-07-10, Revision 6_
 
 ---
 
@@ -388,9 +388,15 @@ Cloudflare DNS: proxied=true (Flexible SSL)
 
 ## 13. Changelog
 
+### Revision 6 (2026-07-10)
+- **🐛 SearchPage FilterBar gefixt:** Sprache/Quelle-Pills in der Mini App waren nicht klickbar
+- **Fix:** `FilterBar` in `SearchPage.tsx` hatte leere Callbacks (`() => {}`) — `onLanguageChange` und `onSourceChange` haben nix gemacht
+- **Fix:** `useConfig()` aus `useSearch.ts` importiert, echte `setLanguage`/`setSource` übergeben
+- **SettingsPage war ok** — die hatte schon korrekte Handler
+
 ### Revision 5 (2026-07-09)
 - **🔍 Cover Images gefixt:** NZBGeek liefert Cover-URLs im `attr[]` Array (nicht top-level)
-- **Fix `extractCoverUrl()`:** Durchsucht `attr` Array mit `@attributes` (Geek) und `attributes` (Hydra)
+- **Fix `extractCoverUrl():**` Durchsucht `attr` Array mit `@attributes` (Geek) und `attributes` (Hydra)
 - **Fix Dedup:** Überschreibt `poster_url` nicht mehr bei Hydra-First-Sort — merge jetzt Covers von Geek in Hydra-Results
 - **Fix Sortierung:** Boostet Results mit `poster_url` (Cover zuerst in den Top-20)
 - **Fix Frontend:** `<img onError>` Handler in ResultCard + DetailPage — bei Ladefehlern Fallback auf Emoji-Placeholder

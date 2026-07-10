@@ -5,6 +5,7 @@ import SearchInput from '../components/search/SearchInput';
 import FilterBar from '../components/search/FilterBar';
 import ResultGrid from '../components/search/ResultGrid';
 import ErrorBoundary from '../components/shared/ErrorBoundary';
+import { useConfig } from '../hooks/useSearch';
 
 const CAT_MAP: Record<string, string | null> = {
   film: '2000',
@@ -21,6 +22,7 @@ export default function SearchPage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { language, setLanguage, source, setSource } = useConfig();
   const [cat, setCat] = useState<string | null>('2000');
   const [showFilters, setShowFilters] = useState(false);
   const [activeMedia, setActiveMedia] = useState('film');
@@ -107,10 +109,10 @@ export default function SearchPage() {
       {showFilters && (
         <div className="mb-4">
           <FilterBar
-            language={null}
-            onLanguageChange={() => {}}
-            source={null}
-            onSourceChange={() => {}}
+            language={language}
+            onLanguageChange={setLanguage}
+            source={source}
+            onSourceChange={setSource}
           />
         </div>
       )}
