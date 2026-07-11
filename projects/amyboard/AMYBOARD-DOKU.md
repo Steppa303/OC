@@ -1,8 +1,9 @@
 # AMYboard – Modulare Synthesizer Integration
 
 > Projekt: AMYboard ins Modular-System einbauen & programmieren
-> Letztes Update: 2026-05-31 v2
+> Letztes Update: 2026-07-11 v3
 > **Quantizer/Remote/Deployment:** Siehe `REMOTE-DEBUG.md`
+> **Web Frontend (amylive):** Siehe `amylive.md` + `amylive/` Src
 > Quellen: shorepine/tulipcc + shorepine/amy @ GitHub
 
 ---
