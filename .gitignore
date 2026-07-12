@@ -31,3 +31,6 @@ Thumbs.db
 # Python
 rag-env/
 *.egg-info/
+
+# Subprojects - own repos
+projects/lesestoff/

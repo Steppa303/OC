@@ -600,7 +600,10 @@ curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID
 - [x] **Event Log System** (LogPanel + Backend Persistenz via /api/amy/log)
 - [x] **Patch Database** (256 Factory Presets + Piano + 7 Drums + 32 User)
 - [x] **Synth Manager Module** (Patch-Browser, Synth Config, MIDI Keyboard Pads)
+- [x] **Wire Bridge** (Wire → zP Python amy.send() mit Velocity-Normalisierung + Synth-Init + Voices)
 - [x] Live-Parameter-Update (Slider → sofortiger Sound, geloggt)
+- [x] Fix: Touch-freundlicher "+ Modul" Button (click statt group-hover)
+- [x] Fix: `onSendWire` feuert echte SysEx/zP statt console.log
 - [ ] Modul-Canvas (Drag&Drop Grid)
 - [ ] **Oszillator-Modul** (alle Wellenformen, Freq, Amp, Pan, Detune)
 - [ ] **Filter-Modul** (LPF/BPF/HPF, Cutoff, Resonance, CtrlCoefs)
@@ -609,6 +612,7 @@ curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID
 - [ ] **FX Rack** (Reverb, Chorus, Echo)
 - [ ] Lokale Patch Library (Speichern/Laden/Löschen)
 - [ ] State vom Board laden (zDZ) + auf Board schreiben (zA/zT)
+- [ ] ♻️ Sound-Test bestanden (board gibt Ton aus)
 
 ### 🟡 Phase 2 – FX & FM
 - [ ] **FX Rack** (Reverb, Chorus, Echo, EQ pro Bus)

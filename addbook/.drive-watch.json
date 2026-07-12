@@ -1,8 +1,8 @@
 {
-  "channelId": "addbook-drive-watch-1783807387",
+  "channelId": "addbook-drive-watch-1783850586",
   "resourceId": "GmowZyszFwEcn3sHGH8cRX9-uXw",
-  "pageToken": "136839",
-  "expiration": 1783890187000,
+  "pageToken": "136864",
+  "expiration": 1783933385000,
   "webhookUrl": "https://addbook.steppa.online/api/drive-webhook",
-  "createdAt": "2026-07-12T00:03:07+0200"
+  "createdAt": "2026-07-12T12:03+0200"
 }

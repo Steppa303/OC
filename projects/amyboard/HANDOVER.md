@@ -250,11 +250,43 @@ Zwei große Features live deployt:
 - **MIDI Keyboard Pads**: ✅ Phase 1 (Mouse-basiert, ohne echte MIDI-Inputs)
 - **Wire Output**: ✅ `onSendWire` feuert korrekt (console.log für Phase 1)
 
+### 10.3 Wire Bridge Bugfixes (Session-Continuation 14:00)
+
+Nach dem ersten Sound-Test stellte sich heraus: **Kein Ton aus AMYboard**, obwohl der offizielle Editor (`amyboard.com/editor`) funktioniert.
+
+#### Bug #1 – `onSendWire` war stub
+`Dashboard.tsx` hatte nur `console.log('Wire:', wire)` – nie SysEX/zP gesendet.  
+**Fix:** `sendWireMessage(wire)` Funktion, die via `amyConnection.runPython()` an Board sendet.
+
+#### Bug #2 – Velocity Range falsch (0–127 statt 0.0–1.0)
+Wire-Format `l100` für Note On – AMY's `vel` Parameter erwartet **0.0–1.0** (Float), nicht 0–127.  
+**Fix:** Normalisierung: `vel = Math.min(1.0, rawVel / 127).toFixed(3)`
+
+#### Bug #3 – Synth ohne Voices initialisiert
+`i0K42Z` alleine reicht nicht – AMY braucht `num_voices` in einem Befehl, sonst existiert Synth-Instanz nicht.  
+**Fix:** Patch-Load erzeugt `amy.send(synth=0, patch=42, num_voices=6)` via zP.
+
+#### Bug #4 – Wire per SysEx vs. per zP Python
+Zwei Ansätze existieren im AMY-Protokoll:
+- **SysEx Wire:** `F0 00 03 45 i0K42 F7` – offiziell dokumentiert, hängt aber von Firmware ab
+- **zP Python:** `amy.send(synth=0, patch=42, num_voices=6)` – zuverlässig auf Tulip CC
+
+**Entscheidung:** `zP Python` als Primär-Ansatz, da Board damit sicher `amy.send()` ausführt.
+
+#### Bug #5 – Synth.tsx fehlendes `useEffect` für Init
+Beim Mount wurde der Synth nicht initialisiert.  
+**Fix:** `useEffect` importiert + Mount-Hook sendet Patch-Load beim ersten Render.
+
+#### Bug #6 – Z-Terminator in Wire-Strings
+`i0K42Z` mit `Z` – SysEx `F7` dient als Terminator, das `Z` ist für die AMY-Text-Engine. `amy.send()` in Python kommt klar mit oder ohne `Z`.  
+**Fix:** `wire.replace(/Z$/, '')` vor Python-Konvertierung.
+
 ### Nächste Schritte
-1. **Echten WebMIDI Output** statt console.log — WebMIDI `midiOutput.send()` aus amy-connection.ts in onSendWire einbauen
-2. **MIDI Input Hook** — eingehende MIDI-Noten (USB Keyboard) → visualisieren
-3. Module: Oscillator, Filter, Envelope, LFO, FX Rack bauen
-4. **Save/Load Patches** vom Board (zDZ/zA)
+1. ⬜ **Sound-Test** – Bastian muss neu deployte Seite testen (Cache killen!)
+2. ⬜ **Falls immer noch kein Sound:** Prüfen ob `amy.send()` überhaupt auf dem Board ankommt – AMYboard Serial Monitor checken, oder manuell `zP amy.send(synth=0, patch=0, num_voices=6)` im offiziellen Editor testen
+3. ⬜ **MIDI Input Hook** – eingehende MIDI-Noten (USB Keyboard) → visualisieren
+4. ⬜ Module: Oscillator, Filter, Envelope, LFO, FX Rack bauen
+5. ⬜ **Save/Load Patches** vom Board (zDZ/zA)
 
 ---
 

@@ -2,7 +2,7 @@
 // Patch browser, MIDI keyboard pads, synth config (voices, ch, portamento).
 // Calls onSendWire with AMY wire protocol to load patches & play notes.
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   Radio,
   Search,
@@ -104,7 +104,9 @@ export function SynthModule({
   const loadPatch = useCallback(
     (patchNum: number) => {
       onParamChange('patch', patchNum);
+      // Init synth with patch + voices in one call (AMY needs both)
       sendWire(`i${synth}K${patchNum}Z`);
+      sendWire(`i${synth}l0Z`); // touch the synth once to initialize
       setShowBrowser(false);
     },
     [synth, onParamChange, sendWire],
@@ -129,6 +131,15 @@ export function SynthModule({
     },
     [synth, sendWire],
   );
+
+  // Init synth on first mount
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+    if (!initialized && currentPatch !== undefined) {
+      sendWire(`i${synth}K${currentPatch}Z`);
+      setInitialized(true);
+    }
+  }, []); // only on mount
 
   // ── Render ──────────────────────────────────────────────────────────
   return (

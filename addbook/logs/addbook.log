@@ -59749,3 +59749,345 @@ requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='connect.composio.dev'
 2026-07-12 11:58:07,246 INFO Found 2 p-gen files in folder
 2026-07-12 11:58:07,246 INFO Processed 0 files this run
 2026-07-12 11:58:07,248 INFO === addbook_sync end ===
+2026-07-12 12:00:02,116 INFO === addbook_sync start ===
+2026-07-12 12:00:03,877 INFO MCP session initialized (id=81816041-6c46-4c59-80b9-4696d6919e7d)
+2026-07-12 12:00:04,101 INFO MCP session initialized (id=2b6cad80-648a-4599-ac2c-0442ac19605f)
+2026-07-12 12:00:09,986 INFO Found 2 p-gen files in folder
+2026-07-12 12:00:09,987 INFO Processed 0 files this run
+2026-07-12 12:00:09,989 INFO === addbook_sync end ===
+2026-07-12 12:02:01,255 INFO === addbook_sync start ===
+2026-07-12 12:02:02,695 INFO MCP session initialized (id=0b6f8297-864e-4c55-994a-5b9c6c9e545c)
+2026-07-12 12:02:06,944 INFO Found 2 p-gen files in folder
+2026-07-12 12:02:06,944 INFO Processed 0 files this run
+2026-07-12 12:02:06,946 INFO === addbook_sync end ===
+2026-07-12 12:04:01,199 INFO === addbook_sync start ===
+2026-07-12 12:04:02,828 INFO MCP session initialized (id=bb585ad1-f2eb-418f-9287-daf23b9379c2)
+2026-07-12 12:04:07,473 INFO Found 2 p-gen files in folder
+2026-07-12 12:04:07,473 INFO Processed 0 files this run
+2026-07-12 12:04:07,475 INFO === addbook_sync end ===
+2026-07-12 12:06:02,161 INFO === addbook_sync start ===
+2026-07-12 12:06:03,671 INFO MCP session initialized (id=704f886c-c27e-48ef-8baa-cc774a390e25)
+2026-07-12 12:06:05,879 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:06:05,880 WARNING Could not find folder 'Kindle Scribe Archive'
+2026-07-12 12:06:07,937 INFO Created archive folder: 1NKDVnwSrq-L-rzbXa5fL0pYD3gmcujCz
+2026-07-12 12:06:09,914 INFO Found 2 p-gen files in folder
+2026-07-12 12:06:09,914 INFO Processed 0 files this run
+2026-07-12 12:06:09,916 INFO === addbook_sync end ===
+2026-07-12 12:08:02,143 INFO === addbook_sync start ===
+2026-07-12 12:08:03,568 INFO MCP session initialized (id=10ab58dd-0fbe-47ce-a0ee-8063ea6d96c0)
+2026-07-12 12:08:05,338 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:08:05,338 WARNING Could not find folder 'Kindle Scribe Archive'
+2026-07-12 12:08:05,760 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:08:05,761 INFO Created archive folder: 4
+2026-07-12 12:08:07,310 INFO Found 2 p-gen files in folder
+2026-07-12 12:08:07,311 INFO Processed 0 files this run
+2026-07-12 12:08:07,312 INFO === addbook_sync end ===
+2026-07-12 12:10:01,602 INFO === addbook_sync start ===
+2026-07-12 12:10:03,175 INFO MCP session initialized (id=333d0989-0e43-42b6-b566-03235d3db471)
+2026-07-12 12:10:07,415 INFO Found 2 p-gen files in folder
+2026-07-12 12:10:07,415 INFO Processed 0 files this run
+2026-07-12 12:10:07,417 INFO === addbook_sync end ===
+2026-07-12 12:12:01,676 INFO === addbook_sync start ===
+2026-07-12 12:12:02,955 INFO MCP session initialized (id=b7398c57-16d5-47a2-a70a-2c5a98263aff)
+2026-07-12 12:12:06,896 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:12:06,897 INFO Found 0 p-gen files in folder
+2026-07-12 12:12:06,897 INFO No new files to process
+2026-07-12 12:12:06,899 INFO === addbook_sync end ===
+2026-07-12 12:14:01,133 INFO === addbook_sync start ===
+2026-07-12 12:14:02,551 INFO MCP session initialized (id=f65f1104-2910-429c-94e3-50882e38c780)
+2026-07-12 12:14:07,313 INFO Found 2 p-gen files in folder
+2026-07-12 12:14:07,313 INFO Processed 0 files this run
+2026-07-12 12:14:07,315 INFO === addbook_sync end ===
+2026-07-12 12:16:01,580 INFO === addbook_sync start ===
+2026-07-12 12:16:02,940 INFO MCP session initialized (id=3ee25248-3eb5-49d8-b9f5-c664877f2200)
+2026-07-12 12:16:03,388 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:16:03,388 WARNING Could not find folder 'Kindle Scribe'
+2026-07-12 12:16:03,388 ERROR Could not find folder 'Kindle Scribe'
+2026-07-12 12:16:03,398 INFO === addbook_sync end ===
+2026-07-12 12:18:01,727 INFO === addbook_sync start ===
+2026-07-12 12:18:04,498 INFO MCP session initialized (id=4a8618e8-8cc9-43a8-bf77-525f5e571f3e)
+2026-07-12 12:18:08,870 INFO Found 2 p-gen files in folder
+2026-07-12 12:18:08,870 INFO Processed 0 files this run
+2026-07-12 12:18:08,872 INFO === addbook_sync end ===
+2026-07-12 12:20:02,187 INFO === addbook_sync start ===
+2026-07-12 12:20:03,822 INFO MCP session initialized (id=a90c5a0b-4046-4326-97db-e7878344ec76)
+2026-07-12 12:20:08,389 INFO Found 2 p-gen files in folder
+2026-07-12 12:20:08,394 INFO Processed 0 files this run
+2026-07-12 12:20:08,396 INFO === addbook_sync end ===
+2026-07-12 12:22:01,660 INFO === addbook_sync start ===
+2026-07-12 12:22:03,197 INFO MCP session initialized (id=5685c7e6-f0fa-4d44-bb27-94f31bcfd218)
+2026-07-12 12:22:07,248 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:22:07,250 INFO Found 0 p-gen files in folder
+2026-07-12 12:22:07,250 INFO No new files to process
+2026-07-12 12:22:07,252 INFO === addbook_sync end ===
+2026-07-12 12:24:01,510 INFO === addbook_sync start ===
+2026-07-12 12:24:02,914 INFO MCP session initialized (id=d011c1a7-79d2-4b6b-8906-ee9feeb7b189)
+2026-07-12 12:24:07,297 INFO Found 2 p-gen files in folder
+2026-07-12 12:24:07,298 INFO Processed 0 files this run
+2026-07-12 12:24:07,301 INFO === addbook_sync end ===
+2026-07-12 12:26:01,710 INFO === addbook_sync start ===
+2026-07-12 12:26:02,997 INFO MCP session initialized (id=6ca792d3-81fe-4734-9067-a1dbfa4622f1)
+2026-07-12 12:26:07,265 INFO Found 2 p-gen files in folder
+2026-07-12 12:26:07,265 INFO Processed 0 files this run
+2026-07-12 12:26:07,267 INFO === addbook_sync end ===
+2026-07-12 12:28:01,566 INFO === addbook_sync start ===
+2026-07-12 12:28:03,130 INFO MCP session initialized (id=898af169-fd1b-409d-910a-c426e8cd6286)
+2026-07-12 12:28:07,702 INFO Found 2 p-gen files in folder
+2026-07-12 12:28:07,702 INFO Processed 0 files this run
+2026-07-12 12:28:07,704 INFO === addbook_sync end ===
+2026-07-12 12:30:02,373 INFO === addbook_sync start ===
+2026-07-12 12:30:04,534 INFO MCP session initialized (id=8846cf11-0828-4016-930c-a8f5cdcf258d)
+2026-07-12 12:30:09,574 INFO Found 2 p-gen files in folder
+2026-07-12 12:30:09,575 INFO Processed 0 files this run
+2026-07-12 12:30:09,581 INFO === addbook_sync end ===
+2026-07-12 12:32:01,912 INFO === addbook_sync start ===
+2026-07-12 12:32:03,837 INFO MCP session initialized (id=eeb0b290-f572-4480-b8fd-4d40eb6f0c18)
+2026-07-12 12:32:08,156 INFO Found 2 p-gen files in folder
+2026-07-12 12:32:08,156 INFO Processed 0 files this run
+2026-07-12 12:32:08,158 INFO === addbook_sync end ===
+2026-07-12 12:34:01,396 INFO === addbook_sync start ===
+2026-07-12 12:34:02,897 INFO MCP session initialized (id=f4015462-44f8-4d8d-8f6b-7ebcea480543)
+2026-07-12 12:34:07,123 INFO Found 2 p-gen files in folder
+2026-07-12 12:34:07,123 INFO Processed 0 files this run
+2026-07-12 12:34:07,126 INFO === addbook_sync end ===
+2026-07-12 12:36:02,064 INFO === addbook_sync start ===
+2026-07-12 12:36:03,629 INFO MCP session initialized (id=c1c021b0-22fd-48e4-9ebd-2af2555b9c63)
+2026-07-12 12:36:08,676 INFO Found 2 p-gen files in folder
+2026-07-12 12:36:08,676 INFO Processed 0 files this run
+2026-07-12 12:36:08,678 INFO === addbook_sync end ===
+2026-07-12 12:38:02,007 INFO === addbook_sync start ===
+2026-07-12 12:38:03,372 INFO MCP session initialized (id=a374412c-9fea-4475-a337-52039d517cf1)
+2026-07-12 12:38:06,777 ERROR MCP error: {'code': -32000, 'message': 'Upstream MCP server error'}
+2026-07-12 12:38:06,777 INFO Found 0 p-gen files in folder
+2026-07-12 12:38:06,777 INFO No new files to process
+2026-07-12 12:38:06,779 INFO === addbook_sync end ===
+2026-07-12 12:40:02,066 INFO === addbook_sync start ===
+2026-07-12 12:40:03,994 INFO MCP session initialized (id=baaacc3e-39fb-4ffc-a5d1-95fc9dc70c17)
+2026-07-12 12:40:08,531 INFO Found 2 p-gen files in folder
+2026-07-12 12:40:08,532 INFO Processed 0 files this run
+2026-07-12 12:40:08,535 INFO === addbook_sync end ===
+2026-07-12 12:42:01,805 INFO === addbook_sync start ===
+2026-07-12 12:42:03,143 INFO MCP session initialized (id=42c77586-7420-4ee5-8f65-2bcd7b35042c)
+2026-07-12 12:42:08,190 INFO Found 2 p-gen files in folder
+2026-07-12 12:42:08,191 INFO Processed 0 files this run
+2026-07-12 12:42:08,193 INFO === addbook_sync end ===
+2026-07-12 12:44:01,433 INFO === addbook_sync start ===
+2026-07-12 12:44:02,835 INFO MCP session initialized (id=efc60d13-b671-46d9-9f97-e8b44ea03810)
+2026-07-12 12:44:07,396 INFO Found 2 p-gen files in folder
+2026-07-12 12:44:07,396 INFO Processed 0 files this run
+2026-07-12 12:44:07,398 INFO === addbook_sync end ===
+2026-07-12 12:46:01,579 INFO === addbook_sync start ===
+2026-07-12 12:46:03,064 INFO MCP session initialized (id=da9611db-2760-48b8-9e05-0e18adc7c9fd)
+2026-07-12 12:46:06,886 INFO Found 2 p-gen files in folder
+2026-07-12 12:46:06,886 INFO Processed 0 files this run
+2026-07-12 12:46:06,889 INFO === addbook_sync end ===
+2026-07-12 12:48:02,214 INFO === addbook_sync start ===
+2026-07-12 12:48:03,515 INFO MCP session initialized (id=a6b45f5b-0fde-4d99-afe2-4deb444f14ee)
+2026-07-12 12:48:07,682 INFO Found 2 p-gen files in folder
+2026-07-12 12:48:07,682 INFO Processed 0 files this run
+2026-07-12 12:48:07,685 INFO === addbook_sync end ===
+2026-07-12 12:50:02,016 INFO === addbook_sync start ===
+2026-07-12 12:50:03,873 INFO MCP session initialized (id=9843f685-cca4-450d-94c2-e218a7d7f9d5)
+2026-07-12 12:50:09,711 INFO Found 2 p-gen files in folder
+2026-07-12 12:50:09,711 INFO Processed 0 files this run
+2026-07-12 12:50:09,714 INFO === addbook_sync end ===
+2026-07-12 12:52:01,996 INFO === addbook_sync start ===
+2026-07-12 12:52:03,466 INFO MCP session initialized (id=f63ace3a-72b7-4b8e-95a0-dae8cb5bb733)
+2026-07-12 12:52:08,533 INFO Found 2 p-gen files in folder
+2026-07-12 12:52:08,533 INFO Processed 0 files this run
+2026-07-12 12:52:08,536 INFO === addbook_sync end ===
+2026-07-12 12:54:01,761 INFO === addbook_sync start ===
+2026-07-12 12:54:03,136 INFO MCP session initialized (id=8fb4b579-2317-4439-a1e9-fec00ba13153)
+2026-07-12 12:54:07,903 INFO Found 2 p-gen files in folder
+2026-07-12 12:54:07,904 INFO Processed 0 files this run
+2026-07-12 12:54:07,905 INFO === addbook_sync end ===
+2026-07-12 12:56:01,707 INFO === addbook_sync start ===
+2026-07-12 12:56:03,429 INFO MCP session initialized (id=8005b1cd-d8c7-4055-b9fe-4f99b4d96b70)
+2026-07-12 12:56:07,784 INFO Found 2 p-gen files in folder
+2026-07-12 12:56:07,784 INFO Processed 0 files this run
+2026-07-12 12:56:07,786 INFO === addbook_sync end ===
+2026-07-12 12:58:02,119 INFO === addbook_sync start ===
+2026-07-12 12:58:03,534 INFO MCP session initialized (id=e33a0b76-0f0f-492c-a7e7-23d584115cea)
+2026-07-12 12:58:07,940 INFO Found 2 p-gen files in folder
+2026-07-12 12:58:07,941 INFO Processed 0 files this run
+2026-07-12 12:58:07,943 INFO === addbook_sync end ===
+2026-07-12 13:00:01,186 INFO === addbook_sync start ===
+2026-07-12 13:00:02,849 INFO MCP session initialized (id=29071e84-6bf3-4206-a2a9-457b0d08e8e3)
+2026-07-12 13:00:08,009 INFO Found 2 p-gen files in folder
+2026-07-12 13:00:08,013 INFO Processed 0 files this run
+2026-07-12 13:00:08,016 INFO === addbook_sync end ===
+2026-07-12 13:02:01,315 INFO === addbook_sync start ===
+2026-07-12 13:02:02,864 INFO MCP session initialized (id=e907e4df-7c75-484e-94dc-07d6be7c13ff)
+2026-07-12 13:02:07,281 INFO Found 2 p-gen files in folder
+2026-07-12 13:02:07,283 INFO Processed 0 files this run
+2026-07-12 13:02:07,285 INFO === addbook_sync end ===
+2026-07-12 13:04:01,601 INFO === addbook_sync start ===
+2026-07-12 13:04:03,516 INFO MCP session initialized (id=74f4b1f1-53a2-4b7f-a088-01113435d969)
+2026-07-12 13:04:07,928 INFO Found 2 p-gen files in folder
+2026-07-12 13:04:07,928 INFO Processed 0 files this run
+2026-07-12 13:04:07,931 INFO === addbook_sync end ===
+2026-07-12 13:06:01,720 INFO === addbook_sync start ===
+2026-07-12 13:06:44,483 INFO MCP session initialized (id=ca0a6419-4f9c-424a-bd82-c0cccbab30d2)
+2026-07-12 13:06:50,337 INFO Found 2 p-gen files in folder
+2026-07-12 13:06:50,338 INFO Processed 0 files this run
+2026-07-12 13:06:50,341 INFO === addbook_sync end ===
+2026-07-12 13:08:01,663 INFO === addbook_sync start ===
+2026-07-12 13:08:03,013 INFO MCP session initialized (id=b2fe833c-c42e-48fe-a998-b2beecc14836)
+2026-07-12 13:08:07,744 INFO Found 2 p-gen files in folder
+2026-07-12 13:08:07,744 INFO Processed 0 files this run
+2026-07-12 13:08:07,746 INFO === addbook_sync end ===
+2026-07-12 13:10:02,160 INFO === addbook_sync start ===
+2026-07-12 13:10:03,848 INFO MCP session initialized (id=1f661a2e-c3b5-4552-a488-51d96bf83931)
+2026-07-12 13:10:08,510 INFO Found 2 p-gen files in folder
+2026-07-12 13:10:08,510 INFO Processed 0 files this run
+2026-07-12 13:10:08,516 INFO === addbook_sync end ===
+2026-07-12 13:12:01,787 INFO === addbook_sync start ===
+2026-07-12 13:12:03,013 INFO MCP session initialized (id=266444c8-aee7-41af-89cc-acab9454189d)
+2026-07-12 13:12:07,200 INFO Found 2 p-gen files in folder
+2026-07-12 13:12:07,201 INFO Processed 0 files this run
+2026-07-12 13:12:07,202 INFO === addbook_sync end ===
+2026-07-12 13:14:01,422 INFO === addbook_sync start ===
+2026-07-12 13:14:03,071 INFO MCP session initialized (id=7246ad61-a4c0-405b-a1dd-744765efb2bf)
+2026-07-12 13:14:08,173 INFO Found 2 p-gen files in folder
+2026-07-12 13:14:08,174 INFO Processed 0 files this run
+2026-07-12 13:14:08,176 INFO === addbook_sync end ===
+2026-07-12 13:16:02,176 INFO === addbook_sync start ===
+2026-07-12 13:16:03,842 INFO MCP session initialized (id=8018ec26-3022-4be7-918d-42673feee1c4)
+2026-07-12 13:16:07,947 INFO Found 2 p-gen files in folder
+2026-07-12 13:16:07,948 INFO Processed 0 files this run
+2026-07-12 13:16:07,950 INFO === addbook_sync end ===
+2026-07-12 13:18:02,163 INFO === addbook_sync start ===
+2026-07-12 13:18:04,180 INFO MCP session initialized (id=2795826c-54ba-4ff1-8737-884e9092efb0)
+2026-07-12 13:18:08,418 INFO Found 2 p-gen files in folder
+2026-07-12 13:18:08,418 INFO Processed 0 files this run
+2026-07-12 13:18:08,421 INFO === addbook_sync end ===
+2026-07-12 13:20:01,690 INFO === addbook_sync start ===
+2026-07-12 13:20:03,412 INFO MCP session initialized (id=5893047f-a562-4291-b2e5-b100c4550644)
+2026-07-12 13:20:07,877 INFO Found 2 p-gen files in folder
+2026-07-12 13:20:07,877 INFO Processed 0 files this run
+2026-07-12 13:20:07,879 INFO === addbook_sync end ===
+2026-07-12 13:22:02,211 INFO === addbook_sync start ===
+2026-07-12 13:22:03,671 INFO MCP session initialized (id=05684c01-2aa2-407b-a2e3-4325aa310234)
+2026-07-12 13:22:08,095 INFO Found 2 p-gen files in folder
+2026-07-12 13:22:08,095 INFO Processed 0 files this run
+2026-07-12 13:22:08,097 INFO === addbook_sync end ===
+2026-07-12 13:24:01,330 INFO === addbook_sync start ===
+2026-07-12 13:24:02,693 INFO MCP session initialized (id=cdd4e496-6ecd-4bcb-b206-51e5b3d0f391)
+2026-07-12 13:24:06,936 INFO Found 2 p-gen files in folder
+2026-07-12 13:24:06,937 INFO Processed 0 files this run
+2026-07-12 13:24:06,939 INFO === addbook_sync end ===
+2026-07-12 13:26:01,643 INFO === addbook_sync start ===
+2026-07-12 13:26:03,063 INFO MCP session initialized (id=ea4e88cb-d818-4fdb-9439-5d14f5c78d6b)
+2026-07-12 13:26:07,240 INFO Found 2 p-gen files in folder
+2026-07-12 13:26:07,240 INFO Processed 0 files this run
+2026-07-12 13:26:07,246 INFO === addbook_sync end ===
+2026-07-12 13:28:01,756 INFO === addbook_sync start ===
+2026-07-12 13:28:04,004 INFO MCP session initialized (id=1b60bce9-ebe2-4df2-a2d3-18cad8330969)
+2026-07-12 13:28:08,362 INFO Found 2 p-gen files in folder
+2026-07-12 13:28:08,363 INFO Processed 0 files this run
+2026-07-12 13:28:08,365 INFO === addbook_sync end ===
+2026-07-12 13:30:01,758 INFO === addbook_sync start ===
+2026-07-12 13:30:03,324 INFO MCP session initialized (id=a0b89035-38ed-472d-8d22-8e6229091d61)
+2026-07-12 13:30:08,097 INFO Found 2 p-gen files in folder
+2026-07-12 13:30:08,097 INFO Processed 0 files this run
+2026-07-12 13:30:08,099 INFO === addbook_sync end ===
+2026-07-12 13:32:01,351 INFO === addbook_sync start ===
+2026-07-12 13:32:02,766 INFO MCP session initialized (id=61563d45-07a5-4fb6-8938-137adcf48ab2)
+2026-07-12 13:32:07,272 INFO Found 2 p-gen files in folder
+2026-07-12 13:32:07,272 INFO Processed 0 files this run
+2026-07-12 13:32:07,274 INFO === addbook_sync end ===
+2026-07-12 13:34:01,519 INFO === addbook_sync start ===
+2026-07-12 13:34:02,841 INFO MCP session initialized (id=56292249-11a1-4a94-9484-830da2d909e5)
+2026-07-12 13:34:07,526 INFO Found 2 p-gen files in folder
+2026-07-12 13:34:07,526 INFO Processed 0 files this run
+2026-07-12 13:34:07,528 INFO === addbook_sync end ===
+2026-07-12 13:36:01,717 INFO === addbook_sync start ===
+2026-07-12 13:36:03,662 INFO MCP session initialized (id=e58e64e9-d249-40da-ae07-d1525ae0f551)
+2026-07-12 13:36:09,909 INFO Found 2 p-gen files in folder
+2026-07-12 13:36:09,910 INFO Processed 0 files this run
+2026-07-12 13:36:09,912 INFO === addbook_sync end ===
+2026-07-12 13:38:01,157 INFO === addbook_sync start ===
+2026-07-12 13:38:02,703 INFO MCP session initialized (id=8379fb7b-fc53-43bd-9943-c6b557294e9f)
+2026-07-12 13:38:07,636 INFO Found 2 p-gen files in folder
+2026-07-12 13:38:07,637 INFO Processed 0 files this run
+2026-07-12 13:38:07,638 INFO === addbook_sync end ===
+2026-07-12 13:40:01,923 INFO === addbook_sync start ===
+2026-07-12 13:40:03,572 INFO MCP session initialized (id=8a49920a-14a7-43c3-85f3-8879014c5ce3)
+2026-07-12 13:40:08,154 INFO Found 2 p-gen files in folder
+2026-07-12 13:40:08,154 INFO Processed 0 files this run
+2026-07-12 13:40:08,165 INFO === addbook_sync end ===
+2026-07-12 13:42:01,494 INFO === addbook_sync start ===
+2026-07-12 13:42:02,939 INFO MCP session initialized (id=cc6c03d8-ba2d-43ec-a272-9d3ee358ffa4)
+2026-07-12 13:42:07,023 INFO Found 2 p-gen files in folder
+2026-07-12 13:42:07,024 INFO Processed 0 files this run
+2026-07-12 13:42:07,026 INFO === addbook_sync end ===
+2026-07-12 13:44:01,277 INFO === addbook_sync start ===
+2026-07-12 13:44:02,811 INFO MCP session initialized (id=23bab5b6-a397-4248-affd-6d1e51382981)
+2026-07-12 13:44:07,644 INFO Found 2 p-gen files in folder
+2026-07-12 13:44:07,645 INFO Processed 0 files this run
+2026-07-12 13:44:07,647 INFO === addbook_sync end ===
+2026-07-12 13:46:02,204 INFO === addbook_sync start ===
+2026-07-12 13:46:03,679 INFO MCP session initialized (id=2bdac217-cfd9-47f2-9627-53b7066e1d88)
+2026-07-12 13:46:08,504 INFO Found 2 p-gen files in folder
+2026-07-12 13:46:08,504 INFO Processed 0 files this run
+2026-07-12 13:46:08,510 INFO === addbook_sync end ===
+2026-07-12 13:48:01,789 INFO === addbook_sync start ===
+2026-07-12 13:48:03,013 INFO MCP session initialized (id=c75e5505-fecc-48aa-ad6f-b59b34ebf53b)
+2026-07-12 13:48:06,909 INFO Found 2 p-gen files in folder
+2026-07-12 13:48:06,909 INFO Processed 0 files this run
+2026-07-12 13:48:06,911 INFO === addbook_sync end ===
+2026-07-12 13:50:01,266 INFO === addbook_sync start ===
+2026-07-12 13:50:02,691 INFO MCP session initialized (id=59b379f8-013f-4cd4-a088-ccd760265f67)
+2026-07-12 13:50:06,994 INFO Found 2 p-gen files in folder
+2026-07-12 13:50:06,994 INFO Processed 0 files this run
+2026-07-12 13:50:06,997 INFO === addbook_sync end ===
+2026-07-12 13:52:01,293 INFO === addbook_sync start ===
+2026-07-12 13:52:02,678 INFO MCP session initialized (id=79e1f40a-e015-4d34-b2e4-9faab34cef3d)
+2026-07-12 13:52:06,824 INFO Found 2 p-gen files in folder
+2026-07-12 13:52:06,829 INFO Processed 0 files this run
+2026-07-12 13:52:06,837 INFO === addbook_sync end ===
+2026-07-12 13:54:02,134 INFO === addbook_sync start ===
+2026-07-12 13:54:03,724 INFO MCP session initialized (id=959cae00-6a44-4539-af52-d0b8f0116c99)
+2026-07-12 13:54:08,136 INFO Found 2 p-gen files in folder
+2026-07-12 13:54:08,137 INFO Processed 0 files this run
+2026-07-12 13:54:08,140 INFO === addbook_sync end ===
+2026-07-12 13:56:01,953 INFO === addbook_sync start ===
+2026-07-12 13:56:03,280 INFO MCP session initialized (id=45a13971-0b53-42f3-b534-af0023d25c78)
+2026-07-12 13:56:07,657 INFO Found 2 p-gen files in folder
+2026-07-12 13:56:07,658 INFO Processed 0 files this run
+2026-07-12 13:56:07,659 INFO === addbook_sync end ===
+2026-07-12 13:58:01,911 INFO === addbook_sync start ===
+2026-07-12 13:58:03,163 INFO MCP session initialized (id=4a280f32-02c7-46ad-a23d-c9c37ae882f3)
+2026-07-12 13:58:07,358 INFO Found 2 p-gen files in folder
+2026-07-12 13:58:07,359 INFO Processed 0 files this run
+2026-07-12 13:58:07,361 INFO === addbook_sync end ===
+2026-07-12 14:00:01,699 INFO === addbook_sync start ===
+2026-07-12 14:00:03,443 INFO MCP session initialized (id=76fb9c9e-cb0b-42bb-af92-c235b0849f9d)
+2026-07-12 14:00:12,266 INFO Found 2 p-gen files in folder
+2026-07-12 14:00:12,266 INFO Processed 0 files this run
+2026-07-12 14:00:12,271 INFO === addbook_sync end ===
+2026-07-12 14:02:01,564 INFO === addbook_sync start ===
+2026-07-12 14:02:03,401 INFO MCP session initialized (id=cc963e1b-b4b8-44e5-9979-1ad55d3e69f6)
+2026-07-12 14:02:08,193 INFO Found 2 p-gen files in folder
+2026-07-12 14:02:08,193 INFO Processed 0 files this run
+2026-07-12 14:02:08,195 INFO === addbook_sync end ===
+2026-07-12 14:04:01,429 INFO === addbook_sync start ===
+2026-07-12 14:04:03,233 INFO MCP session initialized (id=9570ae42-7833-482b-9bc9-110a63ea48eb)
+2026-07-12 14:04:07,999 INFO Found 2 p-gen files in folder
+2026-07-12 14:04:07,999 INFO Processed 0 files this run
+2026-07-12 14:04:08,004 INFO === addbook_sync end ===
+2026-07-12 14:06:01,769 INFO === addbook_sync start ===
+2026-07-12 14:06:03,267 INFO MCP session initialized (id=35535197-d8ed-43cb-8dbe-5b2b3eac7995)
+2026-07-12 14:06:08,220 INFO Found 2 p-gen files in folder
+2026-07-12 14:06:08,221 INFO Processed 0 files this run
+2026-07-12 14:06:08,222 INFO === addbook_sync end ===
+2026-07-12 14:08:01,493 INFO === addbook_sync start ===
+2026-07-12 14:08:03,115 INFO MCP session initialized (id=776e61a9-4efa-4af7-917b-b861a5bed123)
+2026-07-12 14:08:07,573 INFO Found 2 p-gen files in folder
+2026-07-12 14:08:07,573 INFO Processed 0 files this run
+2026-07-12 14:08:07,575 INFO === addbook_sync end ===
+2026-07-12 14:10:02,184 INFO === addbook_sync start ===
+2026-07-12 14:10:03,885 INFO MCP session initialized (id=aa933f25-b185-4ce6-b597-a05cb2b5a81e)
+2026-07-12 14:10:09,076 INFO Found 2 p-gen files in folder
+2026-07-12 14:10:09,076 INFO Processed 0 files this run
+2026-07-12 14:10:09,078 INFO === addbook_sync end ===
