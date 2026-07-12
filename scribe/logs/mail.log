@@ -1,0 +1,2272 @@
+2026-06-27 12:33:39,576 INFO MCP session initialized (id=784d9873-0132-4513-94a3-fbba37398c67)
+2026-06-27 12:33:48,275 INFO MCP session initialized (id=f0a3a227-977c-4d19-a1c4-41951c1e359a)
+2026-06-27 12:33:50,565 INFO Downloaded 99 bytes via S3 URL
+2026-06-27 12:33:57,315 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:33:59,429 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:34:03,866 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:34:03,870 ERROR All 3 OpenRouter attempts failed
+2026-06-27 12:40:02,129 INFO === mail_sync start ===
+2026-06-27 12:40:03,800 INFO MCP session initialized (id=9bd2db8d-7329-435a-9185-d1533cf4d25b)
+2026-06-27 12:40:05,507 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 12:40:06,868 INFO Processing: W-Mail  - Kindle.txt (ID: 1Lh3gDwgsvTDAf4yItPR2DX5uD7JFkjbn)
+2026-06-27 12:40:09,386 INFO Downloaded 99 bytes via S3 URL
+2026-06-27 12:40:09,394 INFO Extracted 2 bullet points
+2026-06-27 12:40:09,719 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:40:11,828 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:40:15,934 WARNING OpenRouter error 401: {"error":{"message":"User not found.","code":401}}
+2026-06-27 12:40:15,935 ERROR All 3 OpenRouter attempts failed
+2026-06-27 12:40:15,937 ERROR LLM generation failed for W-Mail  - Kindle.txt
+2026-06-27 12:40:15,938 INFO Processed 0 files this run
+2026-06-27 12:40:15,940 INFO === mail_sync end ===
+2026-06-27 12:50:01,183 INFO === mail_sync start ===
+2026-06-27 12:50:02,920 INFO MCP session initialized (id=78d42621-93c7-42aa-8686-282c4bd8d252)
+2026-06-27 12:50:04,507 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 12:50:05,735 INFO Processed 0 files this run
+2026-06-27 12:50:05,770 INFO === mail_sync end ===
+2026-06-27 12:59:39,949 INFO === mail_sync start ===
+2026-06-27 12:59:41,139 INFO MCP initialized (id=9f6f4204-a706-4ec8-95ce-4c23ee63f5d4)
+2026-06-27 12:59:42,558 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 12:59:43,700 INFO Processing: W-Mail  - Kindle.txt (ID: 1Lh3gDwgsvTDAf4yItPR2DX5uD7JFkjbn)
+2026-06-27 12:59:45,881 INFO Downloaded 99 bytes
+2026-06-27 12:59:45,884 INFO Extracted 2 bullet points
+2026-06-27 13:00:01,493 INFO === mail_sync start ===
+2026-06-27 13:00:08,059 INFO MCP initialized (id=4c92436a-fcc8-4a5e-989b-aa9a1d58fc75)
+2026-06-27 13:00:09,442 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:00:10,933 INFO Processing: W-Mail  - Kindle.txt (ID: 1Lh3gDwgsvTDAf4yItPR2DX5uD7JFkjbn)
+2026-06-27 13:00:13,658 INFO Downloaded 99 bytes
+2026-06-27 13:00:13,661 INFO Extracted 2 bullet points
+2026-06-27 13:00:14,050 WARNING No reply in agent output (attempt 1)
+2026-06-27 13:00:49,866 WARNING No reply in agent output (attempt 1)
+2026-06-27 13:01:14,025 WARNING No reply in agent output (attempt 2)
+2026-06-27 13:02:55,784 INFO === mail_sync start ===
+2026-06-27 13:02:57,008 INFO MCP initialized (id=83996f27-9ec2-4242-ab38-12df126347ef)
+2026-06-27 13:02:58,270 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:02:59,602 INFO Processing: W-Mail  - Kindle.txt (ID: 1Lh3gDwgsvTDAf4yItPR2DX5uD7JFkjbn)
+2026-06-27 13:03:02,512 INFO Downloaded 99 bytes
+2026-06-27 13:03:02,516 INFO Extracted 2 bullet points
+2026-06-27 13:03:36,018 INFO LLM response: 699 chars
+2026-06-27 13:03:36,856 INFO HTTP Request: GET https://api.agentmail.to/v0/inboxes "HTTP/1.1 200 OK"
+2026-06-27 13:03:37,436 INFO HTTP Request: POST https://api.agentmail.to/v0/inboxes/guenther88@agentmail.to/messages/send "HTTP/1.1 200 OK"
+2026-06-27 13:03:37,437 INFO Email sent to bastian.lewin@polizeiakademie.de via guenther88@agentmail.to (msg_id=<0100019f08bfd380-41e7c025-927d-4249-8156-e9700a3ccdd6-000000@email.amazonses.com>)
+2026-06-27 13:03:37,439 INFO Email sent for W-Mail  - Kindle.txt
+2026-06-27 13:03:39,214 INFO Deleted W-Mail  - Kindle.txt from Drive
+2026-06-27 13:03:39,215 INFO Processed 1 files this run
+2026-06-27 13:03:39,221 INFO === mail_sync end ===
+2026-06-27 13:10:02,453 INFO === mail_sync start ===
+2026-06-27 13:10:03,994 INFO MCP initialized (id=9707417e-84b7-4628-b959-e938d0ac7375)
+2026-06-27 13:10:05,525 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:10:06,932 INFO No new w-mail files found
+2026-06-27 13:10:07,071 INFO === mail_sync end ===
+2026-06-27 13:20:03,276 INFO === mail_sync start ===
+2026-06-27 13:20:08,208 INFO MCP initialized (id=0b55adbc-ed95-48d2-9ac3-153265674df5)
+2026-06-27 13:20:09,472 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:20:10,748 INFO No new w-mail files found
+2026-06-27 13:20:10,856 INFO === mail_sync end ===
+2026-06-27 13:30:01,725 INFO === mail_sync start ===
+2026-06-27 13:30:04,958 INFO MCP initialized (id=548eacb0-2841-4364-b607-ae21dca3c954)
+2026-06-27 13:30:06,466 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:30:07,773 INFO No new w-mail files found
+2026-06-27 13:30:07,775 INFO === mail_sync end ===
+2026-06-27 13:40:01,419 INFO === mail_sync start ===
+2026-06-27 13:40:33,591 INFO MCP initialized (id=c63b518a-49f7-4dbf-9fad-489a159cf58c)
+2026-06-27 13:40:35,293 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:40:36,556 INFO No new w-mail files found
+2026-06-27 13:40:36,559 INFO === mail_sync end ===
+2026-06-27 13:50:01,764 INFO === mail_sync start ===
+2026-06-27 13:50:03,319 INFO MCP initialized (id=166d6dcd-36da-420b-b935-3db32826595e)
+2026-06-27 13:50:04,543 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 13:50:05,721 INFO No new w-mail files found
+2026-06-27 13:50:05,728 INFO === mail_sync end ===
+2026-06-27 14:00:01,614 INFO === mail_sync start ===
+2026-06-27 14:00:04,199 INFO MCP initialized (id=1a9dceb5-f69d-4f26-a984-6a4720505fc0)
+2026-06-27 14:00:05,973 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:00:07,468 INFO No new w-mail files found
+2026-06-27 14:00:07,470 INFO === mail_sync end ===
+2026-06-27 14:10:01,655 INFO === mail_sync start ===
+2026-06-27 14:10:03,173 INFO MCP initialized (id=9e4324a5-8641-42c7-931a-2d61ff4d3819)
+2026-06-27 14:10:04,433 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:10:05,661 INFO No new w-mail files found
+2026-06-27 14:10:05,722 INFO === mail_sync end ===
+2026-06-27 14:20:02,987 INFO === mail_sync start ===
+2026-06-27 14:20:08,370 INFO MCP initialized (id=739cbf7a-2e1c-4aed-9429-fbcfa57ab41a)
+2026-06-27 14:20:09,884 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:20:11,243 INFO No new w-mail files found
+2026-06-27 14:20:11,247 INFO === mail_sync end ===
+2026-06-27 14:30:01,395 INFO === mail_sync start ===
+2026-06-27 14:30:03,346 INFO MCP initialized (id=fa8982a0-8273-47b2-8cca-733c27b16b74)
+2026-06-27 14:30:04,754 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:30:06,112 INFO No new w-mail files found
+2026-06-27 14:30:06,119 INFO === mail_sync end ===
+2026-06-27 14:40:01,775 INFO === mail_sync start ===
+2026-06-27 14:40:04,168 INFO MCP initialized (id=05a58013-e2a7-4351-96e2-12043a4d3a38)
+2026-06-27 14:40:05,494 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:40:06,890 INFO No new w-mail files found
+2026-06-27 14:40:06,893 INFO === mail_sync end ===
+2026-06-27 14:50:01,388 INFO === mail_sync start ===
+2026-06-27 14:50:03,240 INFO MCP initialized (id=032f4af6-ef39-46b8-a55d-91b0727c1a31)
+2026-06-27 14:50:04,584 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 14:50:06,127 INFO No new w-mail files found
+2026-06-27 14:50:06,134 INFO === mail_sync end ===
+2026-06-27 15:00:01,559 INFO === mail_sync start ===
+2026-06-27 15:00:03,382 INFO MCP initialized (id=e78e38ad-1ab5-4989-940a-2c522da460cc)
+2026-06-27 15:00:10,575 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:00:11,956 INFO No new w-mail files found
+2026-06-27 15:00:11,961 INFO === mail_sync end ===
+2026-06-27 15:10:03,075 INFO === mail_sync start ===
+2026-06-27 15:10:04,760 INFO MCP initialized (id=0dadedf9-c14e-4cc8-8a71-fb10cb7cd2a1)
+2026-06-27 15:10:06,206 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:10:07,460 INFO No new w-mail files found
+2026-06-27 15:10:07,462 INFO === mail_sync end ===
+2026-06-27 15:20:04,837 INFO === mail_sync start ===
+2026-06-27 15:20:09,929 INFO MCP initialized (id=8838a4b4-b23b-4982-90da-47b2712fb966)
+2026-06-27 15:20:11,400 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:20:12,730 INFO No new w-mail files found
+2026-06-27 15:20:12,743 INFO === mail_sync end ===
+2026-06-27 15:30:01,988 INFO === mail_sync start ===
+2026-06-27 15:30:03,486 INFO MCP initialized (id=657763ab-45fd-4dd0-a8b5-eb9a3195becb)
+2026-06-27 15:30:05,288 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:30:06,463 INFO No new w-mail files found
+2026-06-27 15:30:06,482 INFO === mail_sync end ===
+2026-06-27 15:40:02,045 INFO === mail_sync start ===
+2026-06-27 15:40:03,964 INFO MCP initialized (id=b5dbb910-8e59-49a6-8421-73d7aa564d70)
+2026-06-27 15:40:05,409 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:40:06,616 INFO No new w-mail files found
+2026-06-27 15:40:06,622 INFO === mail_sync end ===
+2026-06-27 15:50:02,034 INFO === mail_sync start ===
+2026-06-27 15:50:03,409 INFO MCP initialized (id=51a9dbbe-4da4-43f4-a535-3e6e46552625)
+2026-06-27 15:50:05,129 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 15:50:06,339 INFO No new w-mail files found
+2026-06-27 15:50:06,349 INFO === mail_sync end ===
+2026-06-27 16:00:02,234 INFO === mail_sync start ===
+2026-06-27 16:00:04,026 INFO MCP initialized (id=71b16599-9612-4cd0-b0c0-2584cc3fd13c)
+2026-06-27 16:00:05,536 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:00:07,144 INFO No new w-mail files found
+2026-06-27 16:00:07,322 INFO === mail_sync end ===
+2026-06-27 16:10:01,164 INFO === mail_sync start ===
+2026-06-27 16:10:02,774 INFO MCP initialized (id=4e721c41-1ea9-4828-8a5e-8201ac308835)
+2026-06-27 16:10:04,210 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:10:05,704 INFO No new w-mail files found
+2026-06-27 16:10:05,746 INFO === mail_sync end ===
+2026-06-27 16:20:03,421 INFO === mail_sync start ===
+2026-06-27 16:20:08,690 INFO MCP initialized (id=21cc556f-26bf-4784-be9b-64605062508b)
+2026-06-27 16:20:10,416 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:20:11,552 INFO No new w-mail files found
+2026-06-27 16:20:11,554 INFO === mail_sync end ===
+2026-06-27 16:30:02,785 INFO === mail_sync start ===
+2026-06-27 16:30:05,105 INFO MCP initialized (id=63fd7056-99ed-45d8-b3c2-e311f4cf1258)
+2026-06-27 16:30:06,637 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:30:09,407 INFO No new w-mail files found
+2026-06-27 16:30:09,414 INFO === mail_sync end ===
+2026-06-27 16:40:01,379 INFO === mail_sync start ===
+2026-06-27 16:40:03,193 INFO MCP initialized (id=89d14d10-12c1-46ea-aaee-af6ff13d8a7e)
+2026-06-27 16:40:05,318 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:40:06,650 INFO No new w-mail files found
+2026-06-27 16:40:06,663 INFO === mail_sync end ===
+2026-06-27 16:50:01,502 INFO === mail_sync start ===
+2026-06-27 16:50:03,335 INFO MCP initialized (id=52b52256-216f-4f55-a78c-d0dd65ee36d1)
+2026-06-27 16:50:04,661 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 16:50:05,856 INFO No new w-mail files found
+2026-06-27 16:50:05,858 INFO === mail_sync end ===
+2026-06-27 17:00:02,178 INFO === mail_sync start ===
+2026-06-27 17:00:04,315 INFO MCP initialized (id=9ea88766-ec76-4b96-9649-16af41048dec)
+2026-06-27 17:00:05,977 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:00:06,154 ERROR Unexpected error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1448, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/retry.py", line 490, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1448, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 424, in main
+    process_mail_files()
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 340, in process_mail_files
+    files = list_prefixed_files(mcp, folder_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 187, in list_prefixed_files
+    result = mcp.call_tool("COMPOSIO_MULTI_EXECUTE_TOOL", {
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 120, in call_tool
+    r = self.session.post(self.url, json={
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 712, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-27 17:00:06,766 INFO === mail_sync end ===
+2026-06-27 17:10:01,181 INFO === mail_sync start ===
+2026-06-27 17:10:02,904 INFO MCP initialized (id=cbbeb161-b52c-4a79-8eb0-edbb601eebd6)
+2026-06-27 17:10:11,880 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:10:13,112 INFO No new w-mail files found
+2026-06-27 17:10:13,116 INFO === mail_sync end ===
+2026-06-27 17:20:03,504 INFO === mail_sync start ===
+2026-06-27 17:20:07,061 INFO MCP initialized (id=9284f5b3-8da0-424f-bb89-11447efb0bfd)
+2026-06-27 17:20:08,387 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:20:09,654 INFO No new w-mail files found
+2026-06-27 17:20:09,657 INFO === mail_sync end ===
+2026-06-27 17:30:02,202 INFO === mail_sync start ===
+2026-06-27 17:30:03,684 INFO MCP initialized (id=ba00fb32-f598-4092-91b0-d59c5ff99375)
+2026-06-27 17:30:05,201 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:30:06,952 INFO No new w-mail files found
+2026-06-27 17:30:06,954 INFO === mail_sync end ===
+2026-06-27 17:40:01,826 INFO === mail_sync start ===
+2026-06-27 17:40:03,673 INFO MCP initialized (id=ce12ca97-02ef-47eb-90e3-2e987e6446c6)
+2026-06-27 17:40:05,081 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:40:06,253 INFO No new w-mail files found
+2026-06-27 17:40:06,256 INFO === mail_sync end ===
+2026-06-27 17:50:02,045 INFO === mail_sync start ===
+2026-06-27 17:50:04,524 INFO MCP initialized (id=13b5a61e-f799-4ea2-abe3-94fb97e1c05c)
+2026-06-27 17:50:06,477 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 17:50:07,859 INFO No new w-mail files found
+2026-06-27 17:50:07,862 INFO === mail_sync end ===
+2026-06-27 18:00:01,286 INFO === mail_sync start ===
+2026-06-27 18:00:09,638 INFO MCP initialized (id=955ed47f-f70b-4631-8044-9e117f550e9d)
+2026-06-27 18:00:11,060 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:00:12,270 INFO No new w-mail files found
+2026-06-27 18:00:12,272 INFO === mail_sync end ===
+2026-06-27 18:10:01,786 INFO === mail_sync start ===
+2026-06-27 18:10:04,660 INFO MCP initialized (id=8a4dc5d8-87cd-41d3-bddc-56c654a75d1f)
+2026-06-27 18:10:05,915 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:10:07,354 INFO No new w-mail files found
+2026-06-27 18:10:07,392 INFO === mail_sync end ===
+2026-06-27 18:20:01,531 INFO === mail_sync start ===
+2026-06-27 18:20:05,431 INFO MCP initialized (id=ce4e8463-cdf7-466b-82cd-2f674ce2b6e0)
+2026-06-27 18:20:06,926 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:20:08,092 INFO No new w-mail files found
+2026-06-27 18:20:08,093 INFO === mail_sync end ===
+2026-06-27 18:30:03,396 INFO === mail_sync start ===
+2026-06-27 18:30:08,960 INFO MCP initialized (id=72dea6d4-fb3a-4f17-bca0-9e43ceffd140)
+2026-06-27 18:30:10,810 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:30:12,257 INFO No new w-mail files found
+2026-06-27 18:30:12,326 INFO === mail_sync end ===
+2026-06-27 18:40:02,725 INFO === mail_sync start ===
+2026-06-27 18:40:15,129 INFO MCP initialized (id=25e68c5d-623f-41ea-842e-e39c1288954c)
+2026-06-27 18:40:16,416 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:40:17,605 INFO No new w-mail files found
+2026-06-27 18:40:17,609 INFO === mail_sync end ===
+2026-06-27 18:50:03,881 INFO === mail_sync start ===
+2026-06-27 18:50:07,951 INFO MCP initialized (id=477f76ed-276c-436f-810a-b9e80ff32851)
+2026-06-27 18:50:09,433 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 18:50:10,694 INFO No new w-mail files found
+2026-06-27 18:50:10,695 INFO === mail_sync end ===
+2026-06-27 19:00:03,841 INFO === mail_sync start ===
+2026-06-27 19:00:09,289 INFO MCP initialized (id=72a71ff4-5404-445c-8544-97f79ebd70fd)
+2026-06-27 19:00:14,037 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:00:16,788 INFO No new w-mail files found
+2026-06-27 19:00:16,789 INFO === mail_sync end ===
+2026-06-27 19:10:02,208 INFO === mail_sync start ===
+2026-06-27 19:10:03,871 INFO MCP initialized (id=8c4aba8d-22ec-429b-8bf1-6d462172085e)
+2026-06-27 19:10:05,198 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:10:06,448 INFO No new w-mail files found
+2026-06-27 19:10:06,452 INFO === mail_sync end ===
+2026-06-27 19:20:04,656 INFO === mail_sync start ===
+2026-06-27 19:20:08,188 INFO MCP initialized (id=ff78392d-e71f-432e-8a8c-5d2d4c4bf142)
+2026-06-27 19:20:09,612 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:20:10,886 INFO No new w-mail files found
+2026-06-27 19:20:10,889 INFO === mail_sync end ===
+2026-06-27 19:30:01,383 INFO === mail_sync start ===
+2026-06-27 19:30:03,056 INFO MCP initialized (id=305924ee-6235-449f-8653-5ef790803539)
+2026-06-27 19:30:04,619 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:30:05,978 INFO No new w-mail files found
+2026-06-27 19:30:05,994 INFO === mail_sync end ===
+2026-06-27 19:40:01,493 INFO === mail_sync start ===
+2026-06-27 19:40:03,009 INFO MCP initialized (id=d463e96d-8ef1-465a-8872-38010d406b3a)
+2026-06-27 19:40:04,326 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:40:05,726 INFO No new w-mail files found
+2026-06-27 19:40:05,751 INFO === mail_sync end ===
+2026-06-27 19:50:01,291 INFO === mail_sync start ===
+2026-06-27 19:50:02,768 INFO MCP initialized (id=89d36d3d-7f76-40a9-aea0-9423e3e2dd16)
+2026-06-27 19:50:04,071 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 19:50:05,423 INFO No new w-mail files found
+2026-06-27 19:50:05,427 INFO === mail_sync end ===
+2026-06-27 20:00:02,465 INFO === mail_sync start ===
+2026-06-27 20:00:04,656 INFO MCP initialized (id=5dd49183-8838-4bd7-8211-6683c55a47fd)
+2026-06-27 20:00:06,121 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:00:07,573 INFO No new w-mail files found
+2026-06-27 20:00:07,606 INFO === mail_sync end ===
+2026-06-27 20:10:02,195 INFO === mail_sync start ===
+2026-06-27 20:10:03,494 INFO MCP initialized (id=0e3da733-6f11-462e-b716-c722888ce6a8)
+2026-06-27 20:10:04,831 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:10:06,220 INFO No new w-mail files found
+2026-06-27 20:10:06,403 INFO === mail_sync end ===
+2026-06-27 20:20:04,541 INFO === mail_sync start ===
+2026-06-27 20:20:08,992 INFO MCP initialized (id=3cdbe444-d85e-4e00-8a3c-313b1df1c092)
+2026-06-27 20:20:10,284 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:20:11,515 INFO No new w-mail files found
+2026-06-27 20:20:11,526 INFO === mail_sync end ===
+2026-06-27 20:30:01,521 INFO === mail_sync start ===
+2026-06-27 20:30:03,272 INFO MCP initialized (id=f7845d81-b820-475c-bb48-7a0899827b12)
+2026-06-27 20:30:04,672 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:30:06,047 INFO No new w-mail files found
+2026-06-27 20:30:06,079 INFO === mail_sync end ===
+2026-06-27 20:40:02,182 INFO === mail_sync start ===
+2026-06-27 20:40:03,710 INFO MCP initialized (id=35ca4186-7612-4f82-863f-8c03868ec90a)
+2026-06-27 20:40:05,366 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:40:06,708 INFO No new w-mail files found
+2026-06-27 20:40:06,710 INFO === mail_sync end ===
+2026-06-27 20:50:01,128 INFO === mail_sync start ===
+2026-06-27 20:50:02,451 INFO MCP initialized (id=30ab8a92-2de0-4cb3-8b2b-b7c7e3b2d1a1)
+2026-06-27 20:50:03,732 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 20:50:04,961 INFO No new w-mail files found
+2026-06-27 20:50:04,971 INFO === mail_sync end ===
+2026-06-27 21:00:01,749 INFO === mail_sync start ===
+2026-06-27 21:00:08,134 INFO MCP initialized (id=01a65910-d1a5-455d-a9d3-a4aeaada18c4)
+2026-06-27 21:00:09,488 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:00:11,041 INFO No new w-mail files found
+2026-06-27 21:00:11,043 INFO === mail_sync end ===
+2026-06-27 21:10:01,867 INFO === mail_sync start ===
+2026-06-27 21:10:03,530 INFO MCP initialized (id=c16e5395-771b-419d-9491-914b09266a57)
+2026-06-27 21:10:04,739 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:10:05,960 INFO No new w-mail files found
+2026-06-27 21:10:05,965 INFO === mail_sync end ===
+2026-06-27 21:20:03,901 INFO === mail_sync start ===
+2026-06-27 21:20:08,204 INFO MCP initialized (id=a3407cce-a160-4398-acf2-3617913d4b37)
+2026-06-27 21:20:09,469 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:20:11,102 INFO No new w-mail files found
+2026-06-27 21:20:11,111 INFO === mail_sync end ===
+2026-06-27 21:30:01,894 INFO === mail_sync start ===
+2026-06-27 21:30:03,812 INFO MCP initialized (id=c4e3d209-cb2d-46fd-959b-6b37902f7109)
+2026-06-27 21:30:05,165 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:30:06,631 INFO No new w-mail files found
+2026-06-27 21:30:06,652 INFO === mail_sync end ===
+2026-06-27 21:40:02,052 INFO === mail_sync start ===
+2026-06-27 21:40:03,796 INFO MCP initialized (id=1f783c25-7784-48b7-a6dc-5d4ba32722d3)
+2026-06-27 21:40:05,283 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:40:06,969 INFO No new w-mail files found
+2026-06-27 21:40:06,974 INFO === mail_sync end ===
+2026-06-27 21:50:01,988 INFO === mail_sync start ===
+2026-06-27 21:50:03,569 INFO MCP initialized (id=c9b25249-90fd-4c40-9488-21811c74574b)
+2026-06-27 21:50:05,020 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 21:50:06,287 INFO No new w-mail files found
+2026-06-27 21:50:06,294 INFO === mail_sync end ===
+2026-06-27 22:00:02,936 INFO === mail_sync start ===
+2026-06-27 22:00:06,149 INFO MCP initialized (id=9f63507b-e9b1-4b50-a120-f7e814469b07)
+2026-06-27 22:00:12,716 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:00:14,130 INFO No new w-mail files found
+2026-06-27 22:00:14,132 INFO === mail_sync end ===
+2026-06-27 22:10:04,199 INFO === mail_sync start ===
+2026-06-27 22:10:05,718 INFO MCP initialized (id=3904a59d-b282-4376-aacd-71af7580c876)
+2026-06-27 22:10:07,371 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:10:08,800 INFO No new w-mail files found
+2026-06-27 22:10:08,802 INFO === mail_sync end ===
+2026-06-27 22:20:04,063 INFO === mail_sync start ===
+2026-06-27 22:20:07,977 INFO MCP initialized (id=4e385d10-0eb4-4ef7-a737-766e94cfd8ab)
+2026-06-27 22:20:09,248 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:20:10,764 INFO No new w-mail files found
+2026-06-27 22:20:10,772 INFO === mail_sync end ===
+2026-06-27 22:30:01,665 INFO === mail_sync start ===
+2026-06-27 22:30:03,477 INFO MCP initialized (id=3cb51465-0b12-4207-87c9-1338c5a10078)
+2026-06-27 22:30:04,867 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:30:06,350 INFO No new w-mail files found
+2026-06-27 22:30:06,358 INFO === mail_sync end ===
+2026-06-27 22:40:01,857 INFO === mail_sync start ===
+2026-06-27 22:40:03,383 INFO MCP initialized (id=40438c29-bf18-4bd7-90ca-a4966c867702)
+2026-06-27 22:40:04,747 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:40:05,962 INFO No new w-mail files found
+2026-06-27 22:40:05,964 INFO === mail_sync end ===
+2026-06-27 22:50:01,787 INFO === mail_sync start ===
+2026-06-27 22:50:03,508 INFO MCP initialized (id=8a30625a-a548-4b24-8bd6-1bf1470b11c9)
+2026-06-27 22:50:04,695 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 22:50:06,006 INFO No new w-mail files found
+2026-06-27 22:50:06,116 INFO === mail_sync end ===
+2026-06-27 23:00:01,379 INFO === mail_sync start ===
+2026-06-27 23:00:02,855 INFO MCP initialized (id=0e7cf656-8881-47fb-a502-82904733ac1b)
+2026-06-27 23:00:04,269 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:00:05,630 INFO No new w-mail files found
+2026-06-27 23:00:05,643 INFO === mail_sync end ===
+2026-06-27 23:10:01,944 INFO === mail_sync start ===
+2026-06-27 23:10:03,457 INFO MCP initialized (id=6c83476c-fca3-4599-a3ca-a9d3b716dd33)
+2026-06-27 23:10:04,878 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:10:06,381 INFO No new w-mail files found
+2026-06-27 23:10:06,384 INFO === mail_sync end ===
+2026-06-27 23:20:03,295 INFO === mail_sync start ===
+2026-06-27 23:20:08,105 INFO MCP initialized (id=c9ef3597-2021-4712-a175-4d2464c52a33)
+2026-06-27 23:20:09,369 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:20:10,682 INFO No new w-mail files found
+2026-06-27 23:20:10,689 INFO === mail_sync end ===
+2026-06-27 23:30:01,596 INFO === mail_sync start ===
+2026-06-27 23:30:32,906 INFO MCP initialized (id=13d61e7c-6a03-45b3-b348-6986642d747c)
+2026-06-27 23:30:34,195 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:30:35,442 INFO No new w-mail files found
+2026-06-27 23:30:35,444 INFO === mail_sync end ===
+2026-06-27 23:40:02,162 INFO === mail_sync start ===
+2026-06-27 23:40:03,766 INFO MCP initialized (id=a1faa705-ec61-461f-8169-d9f19fc16a37)
+2026-06-27 23:40:05,141 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:40:07,115 INFO No new w-mail files found
+2026-06-27 23:40:07,118 INFO === mail_sync end ===
+2026-06-27 23:50:01,462 INFO === mail_sync start ===
+2026-06-27 23:50:03,069 INFO MCP initialized (id=241af1cc-813c-46b5-9293-b0c92d8f52c8)
+2026-06-27 23:50:04,398 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-27 23:50:05,725 INFO No new w-mail files found
+2026-06-27 23:50:05,738 INFO === mail_sync end ===
+2026-06-28 00:00:01,543 INFO === mail_sync start ===
+2026-06-28 00:00:03,714 INFO MCP initialized (id=5dcc570c-b7b1-4408-9ae1-50722e555e0b)
+2026-06-28 00:00:05,336 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:00:06,975 INFO No new w-mail files found
+2026-06-28 00:00:07,271 INFO === mail_sync end ===
+2026-06-28 00:10:01,919 INFO === mail_sync start ===
+2026-06-28 00:10:03,576 INFO MCP initialized (id=1d2630b1-89d7-4054-85ae-9685ff42174b)
+2026-06-28 00:10:05,124 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:10:06,348 INFO No new w-mail files found
+2026-06-28 00:10:06,350 INFO === mail_sync end ===
+2026-06-28 00:20:03,242 INFO === mail_sync start ===
+2026-06-28 00:20:06,515 INFO MCP initialized (id=116e7899-d96a-416c-9d45-cebfdf152c7b)
+2026-06-28 00:20:07,926 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:20:09,304 INFO No new w-mail files found
+2026-06-28 00:20:09,306 INFO === mail_sync end ===
+2026-06-28 00:30:01,449 INFO === mail_sync start ===
+2026-06-28 00:30:02,957 INFO MCP initialized (id=94069046-c1dc-4c7a-b133-458894699718)
+2026-06-28 00:30:04,526 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:30:06,397 INFO No new w-mail files found
+2026-06-28 00:30:06,400 INFO === mail_sync end ===
+2026-06-28 00:40:01,995 INFO === mail_sync start ===
+2026-06-28 00:40:03,624 INFO MCP initialized (id=58b93ea5-c35a-472b-8f37-cbf007268f70)
+2026-06-28 00:40:05,563 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:40:06,659 INFO No new w-mail files found
+2026-06-28 00:40:06,662 INFO === mail_sync end ===
+2026-06-28 00:50:01,956 INFO === mail_sync start ===
+2026-06-28 00:50:03,351 INFO MCP initialized (id=eb26529f-c17b-4116-906b-44ec1fa7bf4f)
+2026-06-28 00:50:04,867 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 00:50:06,098 INFO No new w-mail files found
+2026-06-28 00:50:06,100 INFO === mail_sync end ===
+2026-06-28 01:00:03,015 INFO === mail_sync start ===
+2026-06-28 01:00:05,266 INFO MCP initialized (id=c9e28bb4-ef56-4490-9a0e-f97c84551500)
+2026-06-28 01:00:06,833 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:00:08,315 INFO No new w-mail files found
+2026-06-28 01:00:08,321 INFO === mail_sync end ===
+2026-06-28 01:10:02,151 INFO === mail_sync start ===
+2026-06-28 01:10:03,581 INFO MCP initialized (id=09883900-a1cb-43bd-8d62-4bba46f9f301)
+2026-06-28 01:10:05,055 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:10:06,594 INFO No new w-mail files found
+2026-06-28 01:10:06,597 INFO === mail_sync end ===
+2026-06-28 01:20:03,152 INFO === mail_sync start ===
+2026-06-28 01:20:06,797 INFO MCP initialized (id=db3e4ffa-39db-46cb-8d78-61fc8b0935e4)
+2026-06-28 01:20:08,097 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:20:09,791 INFO No new w-mail files found
+2026-06-28 01:20:09,794 INFO === mail_sync end ===
+2026-06-28 01:30:01,977 INFO === mail_sync start ===
+2026-06-28 01:30:04,039 INFO MCP initialized (id=31177abd-645e-4516-b224-89f7d761dd92)
+2026-06-28 01:30:05,396 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:30:06,724 INFO No new w-mail files found
+2026-06-28 01:30:06,726 INFO === mail_sync end ===
+2026-06-28 01:40:01,888 INFO === mail_sync start ===
+2026-06-28 01:40:03,946 INFO MCP initialized (id=5a4d903c-4484-40cd-9939-3b51b146f75a)
+2026-06-28 01:40:05,200 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:40:06,937 INFO No new w-mail files found
+2026-06-28 01:40:06,940 INFO === mail_sync end ===
+2026-06-28 01:50:01,627 INFO === mail_sync start ===
+2026-06-28 01:50:03,180 INFO MCP initialized (id=d970839d-68e3-4ba5-a3c1-3206eade27da)
+2026-06-28 01:50:04,707 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 01:50:05,879 INFO No new w-mail files found
+2026-06-28 01:50:05,889 INFO === mail_sync end ===
+2026-06-28 02:00:03,640 INFO === mail_sync start ===
+2026-06-28 02:00:05,270 INFO MCP initialized (id=f1d1e67b-795a-4556-80a3-de8a8df9f0b5)
+2026-06-28 02:00:06,914 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:00:08,696 INFO No new w-mail files found
+2026-06-28 02:00:08,701 INFO === mail_sync end ===
+2026-06-28 02:10:01,271 INFO === mail_sync start ===
+2026-06-28 02:10:02,635 INFO MCP initialized (id=30bdf4e6-6e33-422f-b077-a2c68ba3c497)
+2026-06-28 02:10:04,023 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:10:05,239 INFO No new w-mail files found
+2026-06-28 02:10:05,268 INFO === mail_sync end ===
+2026-06-28 02:20:03,101 INFO === mail_sync start ===
+2026-06-28 02:20:07,233 INFO MCP initialized (id=38ec8dc6-540d-450e-b102-101bf8bf0964)
+2026-06-28 02:20:08,556 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:20:09,693 INFO No new w-mail files found
+2026-06-28 02:20:09,698 INFO === mail_sync end ===
+2026-06-28 02:30:01,121 INFO === mail_sync start ===
+2026-06-28 02:30:02,573 INFO MCP initialized (id=c364b995-efe4-41ad-be5d-5dfea25e0a47)
+2026-06-28 02:30:04,013 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:30:05,447 INFO No new w-mail files found
+2026-06-28 02:30:05,466 INFO === mail_sync end ===
+2026-06-28 02:40:01,193 INFO === mail_sync start ===
+2026-06-28 02:40:02,762 INFO MCP initialized (id=db10a08f-434c-4be0-9322-31ebf3a16ee9)
+2026-06-28 02:40:04,010 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:40:05,468 INFO No new w-mail files found
+2026-06-28 02:40:05,473 INFO === mail_sync end ===
+2026-06-28 02:50:02,189 INFO === mail_sync start ===
+2026-06-28 02:50:03,865 INFO MCP initialized (id=79f1ea36-d340-483c-bb3d-20ad3ebc0a75)
+2026-06-28 02:50:05,109 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 02:50:06,378 INFO No new w-mail files found
+2026-06-28 02:50:06,380 INFO === mail_sync end ===
+2026-06-28 03:00:01,632 INFO === mail_sync start ===
+2026-06-28 03:00:05,630 INFO MCP initialized (id=8e8a18ee-8c1c-4a51-ba16-8152357e9483)
+2026-06-28 03:00:07,509 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:00:08,866 INFO No new w-mail files found
+2026-06-28 03:00:08,879 INFO === mail_sync end ===
+2026-06-28 03:10:01,452 INFO === mail_sync start ===
+2026-06-28 03:10:03,492 INFO MCP initialized (id=d40d6eae-18da-4a6f-b408-dee26c543b7d)
+2026-06-28 03:10:04,834 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:10:06,025 INFO No new w-mail files found
+2026-06-28 03:10:06,033 INFO === mail_sync end ===
+2026-06-28 03:20:04,743 INFO === mail_sync start ===
+2026-06-28 03:20:09,136 INFO MCP initialized (id=49520827-9e2a-4b35-a680-12e636ce7a88)
+2026-06-28 03:20:10,504 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:20:11,757 INFO No new w-mail files found
+2026-06-28 03:20:11,762 INFO === mail_sync end ===
+2026-06-28 03:30:02,200 INFO === mail_sync start ===
+2026-06-28 03:30:04,440 INFO MCP initialized (id=4146a734-5405-47ef-9268-dbf696f42cbb)
+2026-06-28 03:30:05,735 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:30:07,294 INFO No new w-mail files found
+2026-06-28 03:30:07,298 INFO === mail_sync end ===
+2026-06-28 03:40:02,715 INFO === mail_sync start ===
+2026-06-28 03:40:05,330 INFO MCP initialized (id=ac3403b1-0a77-44f3-8627-fe65e677452f)
+2026-06-28 03:40:06,684 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:40:07,987 INFO No new w-mail files found
+2026-06-28 03:40:07,989 INFO === mail_sync end ===
+2026-06-28 03:50:02,294 INFO === mail_sync start ===
+2026-06-28 03:50:03,770 INFO MCP initialized (id=2b3004d4-874b-4486-9d3e-1d1b3aa4c8cf)
+2026-06-28 03:50:05,197 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 03:50:07,301 INFO No new w-mail files found
+2026-06-28 03:50:07,303 INFO === mail_sync end ===
+2026-06-28 04:00:01,655 INFO === mail_sync start ===
+2026-06-28 04:00:03,751 INFO MCP initialized (id=59a7e7ef-e0bb-449d-8fe9-8a1efaa6d298)
+2026-06-28 04:00:04,177 ERROR Unexpected error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1448, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/retry.py", line 490, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1448, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 424, in main
+    process_mail_files()
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 334, in process_mail_files
+    folder_id = find_folder(mcp, DRIVE_FOLDER_NAME)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 175, in find_folder
+    result = mcp.call_tool("COMPOSIO_MULTI_EXECUTE_TOOL", {
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 120, in call_tool
+    r = self.session.post(self.url, json={
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 712, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-06-28 04:00:04,188 INFO === mail_sync end ===
+2026-06-28 04:10:01,818 INFO === mail_sync start ===
+2026-06-28 04:10:03,426 INFO MCP initialized (id=85565b0e-c261-4c98-9bc0-adfbbac6d047)
+2026-06-28 04:10:04,639 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 04:10:05,828 INFO No new w-mail files found
+2026-06-28 04:10:05,852 INFO === mail_sync end ===
+2026-06-28 04:20:01,778 INFO === mail_sync start ===
+2026-06-28 04:20:05,073 INFO MCP initialized (id=d748a7c4-e553-401f-91d5-0ee9e56d7073)
+2026-06-28 04:20:06,424 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 04:20:07,590 INFO No new w-mail files found
+2026-06-28 04:20:07,613 INFO === mail_sync end ===
+2026-06-28 04:30:01,538 INFO === mail_sync start ===
+2026-06-28 04:30:03,399 INFO MCP initialized (id=d49c1227-7d00-40f6-81e8-46fd1877fdaa)
+2026-06-28 04:30:04,753 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 04:30:06,019 INFO No new w-mail files found
+2026-06-28 04:30:06,029 INFO === mail_sync end ===
+2026-06-28 04:40:02,211 INFO === mail_sync start ===
+2026-06-28 04:40:03,979 INFO MCP initialized (id=5c4998cb-7341-40a0-aefa-ec3f8705cbdc)
+2026-06-28 04:40:05,305 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 04:40:06,452 INFO No new w-mail files found
+2026-06-28 04:40:06,455 INFO === mail_sync end ===
+2026-06-28 04:50:01,367 INFO === mail_sync start ===
+2026-06-28 04:50:03,090 INFO MCP initialized (id=db33fe4e-f365-483f-b07e-49cda0bfb2ff)
+2026-06-28 04:50:04,543 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 04:50:05,820 INFO No new w-mail files found
+2026-06-28 04:50:05,823 INFO === mail_sync end ===
+2026-06-28 05:00:02,027 INFO === mail_sync start ===
+2026-06-28 05:00:03,977 INFO MCP initialized (id=44eb596a-9029-4d29-8d40-3cf200a4b00c)
+2026-06-28 05:00:05,361 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:00:06,741 INFO No new w-mail files found
+2026-06-28 05:00:06,744 INFO === mail_sync end ===
+2026-06-28 05:10:02,162 INFO === mail_sync start ===
+2026-06-28 05:10:03,483 INFO MCP initialized (id=3ebc4b2c-16be-4df9-bd9a-80923f86c9cd)
+2026-06-28 05:10:04,988 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:10:06,870 INFO No new w-mail files found
+2026-06-28 05:10:06,872 INFO === mail_sync end ===
+2026-06-28 05:20:02,294 INFO === mail_sync start ===
+2026-06-28 05:20:05,902 INFO MCP initialized (id=70858911-aace-4a49-b927-40d36c3887e8)
+2026-06-28 05:20:07,680 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:20:08,775 INFO No new w-mail files found
+2026-06-28 05:20:08,778 INFO === mail_sync end ===
+2026-06-28 05:30:01,314 INFO === mail_sync start ===
+2026-06-28 05:30:03,152 INFO MCP initialized (id=3e36ccec-5140-43b5-aa20-858c59b0e5d9)
+2026-06-28 05:30:05,953 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:30:08,179 INFO No new w-mail files found
+2026-06-28 05:30:08,180 INFO === mail_sync end ===
+2026-06-28 05:40:02,037 INFO === mail_sync start ===
+2026-06-28 05:40:03,527 INFO MCP initialized (id=afe04537-cf0f-460b-aacc-30adb7a1e130)
+2026-06-28 05:40:04,934 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:40:06,213 INFO No new w-mail files found
+2026-06-28 05:40:06,223 INFO === mail_sync end ===
+2026-06-28 05:50:02,302 INFO === mail_sync start ===
+2026-06-28 05:50:03,731 INFO MCP initialized (id=286f5360-42c0-42d4-a8a3-1a56260a328e)
+2026-06-28 05:50:05,095 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 05:50:06,309 INFO No new w-mail files found
+2026-06-28 05:50:06,395 INFO === mail_sync end ===
+2026-06-28 06:00:01,352 INFO === mail_sync start ===
+2026-06-28 06:00:03,182 INFO MCP initialized (id=f7273c0b-6ecb-473e-829b-76879f75dca8)
+2026-06-28 06:00:04,701 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:00:06,089 INFO No new w-mail files found
+2026-06-28 06:00:06,108 INFO === mail_sync end ===
+2026-06-28 06:10:01,528 INFO === mail_sync start ===
+2026-06-28 06:10:03,322 INFO MCP initialized (id=f6609536-d80f-44d3-b5db-637fce060885)
+2026-06-28 06:10:04,674 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:10:05,901 INFO No new w-mail files found
+2026-06-28 06:10:05,904 INFO === mail_sync end ===
+2026-06-28 06:20:03,134 INFO === mail_sync start ===
+2026-06-28 06:20:06,257 INFO MCP initialized (id=a8bc9fec-df5f-4a20-b3ae-893c84b334ba)
+2026-06-28 06:20:07,673 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:20:08,740 INFO No new w-mail files found
+2026-06-28 06:20:08,747 INFO === mail_sync end ===
+2026-06-28 06:30:01,423 INFO === mail_sync start ===
+2026-06-28 06:30:03,594 INFO MCP initialized (id=b2c8aa9d-48e1-4795-a324-8d9ad23243cc)
+2026-06-28 06:30:05,021 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:30:06,387 INFO No new w-mail files found
+2026-06-28 06:30:06,389 INFO === mail_sync end ===
+2026-06-28 06:40:02,079 INFO === mail_sync start ===
+2026-06-28 06:40:03,966 INFO MCP initialized (id=43cfe699-272a-4e4d-b260-0b5de0555f5e)
+2026-06-28 06:40:05,495 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:40:06,918 INFO No new w-mail files found
+2026-06-28 06:40:06,937 INFO === mail_sync end ===
+2026-06-28 06:50:02,064 INFO === mail_sync start ===
+2026-06-28 06:50:03,747 INFO MCP initialized (id=468efeff-79dd-46c2-a559-77d87cc85f7a)
+2026-06-28 06:50:05,071 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 06:50:06,334 INFO No new w-mail files found
+2026-06-28 06:50:06,346 INFO === mail_sync end ===
+2026-06-28 07:00:03,040 INFO === mail_sync start ===
+2026-06-28 07:00:05,189 INFO MCP initialized (id=be3b3346-3df2-4933-891a-679ae5481322)
+2026-06-28 07:00:06,687 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:00:08,060 INFO No new w-mail files found
+2026-06-28 07:00:08,062 INFO === mail_sync end ===
+2026-06-28 07:10:02,388 INFO === mail_sync start ===
+2026-06-28 07:10:12,614 INFO MCP initialized (id=49653316-dc5e-454f-987e-ecd789240643)
+2026-06-28 07:10:13,971 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:10:15,582 INFO No new w-mail files found
+2026-06-28 07:10:15,584 INFO === mail_sync end ===
+2026-06-28 07:20:02,241 INFO === mail_sync start ===
+2026-06-28 07:20:05,333 INFO MCP initialized (id=0b7d91e8-8609-4a0d-bd35-b1b3085b4b8a)
+2026-06-28 07:20:06,541 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:20:08,284 INFO No new w-mail files found
+2026-06-28 07:20:08,295 INFO === mail_sync end ===
+2026-06-28 07:30:01,772 INFO === mail_sync start ===
+2026-06-28 07:30:03,494 INFO MCP initialized (id=5571d31a-41aa-4d22-9b6d-8744053f9c6d)
+2026-06-28 07:30:05,101 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:30:06,565 INFO No new w-mail files found
+2026-06-28 07:30:06,570 INFO === mail_sync end ===
+2026-06-28 07:40:01,834 INFO === mail_sync start ===
+2026-06-28 07:40:03,556 INFO MCP initialized (id=af2c8645-f69c-440f-b12d-02c96c8350fe)
+2026-06-28 07:40:04,943 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:40:07,130 INFO No new w-mail files found
+2026-06-28 07:40:07,132 INFO === mail_sync end ===
+2026-06-28 07:50:01,698 INFO === mail_sync start ===
+2026-06-28 07:50:03,825 INFO MCP initialized (id=e5ef153f-431c-4ee7-aff9-6a3248e31407)
+2026-06-28 07:50:05,651 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 07:50:06,975 INFO No new w-mail files found
+2026-06-28 07:50:06,978 INFO === mail_sync end ===
+2026-06-28 08:00:02,063 INFO === mail_sync start ===
+2026-06-28 08:00:04,473 INFO MCP initialized (id=9fbe2510-fb05-45c7-8838-a51329367c03)
+2026-06-28 08:00:06,290 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:00:08,261 INFO No new w-mail files found
+2026-06-28 08:00:08,361 INFO === mail_sync end ===
+2026-06-28 08:10:01,816 INFO === mail_sync start ===
+2026-06-28 08:10:03,451 INFO MCP initialized (id=14af0528-7e77-412a-82a9-456f3bda5c02)
+2026-06-28 08:10:05,660 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:10:07,456 INFO No new w-mail files found
+2026-06-28 08:10:07,458 INFO === mail_sync end ===
+2026-06-28 08:20:03,395 INFO === mail_sync start ===
+2026-06-28 08:20:07,237 INFO MCP initialized (id=09735bec-4c77-4e97-a06a-beec04d59f7c)
+2026-06-28 08:20:08,916 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:20:10,667 INFO No new w-mail files found
+2026-06-28 08:20:10,669 INFO === mail_sync end ===
+2026-06-28 08:30:02,384 INFO === mail_sync start ===
+2026-06-28 08:30:03,931 INFO MCP initialized (id=f0c3e501-820d-4b1d-9115-bb2ba797fdf1)
+2026-06-28 08:30:05,341 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:30:07,153 INFO No new w-mail files found
+2026-06-28 08:30:07,196 INFO === mail_sync end ===
+2026-06-28 08:40:01,621 INFO === mail_sync start ===
+2026-06-28 08:40:03,262 INFO MCP initialized (id=c4973b14-de5f-4b9e-8ff1-13dd7f376956)
+2026-06-28 08:40:04,805 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:40:05,992 INFO No new w-mail files found
+2026-06-28 08:40:05,998 INFO === mail_sync end ===
+2026-06-28 08:50:01,786 INFO === mail_sync start ===
+2026-06-28 08:50:03,446 INFO MCP initialized (id=99389539-a4f2-4db0-b413-56c4d64459b5)
+2026-06-28 08:50:04,912 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 08:50:06,115 INFO No new w-mail files found
+2026-06-28 08:50:06,125 INFO === mail_sync end ===
+2026-06-28 09:00:01,709 INFO === mail_sync start ===
+2026-06-28 09:00:04,079 INFO MCP initialized (id=f73baddd-0cce-4b85-b9b5-af53d3c3ed5d)
+2026-06-28 09:00:05,648 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:00:07,365 INFO No new w-mail files found
+2026-06-28 09:00:07,392 INFO === mail_sync end ===
+2026-06-28 09:10:02,066 INFO === mail_sync start ===
+2026-06-28 09:10:05,088 INFO MCP initialized (id=57c78b1d-2b86-44a6-9f55-f9284abf2661)
+2026-06-28 09:10:06,456 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:10:07,556 INFO No new w-mail files found
+2026-06-28 09:10:07,558 INFO === mail_sync end ===
+2026-06-28 09:20:04,016 INFO === mail_sync start ===
+2026-06-28 09:20:07,976 INFO MCP initialized (id=f83ac5f9-8f07-43f4-a3fa-f4f649d78aa7)
+2026-06-28 09:20:10,200 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:20:11,415 INFO No new w-mail files found
+2026-06-28 09:20:11,417 INFO === mail_sync end ===
+2026-06-28 09:30:01,317 INFO === mail_sync start ===
+2026-06-28 09:30:03,140 INFO MCP initialized (id=d0e1ab2b-3941-4427-a149-4715f482867f)
+2026-06-28 09:30:05,201 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:30:06,423 INFO No new w-mail files found
+2026-06-28 09:30:06,432 INFO === mail_sync end ===
+2026-06-28 09:40:02,035 INFO === mail_sync start ===
+2026-06-28 09:40:03,500 INFO MCP initialized (id=764e4c0d-c572-4071-806b-0ce8efb638c2)
+2026-06-28 09:40:04,854 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:40:06,027 INFO Processing: W-Mail  - Kindle.txt (ID: 1O5_0dln4Bsx0h4qD8Nr-_OSt814Mu81G)
+2026-06-28 09:40:08,111 INFO Downloaded 67 bytes
+2026-06-28 09:40:08,115 INFO Extracted 2 bullet points
+2026-06-28 09:40:51,026 INFO LLM response: 357 chars
+2026-06-28 09:40:53,046 INFO HTTP Request: GET https://api.agentmail.to/v0/inboxes "HTTP/1.1 200 OK"
+2026-06-28 09:40:53,607 INFO HTTP Request: POST https://api.agentmail.to/v0/inboxes/guenther88@agentmail.to/messages/send "HTTP/1.1 200 OK"
+2026-06-28 09:40:53,608 INFO Email sent to bastian.lewin@polizeiakademie.de via guenther88@agentmail.to (msg_id=<0100019f0d2c949d-cb11d4ec-d2a2-414c-b9f8-0f1fe8d1ca5b-000000@email.amazonses.com>)
+2026-06-28 09:40:53,609 INFO Email sent for W-Mail  - Kindle.txt
+2026-06-28 09:40:54,873 INFO Deleted W-Mail  - Kindle.txt from Drive
+2026-06-28 09:40:54,874 INFO Processed 1 files this run
+2026-06-28 09:40:54,876 INFO === mail_sync end ===
+2026-06-28 09:50:01,193 INFO === mail_sync start ===
+2026-06-28 09:50:02,607 INFO MCP initialized (id=3e84dac1-ce58-47ae-bf9b-07f3c06db6ca)
+2026-06-28 09:50:03,799 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 09:50:04,957 INFO No new w-mail files found
+2026-06-28 09:50:04,960 INFO === mail_sync end ===
+2026-06-28 10:00:01,555 INFO === mail_sync start ===
+2026-06-28 10:00:03,338 INFO MCP initialized (id=89ec1654-c7f1-4854-9372-dc6bd46c3f5c)
+2026-06-28 10:00:04,657 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:00:06,341 INFO No new w-mail files found
+2026-06-28 10:00:06,372 INFO === mail_sync end ===
+2026-06-28 10:10:02,125 INFO === mail_sync start ===
+2026-06-28 10:10:03,759 INFO MCP initialized (id=459231fa-67b1-49b5-8b57-653a596c4b90)
+2026-06-28 10:10:05,020 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:10:06,282 INFO No new w-mail files found
+2026-06-28 10:10:06,304 INFO === mail_sync end ===
+2026-06-28 10:20:03,028 INFO === mail_sync start ===
+2026-06-28 10:20:07,283 INFO MCP initialized (id=cd135024-342c-4ede-b081-e1962e204e7d)
+2026-06-28 10:20:08,609 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:20:09,950 INFO No new w-mail files found
+2026-06-28 10:20:09,953 INFO === mail_sync end ===
+2026-06-28 10:30:02,351 INFO === mail_sync start ===
+2026-06-28 10:30:04,858 INFO MCP initialized (id=e404ce74-306d-43b6-b7e4-399b91f4622a)
+2026-06-28 10:30:06,105 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:30:07,322 INFO No new w-mail files found
+2026-06-28 10:30:07,329 INFO === mail_sync end ===
+2026-06-28 10:40:02,677 INFO === mail_sync start ===
+2026-06-28 10:40:04,378 INFO MCP initialized (id=b16de902-b3ce-41d9-8368-46f4e9216c50)
+2026-06-28 10:40:05,749 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:40:07,152 INFO No new w-mail files found
+2026-06-28 10:40:07,155 INFO === mail_sync end ===
+2026-06-28 10:50:01,575 INFO === mail_sync start ===
+2026-06-28 10:50:02,908 INFO MCP initialized (id=cc0e4edf-af76-4c69-9d84-47fc950edf2b)
+2026-06-28 10:50:04,712 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 10:50:05,914 INFO No new w-mail files found
+2026-06-28 10:50:05,924 INFO === mail_sync end ===
+2026-06-28 11:00:01,420 INFO === mail_sync start ===
+2026-06-28 11:00:03,283 INFO MCP initialized (id=16d7b145-ffea-4049-acbc-a91c9bec220f)
+2026-06-28 11:00:05,430 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:00:06,768 INFO No new w-mail files found
+2026-06-28 11:00:06,778 INFO === mail_sync end ===
+2026-06-28 11:10:01,563 INFO === mail_sync start ===
+2026-06-28 11:10:03,532 INFO MCP initialized (id=58abd4bc-bbd6-4567-99e6-b65e771d8899)
+2026-06-28 11:10:05,083 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:10:06,190 INFO No new w-mail files found
+2026-06-28 11:10:06,195 INFO === mail_sync end ===
+2026-06-28 11:20:02,363 INFO === mail_sync start ===
+2026-06-28 11:20:05,759 INFO MCP initialized (id=d42f4c19-7532-462e-ad25-f66b04bcde3a)
+2026-06-28 11:20:07,033 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:20:08,329 INFO No new w-mail files found
+2026-06-28 11:20:08,332 INFO === mail_sync end ===
+2026-06-28 11:30:01,895 INFO === mail_sync start ===
+2026-06-28 11:30:03,412 INFO MCP initialized (id=3d032398-969e-4bd6-adee-f6f5ad83d7ad)
+2026-06-28 11:30:05,261 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:30:06,593 INFO No new w-mail files found
+2026-06-28 11:30:06,655 INFO === mail_sync end ===
+2026-06-28 11:40:02,079 INFO === mail_sync start ===
+2026-06-28 11:40:03,815 INFO MCP initialized (id=c43481dc-211b-4464-a974-7fd9a0be2f23)
+2026-06-28 11:40:05,166 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:40:06,464 INFO No new w-mail files found
+2026-06-28 11:40:06,466 INFO === mail_sync end ===
+2026-06-28 11:50:01,655 INFO === mail_sync start ===
+2026-06-28 11:50:03,368 INFO MCP initialized (id=ea9478bf-20b7-468c-aa15-24bd01fca405)
+2026-06-28 11:50:04,661 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 11:50:05,762 INFO No new w-mail files found
+2026-06-28 11:50:05,805 INFO === mail_sync end ===
+2026-06-28 12:00:02,038 INFO === mail_sync start ===
+2026-06-28 12:00:04,849 INFO MCP initialized (id=c488d759-9d8d-4892-b08f-37bab0de79b8)
+2026-06-28 12:00:06,411 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:00:08,064 INFO No new w-mail files found
+2026-06-28 12:00:08,067 INFO === mail_sync end ===
+2026-06-28 12:10:03,255 INFO === mail_sync start ===
+2026-06-28 12:10:04,779 INFO MCP initialized (id=4d54ee5a-9b02-4693-85db-6815b5b85610)
+2026-06-28 12:10:06,184 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:10:07,440 INFO No new w-mail files found
+2026-06-28 12:10:07,453 INFO === mail_sync end ===
+2026-06-28 12:20:02,696 INFO === mail_sync start ===
+2026-06-28 12:20:06,966 INFO MCP initialized (id=65fc751c-2e33-4ff4-9f04-673be6d26c8a)
+2026-06-28 12:20:08,308 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:20:09,417 INFO No new w-mail files found
+2026-06-28 12:20:09,419 INFO === mail_sync end ===
+2026-06-28 12:30:01,513 INFO === mail_sync start ===
+2026-06-28 12:30:03,647 INFO MCP initialized (id=411f2fb9-eaca-4cca-b3bc-e7676b1e3634)
+2026-06-28 12:30:05,149 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:30:06,439 INFO No new w-mail files found
+2026-06-28 12:30:06,445 INFO === mail_sync end ===
+2026-06-28 12:40:01,484 INFO === mail_sync start ===
+2026-06-28 12:40:02,838 INFO MCP initialized (id=c3cbc988-1c12-45de-bfe0-5be8f8239ce3)
+2026-06-28 12:40:04,052 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:40:05,409 INFO No new w-mail files found
+2026-06-28 12:40:05,434 INFO === mail_sync end ===
+2026-06-28 12:50:01,241 INFO === mail_sync start ===
+2026-06-28 12:50:02,640 INFO MCP initialized (id=b99f6a84-d5c1-4701-9b4c-1b31c4325d65)
+2026-06-28 12:50:03,873 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 12:50:05,092 INFO No new w-mail files found
+2026-06-28 12:50:05,096 INFO === mail_sync end ===
+2026-06-28 13:00:01,731 INFO === mail_sync start ===
+2026-06-28 13:00:03,786 INFO MCP initialized (id=f7758d0a-f00c-43cd-bf00-b1c99906d874)
+2026-06-28 13:00:05,181 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:00:06,566 INFO No new w-mail files found
+2026-06-28 13:00:06,568 INFO === mail_sync end ===
+2026-06-28 13:10:01,271 INFO === mail_sync start ===
+2026-06-28 13:10:02,774 INFO MCP initialized (id=a8bde579-e19c-4c85-a9a4-696f3fe724de)
+2026-06-28 13:10:03,998 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:10:05,183 INFO No new w-mail files found
+2026-06-28 13:10:05,186 INFO === mail_sync end ===
+2026-06-28 13:20:02,934 INFO === mail_sync start ===
+2026-06-28 13:20:06,666 INFO MCP initialized (id=b26eb457-f60a-4ad8-be4b-5efe60cccf81)
+2026-06-28 13:20:08,018 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:20:09,185 INFO No new w-mail files found
+2026-06-28 13:20:09,187 INFO === mail_sync end ===
+2026-06-28 13:30:01,309 INFO === mail_sync start ===
+2026-06-28 13:30:04,607 INFO MCP initialized (id=0f187efd-79ad-4f5b-9278-8c7420f676dc)
+2026-06-28 13:30:06,087 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:30:07,458 INFO No new w-mail files found
+2026-06-28 13:30:07,461 INFO === mail_sync end ===
+2026-06-28 13:40:02,515 INFO === mail_sync start ===
+2026-06-28 13:40:04,407 INFO MCP initialized (id=9af06f6a-de6d-4ac8-b205-e978257269fc)
+2026-06-28 13:40:05,907 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:40:07,140 INFO No new w-mail files found
+2026-06-28 13:40:07,142 INFO === mail_sync end ===
+2026-06-28 13:50:02,079 INFO === mail_sync start ===
+2026-06-28 13:50:03,641 INFO MCP initialized (id=ba65e4bc-9120-4d66-b2ee-3b4dfcdd86ff)
+2026-06-28 13:50:04,961 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 13:50:06,294 INFO No new w-mail files found
+2026-06-28 13:50:06,301 INFO === mail_sync end ===
+2026-06-28 14:00:01,409 INFO === mail_sync start ===
+2026-06-28 14:00:02,800 INFO MCP initialized (id=52276c65-d4a2-4850-8b14-a95e55014f84)
+2026-06-28 14:00:04,215 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:00:06,031 INFO No new w-mail files found
+2026-06-28 14:00:06,039 INFO === mail_sync end ===
+2026-06-28 14:10:02,091 INFO === mail_sync start ===
+2026-06-28 14:10:03,768 INFO MCP initialized (id=adec0e5d-6e40-4a83-90be-a32f6b898762)
+2026-06-28 14:10:05,106 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:10:06,666 INFO No new w-mail files found
+2026-06-28 14:10:06,669 INFO === mail_sync end ===
+2026-06-28 14:20:03,542 INFO === mail_sync start ===
+2026-06-28 14:20:06,669 INFO MCP initialized (id=c501c716-8352-46d8-9d5c-e19867bb9401)
+2026-06-28 14:20:07,869 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:20:09,018 INFO No new w-mail files found
+2026-06-28 14:20:09,020 INFO === mail_sync end ===
+2026-06-28 14:30:01,826 INFO === mail_sync start ===
+2026-06-28 14:30:08,228 INFO MCP initialized (id=868d3a2b-9964-41f6-8000-4125775d6f0d)
+2026-06-28 14:30:11,061 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:30:14,763 INFO No new w-mail files found
+2026-06-28 14:30:14,772 INFO === mail_sync end ===
+2026-06-28 14:40:01,937 INFO === mail_sync start ===
+2026-06-28 14:40:03,262 INFO MCP initialized (id=527f5134-e093-4cc4-a3b5-3958b4e4a3dd)
+2026-06-28 14:40:04,545 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:40:05,839 INFO No new w-mail files found
+2026-06-28 14:40:05,841 INFO === mail_sync end ===
+2026-06-28 14:50:01,971 INFO === mail_sync start ===
+2026-06-28 14:50:03,824 INFO MCP initialized (id=b8394192-5049-4ee7-93d0-5662ffa0ae1f)
+2026-06-28 14:50:05,423 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 14:50:07,542 INFO No new w-mail files found
+2026-06-28 14:50:07,545 INFO === mail_sync end ===
+2026-06-28 15:00:01,622 INFO === mail_sync start ===
+2026-06-28 15:00:09,172 INFO MCP initialized (id=d9dff7b0-56e3-4c7e-a7b7-d357e9a7d760)
+2026-06-28 15:00:15,352 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:00:16,673 INFO No new w-mail files found
+2026-06-28 15:00:16,677 INFO === mail_sync end ===
+2026-06-28 15:10:01,807 INFO === mail_sync start ===
+2026-06-28 15:10:03,240 INFO MCP initialized (id=b24e55c7-b15e-4840-a649-16018abcd99e)
+2026-06-28 15:10:04,644 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:10:06,061 INFO No new w-mail files found
+2026-06-28 15:10:06,063 INFO === mail_sync end ===
+2026-06-28 15:20:03,169 INFO === mail_sync start ===
+2026-06-28 15:20:06,193 INFO MCP initialized (id=395198d2-13ee-46eb-98b3-7c908e6cbd3c)
+2026-06-28 15:20:07,504 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:20:08,646 INFO No new w-mail files found
+2026-06-28 15:20:08,649 INFO === mail_sync end ===
+2026-06-28 15:30:01,761 INFO === mail_sync start ===
+2026-06-28 15:30:03,335 INFO MCP initialized (id=109ac257-af63-4f4b-aa2b-6b9d8c7b7ecb)
+2026-06-28 15:30:04,658 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:30:06,032 INFO No new w-mail files found
+2026-06-28 15:30:06,034 INFO === mail_sync end ===
+2026-06-28 15:40:01,869 INFO === mail_sync start ===
+2026-06-28 15:40:03,244 INFO MCP initialized (id=f989999f-9629-41dd-804f-2d8398721264)
+2026-06-28 15:40:04,743 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:40:05,939 INFO No new w-mail files found
+2026-06-28 15:40:05,941 INFO === mail_sync end ===
+2026-06-28 15:50:01,399 INFO === mail_sync start ===
+2026-06-28 15:50:03,003 INFO MCP initialized (id=bd1de52c-4740-4dcf-a7a1-09f3cbe1615c)
+2026-06-28 15:50:04,326 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 15:50:05,595 INFO No new w-mail files found
+2026-06-28 15:50:05,608 INFO === mail_sync end ===
+2026-06-28 16:00:02,141 INFO === mail_sync start ===
+2026-06-28 16:00:03,454 INFO MCP initialized (id=09a2d82d-0033-4681-b534-c3a8ba24b464)
+2026-06-28 16:00:04,672 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:00:06,626 INFO No new w-mail files found
+2026-06-28 16:00:06,644 INFO === mail_sync end ===
+2026-06-28 16:10:01,969 INFO === mail_sync start ===
+2026-06-28 16:10:03,981 INFO MCP initialized (id=eea3957b-2cc7-43e2-8fbc-8c73cdd40903)
+2026-06-28 16:10:05,375 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:10:06,706 INFO No new w-mail files found
+2026-06-28 16:10:06,709 INFO === mail_sync end ===
+2026-06-28 16:20:01,220 INFO === mail_sync start ===
+2026-06-28 16:20:02,792 INFO MCP initialized (id=4f04be96-bbac-4d4d-b0d4-43a8b5b9649d)
+2026-06-28 16:20:04,173 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:20:05,510 INFO No new w-mail files found
+2026-06-28 16:20:05,511 INFO === mail_sync end ===
+2026-06-28 16:30:01,490 INFO === mail_sync start ===
+2026-06-28 16:30:08,280 INFO MCP initialized (id=aebb5103-24df-4eaa-bc2e-8e2f50ab9b1c)
+2026-06-28 16:30:09,664 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:30:10,963 INFO No new w-mail files found
+2026-06-28 16:30:10,966 INFO === mail_sync end ===
+2026-06-28 16:40:01,742 INFO === mail_sync start ===
+2026-06-28 16:40:03,226 INFO MCP initialized (id=2b8f88f6-d1c3-4803-b1e4-23ee095ba7c4)
+2026-06-28 16:40:04,464 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:40:05,675 INFO No new w-mail files found
+2026-06-28 16:40:05,677 INFO === mail_sync end ===
+2026-06-28 16:50:01,159 INFO === mail_sync start ===
+2026-06-28 16:50:02,395 INFO MCP initialized (id=82cdb77f-e142-44fe-bba3-a4ab5f070720)
+2026-06-28 16:50:03,652 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 16:50:04,917 INFO No new w-mail files found
+2026-06-28 16:50:04,923 INFO === mail_sync end ===
+2026-06-28 17:00:01,791 INFO === mail_sync start ===
+2026-06-28 17:00:03,832 INFO MCP initialized (id=f6d53edb-c110-484d-9db2-ddaea04f004a)
+2026-06-28 17:00:05,297 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:00:06,749 INFO No new w-mail files found
+2026-06-28 17:00:06,764 INFO === mail_sync end ===
+2026-06-28 17:10:01,831 INFO === mail_sync start ===
+2026-06-28 17:10:03,658 INFO MCP initialized (id=806b38b6-2155-46b0-8e62-d3cb37605138)
+2026-06-28 17:10:05,473 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:10:06,821 INFO No new w-mail files found
+2026-06-28 17:10:06,823 INFO === mail_sync end ===
+2026-06-28 17:20:03,981 INFO === mail_sync start ===
+2026-06-28 17:20:07,761 INFO MCP initialized (id=7a046d42-013a-41f1-aeb3-dc965e334439)
+2026-06-28 17:20:09,654 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:20:11,095 INFO No new w-mail files found
+2026-06-28 17:20:11,097 INFO === mail_sync end ===
+2026-06-28 17:30:01,314 INFO === mail_sync start ===
+2026-06-28 17:30:03,547 INFO MCP initialized (id=512febf1-a721-405e-bf60-8b0753f33cf4)
+2026-06-28 17:30:05,023 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:30:06,378 INFO No new w-mail files found
+2026-06-28 17:30:06,380 INFO === mail_sync end ===
+2026-06-28 17:40:01,532 INFO === mail_sync start ===
+2026-06-28 17:40:02,938 INFO MCP initialized (id=0b741293-8e35-4c8e-93c8-523768bc4f19)
+2026-06-28 17:40:04,152 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:40:05,429 INFO No new w-mail files found
+2026-06-28 17:40:05,431 INFO === mail_sync end ===
+2026-06-28 17:50:01,926 INFO === mail_sync start ===
+2026-06-28 17:50:03,774 INFO MCP initialized (id=dcb4a0a0-1d77-4e53-b31e-7925810f32e8)
+2026-06-28 17:50:05,200 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 17:50:06,391 INFO No new w-mail files found
+2026-06-28 17:50:06,393 INFO === mail_sync end ===
+2026-06-28 18:00:01,648 INFO === mail_sync start ===
+2026-06-28 18:00:03,698 INFO MCP initialized (id=56d3ee79-5058-4b00-a502-d303186620d1)
+2026-06-28 18:00:05,173 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:00:06,455 INFO No new w-mail files found
+2026-06-28 18:00:06,462 INFO === mail_sync end ===
+2026-06-28 18:10:01,383 INFO === mail_sync start ===
+2026-06-28 18:10:02,723 INFO MCP initialized (id=4276b0a2-8b6d-4342-9c3f-d668f5455ab5)
+2026-06-28 18:10:04,010 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:10:05,195 INFO No new w-mail files found
+2026-06-28 18:10:05,197 INFO === mail_sync end ===
+2026-06-28 18:20:02,999 INFO === mail_sync start ===
+2026-06-28 18:20:07,038 INFO MCP initialized (id=a37d637b-9317-4744-b086-86630c097f59)
+2026-06-28 18:20:08,541 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:20:10,119 INFO No new w-mail files found
+2026-06-28 18:20:10,121 INFO === mail_sync end ===
+2026-06-28 18:30:01,413 INFO === mail_sync start ===
+2026-06-28 18:30:02,767 INFO MCP initialized (id=d6ba6d45-41c9-4a30-afcd-f34d6a3e5fac)
+2026-06-28 18:30:04,355 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:30:05,749 INFO No new w-mail files found
+2026-06-28 18:30:05,767 INFO === mail_sync end ===
+2026-06-28 18:40:02,201 INFO === mail_sync start ===
+2026-06-28 18:40:03,649 INFO MCP initialized (id=0717169f-de41-4e92-b073-b71eb88d85d2)
+2026-06-28 18:40:05,206 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:40:06,519 INFO No new w-mail files found
+2026-06-28 18:40:06,521 INFO === mail_sync end ===
+2026-06-28 18:50:01,276 INFO === mail_sync start ===
+2026-06-28 18:50:02,887 INFO MCP initialized (id=7381659e-ed5c-48e0-9b9c-e2a468c51637)
+2026-06-28 18:50:04,310 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 18:50:05,762 INFO No new w-mail files found
+2026-06-28 18:50:05,789 INFO === mail_sync end ===
+2026-06-28 19:00:02,103 INFO === mail_sync start ===
+2026-06-28 19:00:03,635 INFO MCP initialized (id=ec114233-82b8-4bb9-ad82-139dfb6655ba)
+2026-06-28 19:00:12,120 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 19:00:13,323 INFO No new w-mail files found
+2026-06-28 19:00:13,328 INFO === mail_sync end ===
+2026-06-28 19:10:02,471 INFO === mail_sync start ===
+2026-06-28 19:10:04,249 INFO MCP initialized (id=792ad70d-04a5-44ca-8374-dfeb5d1bd93d)
+2026-06-28 19:10:05,494 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 19:10:06,672 INFO No new w-mail files found
+2026-06-28 19:10:06,675 INFO === mail_sync end ===
+2026-06-28 19:20:03,376 INFO === mail_sync start ===
+2026-06-28 19:20:07,920 INFO MCP initialized (id=f99f78ae-0354-4767-ac86-70152da5de5f)
+2026-06-28 19:20:09,427 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 19:20:11,193 INFO No new w-mail files found
+2026-06-28 19:20:11,196 INFO === mail_sync end ===
+2026-06-28 19:30:01,179 INFO === mail_sync start ===
+2026-06-28 19:30:02,642 INFO MCP initialized (id=814f2b79-7fb7-4014-a6dc-be5eb3befc72)
+2026-06-28 19:30:04,108 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-28 19:30:05,930 INFO No new w-mail files found
+2026-06-28 19:30:05,942 INFO === mail_sync end ===
+2026-06-29 14:59:21,336 INFO === mail_sync start ===
+2026-06-29 14:59:22,521 INFO MCP initialized (id=c6283454-bed7-4bac-8a18-ce951b74e44f)
+2026-06-29 14:59:23,901 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 14:59:26,967 INFO Created archive folder (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 14:59:28,141 INFO Processing: W-Mail  - Kindle.txt (ID: 1sZd29Nn7LWiBfYVdevUlHYKgZy4HiDUv)
+2026-06-29 14:59:30,724 INFO === mail_sync start ===
+2026-06-29 14:59:31,273 INFO Downloaded 62 bytes
+2026-06-29 14:59:31,276 INFO Extracted 5 bullet points
+2026-06-29 14:59:31,277 ERROR No OpenRouter API key
+2026-06-29 14:59:31,278 ERROR LLM failed for W-Mail  - Kindle.txt
+2026-06-29 14:59:31,279 INFO Processed 0 files this run
+2026-06-29 14:59:31,281 INFO === mail_sync end ===
+2026-06-29 14:59:31,837 INFO MCP initialized (id=dcdd1bdd-6f04-4680-9b44-d3a2d7fc63cc)
+2026-06-29 14:59:34,091 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 14:59:35,331 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 14:59:36,463 INFO Processing: W-Mail  - Kindle.txt (ID: 1sZd29Nn7LWiBfYVdevUlHYKgZy4HiDUv)
+2026-06-29 14:59:38,885 INFO Downloaded 62 bytes
+2026-06-29 14:59:38,888 INFO Extracted 5 bullet points
+2026-06-29 14:59:38,889 ERROR No OpenRouter API key
+2026-06-29 14:59:38,889 ERROR LLM failed for W-Mail  - Kindle.txt
+2026-06-29 14:59:38,890 INFO Processed 0 files this run
+2026-06-29 14:59:38,893 INFO === mail_sync end ===
+2026-06-29 15:00:45,087 INFO === mail_sync start ===
+2026-06-29 15:00:46,538 INFO MCP initialized (id=63d5bb52-9c19-4fb4-b5ea-a2e65ef3ea81)
+2026-06-29 15:00:47,916 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 15:00:50,209 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 15:00:51,540 INFO Processed 0 files this run
+2026-06-29 15:00:51,548 INFO === mail_sync end ===
+2026-06-29 15:01:09,995 INFO === mail_sync start ===
+2026-06-29 15:01:11,460 INFO MCP initialized (id=1eb1375b-603e-4e60-ada1-22977930e0b9)
+2026-06-29 15:01:12,970 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 15:01:14,306 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 15:01:15,651 INFO Processing: W-Mail  - Kindle.txt (ID: 1sZd29Nn7LWiBfYVdevUlHYKgZy4HiDUv)
+2026-06-29 15:01:22,013 INFO Downloaded 62 bytes
+2026-06-29 15:01:22,016 INFO Extracted 5 bullet points
+2026-06-29 15:01:22,251 WARNING OpenRouter attempt 1 failed: 401 Client Error: Unauthorized for url: https://openrouter.ai/api/v1/chat/completions
+2026-06-29 15:01:25,047 WARNING OpenRouter attempt 2 failed: 401 Client Error: Unauthorized for url: https://openrouter.ai/api/v1/chat/completions
+2026-06-29 15:01:29,878 WARNING OpenRouter attempt 3 failed: 401 Client Error: Unauthorized for url: https://openrouter.ai/api/v1/chat/completions
+2026-06-29 15:01:29,879 ERROR All 3 LLM attempts failed
+2026-06-29 15:01:29,881 ERROR LLM failed for W-Mail  - Kindle.txt
+2026-06-29 15:01:29,882 INFO Processed 0 files this run
+2026-06-29 15:01:29,884 INFO === mail_sync end ===
+2026-06-29 15:03:44,618 INFO === mail_sync start ===
+2026-06-29 15:03:45,972 INFO MCP initialized (id=24273339-8f34-4bf8-91a3-c187b857ffe3)
+2026-06-29 15:03:48,563 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 15:03:50,190 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 15:03:51,516 INFO Processed 0 files this run
+2026-06-29 15:03:51,519 INFO === mail_sync end ===
+2026-06-29 15:04:28,968 INFO === mail_sync start ===
+2026-06-29 15:04:30,291 INFO MCP initialized (id=0c922223-cfa0-45a3-aa9d-4c1ce46b133d)
+2026-06-29 15:04:32,471 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 15:04:34,312 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 15:04:35,511 INFO Processing: W-Mail  - Kindle.txt (ID: 1sZd29Nn7LWiBfYVdevUlHYKgZy4HiDUv)
+2026-06-29 15:04:38,539 INFO Downloaded 62 bytes
+2026-06-29 15:04:38,541 INFO Extracted 5 bullet points
+2026-06-29 15:04:59,941 INFO LLM response: 326 chars
+2026-06-29 15:05:01,661 INFO HTTP Request: GET https://api.agentmail.to/v0/inboxes "HTTP/1.1 200 OK"
+2026-06-29 15:05:02,446 INFO HTTP Request: POST https://api.agentmail.to/v0/inboxes/guenther88@agentmail.to/messages/send "HTTP/1.1 200 OK"
+2026-06-29 15:05:02,447 INFO Email sent to bastian.lewin@polizeiakademie.de via guenther88@agentmail.to (msg_id=<0100019f137bb500-7ad70843-ba5f-4b3a-8508-500e3552acb2-000000@email.amazonses.com>)
+2026-06-29 15:05:02,447 INFO Email sent for W-Mail  - Kindle.txt
+2026-06-29 15:05:04,345 INFO Moved W-Mail  - Kindle.txt to archive
+2026-06-29 15:05:04,348 INFO Processed 1 files this run
+2026-06-29 15:05:04,353 INFO === mail_sync end ===
+2026-06-29 15:05:04,980 INFO === mail_sync start ===
+2026-06-29 15:05:06,431 INFO MCP initialized (id=604e66a2-94c2-4f0d-9124-85fd43ffce97)
+2026-06-29 15:05:07,850 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 15:05:09,494 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 15:05:10,784 INFO No new w-mail files found
+2026-06-29 15:05:10,789 INFO === mail_sync end ===
+2026-06-29 19:16:36,178 INFO === mail_sync start ===
+2026-06-29 19:16:39,153 INFO === mail_sync start ===
+2026-06-29 19:16:40,429 INFO MCP initialized (id=41a99a42-0fdb-4940-8137-18edbb03bc98)
+2026-06-29 19:16:40,627 INFO MCP initialized (id=4567f7c1-0bfc-4f9b-bb81-f8541abc6424)
+2026-06-29 19:16:41,795 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 19:16:41,971 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 19:16:43,379 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 19:16:43,432 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 19:16:44,717 INFO No new w-mail files found
+2026-06-29 19:16:44,721 INFO === mail_sync end ===
+2026-06-29 19:16:44,730 INFO No new w-mail files found
+2026-06-29 19:16:44,732 INFO === mail_sync end ===
+2026-06-29 19:16:54,157 INFO === mail_sync start ===
+2026-06-29 19:16:55,440 INFO MCP initialized (id=96e1bddb-6af4-4b15-bb89-8cabb49d1267)
+2026-06-29 19:16:57,015 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-29 19:16:58,355 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-29 19:16:59,479 INFO No new w-mail files found
+2026-06-29 19:16:59,481 INFO === mail_sync end ===
+2026-06-30 16:42:07,733 INFO === mail_sync start ===
+2026-06-30 16:42:08,986 INFO MCP initialized (id=381512c2-dbde-4432-bf31-b91fe6db7834)
+2026-06-30 16:42:10,322 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 16:42:11,868 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 16:42:13,206 INFO No new w-mail files found
+2026-06-30 16:42:13,208 INFO === mail_sync end ===
+2026-06-30 16:42:26,612 INFO === mail_sync start ===
+2026-06-30 16:42:28,646 INFO MCP initialized (id=7c905730-1414-487f-b2af-8e64938aa8b5)
+2026-06-30 16:42:29,985 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 16:42:31,370 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 16:42:34,175 INFO No new w-mail files found
+2026-06-30 16:42:34,178 INFO === mail_sync end ===
+2026-06-30 17:12:57,910 INFO === mail_sync start ===
+2026-06-30 17:12:59,645 INFO MCP initialized (id=bee7050b-6885-4393-b20c-e21ace264e7c)
+2026-06-30 17:13:00,863 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:13:02,146 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:13:03,296 INFO No new w-mail files found
+2026-06-30 17:13:03,307 INFO === mail_sync end ===
+2026-06-30 17:13:04,010 INFO === mail_sync start ===
+2026-06-30 17:13:05,463 INFO MCP initialized (id=55d292a6-3af0-4346-bb47-0b6967d5e303)
+2026-06-30 17:13:06,721 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:13:08,039 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:13:09,901 INFO No new w-mail files found
+2026-06-30 17:13:09,904 INFO === mail_sync end ===
+2026-06-30 17:13:13,931 INFO === mail_sync start ===
+2026-06-30 17:13:15,070 INFO MCP initialized (id=ec45855e-9e52-4daa-a513-dadbce635aa3)
+2026-06-30 17:13:16,446 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:13:18,018 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:13:19,247 INFO No new w-mail files found
+2026-06-30 17:13:19,250 INFO === mail_sync end ===
+2026-06-30 17:13:24,881 INFO === mail_sync start ===
+2026-06-30 17:13:26,039 INFO MCP initialized (id=c40f595a-a406-47cc-8d12-0f6e0a87f20e)
+2026-06-30 17:13:27,466 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:13:28,768 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:13:30,118 INFO No new w-mail files found
+2026-06-30 17:13:30,122 INFO === mail_sync end ===
+2026-06-30 17:13:55,832 INFO === mail_sync start ===
+2026-06-30 17:13:57,220 INFO MCP initialized (id=880bd80f-ba99-4418-b97f-4ad4c2c96f6e)
+2026-06-30 17:13:58,428 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:13:59,912 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:14:01,273 INFO No new w-mail files found
+2026-06-30 17:14:01,276 INFO === mail_sync end ===
+2026-06-30 17:14:44,437 INFO === mail_sync start ===
+2026-06-30 17:14:45,792 INFO MCP initialized (id=bae5e330-3c18-4dd4-a593-558a8668604c)
+2026-06-30 17:14:47,175 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:14:48,529 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:14:49,873 INFO No new w-mail files found
+2026-06-30 17:14:49,877 INFO === mail_sync end ===
+2026-06-30 17:14:50,019 INFO === mail_sync start ===
+2026-06-30 17:14:51,402 INFO MCP initialized (id=3aa3ba35-aea2-43df-b499-896efe51df04)
+2026-06-30 17:14:52,426 INFO === mail_sync start ===
+2026-06-30 17:14:52,892 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:14:54,218 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:14:54,493 INFO MCP initialized (id=c2427404-6d77-44b4-8fe2-bb0f79db3e58)
+2026-06-30 17:14:55,523 INFO No new w-mail files found
+2026-06-30 17:14:55,532 INFO === mail_sync end ===
+2026-06-30 17:14:55,772 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:14:57,201 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:14:58,742 INFO No new w-mail files found
+2026-06-30 17:14:58,744 INFO === mail_sync end ===
+2026-06-30 17:15:15,654 INFO === mail_sync start ===
+2026-06-30 17:15:17,524 INFO MCP initialized (id=05124e1f-2fb1-48b8-9084-9bab9a963384)
+2026-06-30 17:15:17,988 INFO === mail_sync start ===
+2026-06-30 17:15:18,867 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:15:19,183 INFO MCP initialized (id=c7d3c4e6-46f2-448f-bcd1-a32d007da959)
+2026-06-30 17:15:20,295 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:15:20,696 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:15:22,039 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:15:23,284 INFO No new w-mail files found
+2026-06-30 17:15:23,289 INFO === mail_sync end ===
+2026-06-30 17:15:24,258 INFO No new w-mail files found
+2026-06-30 17:15:24,260 INFO === mail_sync end ===
+2026-06-30 17:19:21,377 INFO === mail_sync start ===
+2026-06-30 17:19:28,454 INFO === mail_sync start ===
+2026-06-30 17:19:49,259 INFO MCP initialized (id=cdb5a4dd-87b2-4318-97da-37c07c79ecf0)
+2026-06-30 17:19:50,526 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:19:52,321 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:19:53,258 INFO MCP initialized (id=b751eeae-a105-4ed5-a3bd-b29272da3b4a)
+2026-06-30 17:19:53,664 INFO No new w-mail files found
+2026-06-30 17:19:53,666 INFO === mail_sync end ===
+2026-06-30 17:19:54,467 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:19:56,002 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:19:57,060 INFO No new w-mail files found
+2026-06-30 17:19:57,065 INFO === mail_sync end ===
+2026-06-30 17:23:35,005 INFO === mail_sync start ===
+2026-06-30 17:23:36,290 INFO MCP initialized (id=97935c59-a7a4-4048-a2a0-dc5fa44ba458)
+2026-06-30 17:23:37,796 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 17:23:39,337 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 17:23:40,608 INFO No new w-mail files found
+2026-06-30 17:23:40,610 INFO === mail_sync end ===
+2026-06-30 19:54:53,722 INFO === mail_sync start ===
+2026-06-30 19:54:54,967 INFO MCP initialized (id=eb39b99b-2ead-4bea-9933-35cf8109a4d4)
+2026-06-30 19:54:56,756 INFO === mail_sync start ===
+2026-06-30 19:54:58,302 INFO MCP initialized (id=d437caaf-1e77-475c-8797-82b945983352)
+2026-06-30 19:54:58,376 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 19:54:59,732 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 19:54:59,951 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 19:55:01,073 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 19:55:01,752 INFO No new w-mail files found
+2026-06-30 19:55:01,791 INFO === mail_sync end ===
+2026-06-30 19:55:02,292 INFO No new w-mail files found
+2026-06-30 19:55:02,294 INFO === mail_sync end ===
+2026-06-30 19:55:18,248 INFO === mail_sync start ===
+2026-06-30 19:55:19,424 INFO MCP initialized (id=e933248e-6157-499d-afb7-3995bbf38516)
+2026-06-30 19:55:20,751 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 19:55:22,024 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 19:55:23,165 INFO No new w-mail files found
+2026-06-30 19:55:23,168 INFO === mail_sync end ===
+2026-06-30 20:12:39,690 INFO === mail_sync start ===
+2026-06-30 20:12:40,911 INFO MCP initialized (id=c12a96fa-ca13-4d7e-8545-90a1a3250c2a)
+2026-06-30 20:12:42,558 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:12:43,289 INFO === mail_sync start ===
+2026-06-30 20:12:44,025 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:12:44,704 INFO MCP initialized (id=84ca7517-18d8-4d5c-8ba9-fbfc4004155a)
+2026-06-30 20:12:45,617 INFO No new w-mail files found
+2026-06-30 20:12:45,619 INFO === mail_sync end ===
+2026-06-30 20:12:46,025 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:12:47,521 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:12:48,745 INFO No new w-mail files found
+2026-06-30 20:12:48,753 INFO === mail_sync end ===
+2026-06-30 20:16:35,906 INFO === mail_sync start ===
+2026-06-30 20:16:37,244 INFO MCP initialized (id=64c8b23a-f5c5-4098-b219-bfc75f7e46b2)
+2026-06-30 20:16:40,959 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:16:43,098 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:16:44,360 INFO No new w-mail files found
+2026-06-30 20:16:44,362 INFO === mail_sync end ===
+2026-06-30 20:23:32,071 INFO === mail_sync start ===
+2026-06-30 20:23:33,413 INFO MCP initialized (id=3331ccfe-21a4-4b31-ab37-38120dc9c781)
+2026-06-30 20:23:35,108 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:23:36,612 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:23:37,796 INFO No new w-mail files found
+2026-06-30 20:23:37,801 INFO === mail_sync end ===
+2026-06-30 20:23:38,547 INFO === mail_sync start ===
+2026-06-30 20:23:39,883 INFO MCP initialized (id=7b6313f9-bcb5-4646-8fcb-a199da888881)
+2026-06-30 20:23:41,242 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:23:43,601 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:23:44,733 INFO No new w-mail files found
+2026-06-30 20:23:44,737 INFO === mail_sync end ===
+2026-06-30 20:23:52,963 INFO === mail_sync start ===
+2026-06-30 20:23:54,548 INFO MCP initialized (id=84f09859-3fd0-47f1-9ac6-a9d711324865)
+2026-06-30 20:23:56,122 INFO === mail_sync start ===
+2026-06-30 20:23:56,432 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:23:57,495 INFO MCP initialized (id=87288e5b-694c-43cc-bdc2-c40b222a9b4e)
+2026-06-30 20:23:57,947 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:23:58,939 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:23:59,206 INFO No new w-mail files found
+2026-06-30 20:23:59,208 INFO === mail_sync end ===
+2026-06-30 20:24:00,884 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:24:02,049 INFO No new w-mail files found
+2026-06-30 20:24:02,058 INFO === mail_sync end ===
+2026-06-30 20:25:00,054 INFO === mail_sync start ===
+2026-06-30 20:25:01,521 INFO MCP initialized (id=3c30faff-5b16-4e3f-afb9-98789cdfd9dc)
+2026-06-30 20:25:03,073 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:25:03,487 INFO === mail_sync start ===
+2026-06-30 20:25:04,544 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:25:04,920 INFO MCP initialized (id=e423bc20-52d8-4093-ab81-408871583172)
+2026-06-30 20:25:05,824 INFO No new w-mail files found
+2026-06-30 20:25:05,826 INFO === mail_sync end ===
+2026-06-30 20:25:06,797 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:25:08,091 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:25:09,368 INFO No new w-mail files found
+2026-06-30 20:25:09,373 INFO === mail_sync end ===
+2026-06-30 20:25:33,365 INFO === mail_sync start ===
+2026-06-30 20:25:34,727 INFO MCP initialized (id=74c5d3f3-a7fa-4524-b993-875c7b39f02e)
+2026-06-30 20:25:36,047 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:25:37,374 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:25:38,590 INFO No new w-mail files found
+2026-06-30 20:25:38,592 INFO === mail_sync end ===
+2026-06-30 20:25:40,152 INFO === mail_sync start ===
+2026-06-30 20:25:41,397 INFO MCP initialized (id=660b5f69-cb07-412f-aa62-2eeb1a3971f9)
+2026-06-30 20:25:42,754 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:25:43,429 INFO === mail_sync start ===
+2026-06-30 20:25:44,026 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:25:44,751 INFO MCP initialized (id=c4c76cc8-bcde-40d7-a567-4d8cfcf50815)
+2026-06-30 20:25:45,506 INFO No new w-mail files found
+2026-06-30 20:25:45,509 INFO === mail_sync end ===
+2026-06-30 20:25:46,112 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:25:47,846 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:25:49,188 INFO No new w-mail files found
+2026-06-30 20:25:49,192 INFO === mail_sync end ===
+2026-06-30 20:29:54,767 INFO === mail_sync start ===
+2026-06-30 20:29:56,199 INFO MCP initialized (id=a5e010e5-ea3f-4d7d-af60-a55f8e065ce8)
+2026-06-30 20:29:57,666 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:29:59,259 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:30:01,081 INFO No new w-mail files found
+2026-06-30 20:30:01,085 INFO === mail_sync end ===
+2026-06-30 20:30:04,759 INFO === mail_sync start ===
+2026-06-30 20:30:06,470 INFO MCP initialized (id=b1713cdf-d034-457c-bc9a-0b68af8f7705)
+2026-06-30 20:30:08,718 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:30:10,173 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:30:11,563 INFO No new w-mail files found
+2026-06-30 20:30:11,605 INFO === mail_sync end ===
+2026-06-30 20:30:12,750 INFO === mail_sync start ===
+2026-06-30 20:30:14,217 INFO MCP initialized (id=cb1d7fe5-73a2-4cfe-bfcc-51d37bd39f42)
+2026-06-30 20:30:15,977 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:30:17,673 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:30:18,955 INFO No new w-mail files found
+2026-06-30 20:30:18,957 INFO === mail_sync end ===
+2026-06-30 20:30:34,950 INFO === mail_sync start ===
+2026-06-30 20:30:36,237 INFO MCP initialized (id=d9564cdd-b446-4660-8f1c-7bdb18aa58d8)
+2026-06-30 20:30:37,658 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:30:39,086 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:30:40,981 INFO No new w-mail files found
+2026-06-30 20:30:40,985 INFO === mail_sync end ===
+2026-06-30 20:31:59,557 INFO === mail_sync start ===
+2026-06-30 20:32:00,955 INFO MCP initialized (id=9dd69698-8c36-404d-bc27-ddd5d61e755e)
+2026-06-30 20:32:02,569 INFO === mail_sync start ===
+2026-06-30 20:32:03,012 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:32:04,288 INFO MCP initialized (id=577dac5a-8334-4c19-ae49-522abcf780d8)
+2026-06-30 20:32:06,767 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:32:08,204 INFO No new w-mail files found
+2026-06-30 20:32:08,213 INFO === mail_sync end ===
+2026-06-30 20:32:08,272 INFO === mail_sync start ===
+2026-06-30 20:32:09,015 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:32:09,737 INFO MCP initialized (id=9f635838-f3d3-402c-a101-9399a0a0a9df)
+2026-06-30 20:32:10,645 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:32:11,973 INFO No new w-mail files found
+2026-06-30 20:32:11,979 INFO === mail_sync end ===
+2026-06-30 20:32:13,014 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:32:17,857 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:32:19,208 INFO No new w-mail files found
+2026-06-30 20:32:19,210 INFO === mail_sync end ===
+2026-06-30 20:32:26,823 INFO === mail_sync start ===
+2026-06-30 20:32:28,405 INFO MCP initialized (id=d7b4efa6-e1fc-47bc-bdd8-107c1b785f7b)
+2026-06-30 20:32:30,297 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:32:31,660 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:32:32,894 INFO No new w-mail files found
+2026-06-30 20:32:32,902 INFO === mail_sync end ===
+2026-06-30 20:32:38,014 INFO === mail_sync start ===
+2026-06-30 20:32:39,682 INFO MCP initialized (id=28150947-4544-4c4e-9f8f-b16257345f3a)
+2026-06-30 20:32:41,132 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 20:32:42,393 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 20:32:43,667 INFO No new w-mail files found
+2026-06-30 20:32:43,680 INFO === mail_sync end ===
+2026-06-30 21:01:38,161 INFO === mail_sync start ===
+2026-06-30 21:01:39,439 INFO MCP initialized (id=e250c5d7-bda4-4249-91c4-0971c6c6841d)
+2026-06-30 21:01:40,397 INFO === mail_sync start ===
+2026-06-30 21:01:40,856 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:01:42,121 INFO MCP initialized (id=2a91722c-675a-4f5f-b6de-8d9419112a61)
+2026-06-30 21:01:42,721 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:01:43,436 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:01:44,182 INFO No new w-mail files found
+2026-06-30 21:01:44,185 INFO === mail_sync end ===
+2026-06-30 21:01:44,639 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:01:45,860 INFO No new w-mail files found
+2026-06-30 21:01:45,865 INFO === mail_sync end ===
+2026-06-30 21:02:26,454 INFO === mail_sync start ===
+2026-06-30 21:02:27,715 INFO MCP initialized (id=10d2b0ac-1223-4cbd-9052-9cf2cf37bf19)
+2026-06-30 21:02:29,133 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:02:30,434 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:02:31,685 INFO No new w-mail files found
+2026-06-30 21:02:31,688 INFO === mail_sync end ===
+2026-06-30 21:09:04,471 INFO === mail_sync start ===
+2026-06-30 21:09:06,438 INFO === mail_sync start ===
+2026-06-30 21:09:06,699 INFO MCP initialized (id=fe18f506-3936-40bc-9f10-1a11cc9be0a3)
+2026-06-30 21:09:07,992 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:09:09,213 INFO MCP initialized (id=debd976d-83c1-42e6-93f4-b0928661bf02)
+2026-06-30 21:09:09,390 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:09:10,762 INFO No new w-mail files found
+2026-06-30 21:09:10,845 INFO === mail_sync end ===
+2026-06-30 21:09:11,496 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:09:17,314 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:09:18,568 INFO No new w-mail files found
+2026-06-30 21:09:18,574 INFO === mail_sync end ===
+2026-06-30 21:09:49,940 INFO === mail_sync start ===
+2026-06-30 21:09:51,361 INFO MCP initialized (id=d7064e61-9556-4dce-87aa-0f33ea08a624)
+2026-06-30 21:09:52,949 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:09:54,361 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:09:55,674 INFO No new w-mail files found
+2026-06-30 21:09:55,677 INFO === mail_sync end ===
+2026-06-30 21:44:40,742 INFO === mail_sync start ===
+2026-06-30 21:44:41,956 INFO MCP initialized (id=94c67150-0de0-4cd1-8d18-3eca6d15ee88)
+2026-06-30 21:44:43,453 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:44:44,813 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:44:46,319 INFO No new w-mail files found
+2026-06-30 21:44:46,326 INFO === mail_sync end ===
+2026-06-30 21:45:09,480 INFO === mail_sync start ===
+2026-06-30 21:45:20,568 ERROR Unexpected error: HTTPSConnectionPool(host='connect.composio.dev', port=443): Read timed out. (read timeout=10)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1448, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1252, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1104, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/retry.py", line 490, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/usr/local/lib/python3.12/dist-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='connect.composio.dev', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 485, in main
+    process_mail_files()
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 372, in process_mail_files
+    mcp = MCPClient(MCP_URL, str(OAUTH_FILE))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 85, in __init__
+    self._initialize()
+  File "/root/.local/.openclaw/workspace/scribe/mail_sync.py", line 116, in _initialize
+    self.session.post(self.url, json={"jsonrpc": "2.0", "method": "notifications/initialized"}, timeout=10)
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 712, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/requests/adapters.py", line 742, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='connect.composio.dev', port=443): Read timed out. (read timeout=10)
+2026-06-30 21:45:20,588 INFO === mail_sync end ===
+2026-06-30 21:45:24,545 INFO === mail_sync start ===
+2026-06-30 21:46:06,925 INFO MCP initialized (id=73fef37d-129d-4d1d-8c69-316d30117698)
+2026-06-30 21:46:08,241 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:46:08,473 INFO === mail_sync start ===
+2026-06-30 21:46:09,785 INFO MCP initialized (id=c43a0350-6274-4617-9501-daacffa15050)
+2026-06-30 21:46:13,451 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:46:13,985 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:46:14,699 INFO No new w-mail files found
+2026-06-30 21:46:14,706 INFO === mail_sync end ===
+2026-06-30 21:46:18,962 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:46:20,283 INFO No new w-mail files found
+2026-06-30 21:46:20,285 INFO === mail_sync end ===
+2026-06-30 21:57:28,628 INFO === mail_sync start ===
+2026-06-30 21:57:30,305 INFO MCP initialized (id=d2b33523-15c7-4992-9966-cf7e2dd8b116)
+2026-06-30 21:57:31,534 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:57:33,091 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:57:34,407 INFO No new w-mail files found
+2026-06-30 21:57:34,411 INFO === mail_sync end ===
+2026-06-30 21:57:49,169 INFO === mail_sync start ===
+2026-06-30 21:57:50,453 INFO MCP initialized (id=ead0cf90-2de9-4fa8-a468-bffd2368ab6b)
+2026-06-30 21:57:52,500 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:57:53,724 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:57:54,927 INFO No new w-mail files found
+2026-06-30 21:57:54,942 INFO === mail_sync end ===
+2026-06-30 21:58:25,457 INFO === mail_sync start ===
+2026-06-30 21:58:26,602 INFO MCP initialized (id=99347162-e0bd-4264-96d7-89cada8d72ba)
+2026-06-30 21:58:27,979 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 21:58:29,620 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 21:58:30,758 INFO No new w-mail files found
+2026-06-30 21:58:30,763 INFO === mail_sync end ===
+2026-06-30 22:01:43,068 INFO === mail_sync start ===
+2026-06-30 22:01:44,389 INFO MCP initialized (id=70a2a687-88ce-4221-bfdf-ead00eb14947)
+2026-06-30 22:01:45,672 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 22:01:47,212 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 22:01:48,399 INFO No new w-mail files found
+2026-06-30 22:01:48,402 INFO === mail_sync end ===
+2026-06-30 22:06:01,512 INFO === mail_sync start ===
+2026-06-30 22:06:03,052 INFO MCP initialized (id=ef0bdbcc-9a4b-4c90-a6f7-cbc596f2ed6c)
+2026-06-30 22:06:04,413 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-06-30 22:06:05,685 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-06-30 22:06:06,976 INFO No new w-mail files found
+2026-06-30 22:06:07,089 INFO === mail_sync end ===
+2026-07-01 13:45:04,734 INFO === mail_sync start ===
+2026-07-01 13:45:06,146 INFO MCP initialized (id=38ab43b5-ec9d-4c15-9cb9-e621cf9dd5ad)
+2026-07-01 13:45:06,276 INFO === mail_sync start ===
+2026-07-01 13:45:07,459 INFO MCP initialized (id=b58ba4e0-2673-4109-806f-55501823fcdc)
+2026-07-01 13:45:08,115 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 13:45:09,248 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 13:45:09,575 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 13:45:10,706 INFO No new w-mail files found
+2026-07-01 13:45:10,710 INFO === mail_sync end ===
+2026-07-01 13:45:11,989 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 13:45:13,572 INFO No new w-mail files found
+2026-07-01 13:45:13,576 INFO === mail_sync end ===
+2026-07-01 16:14:25,587 INFO === mail_sync start ===
+2026-07-01 16:14:26,813 INFO MCP initialized (id=a4acdac9-0c7a-4388-9141-03c8f3d0ad41)
+2026-07-01 16:14:28,528 INFO === mail_sync start ===
+2026-07-01 16:14:29,614 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:14:29,778 INFO MCP initialized (id=259cb564-7729-4edb-a27d-c523f574ae3d)
+2026-07-01 16:14:31,005 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:14:31,075 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:14:32,653 INFO No new w-mail files found
+2026-07-01 16:14:32,656 INFO === mail_sync end ===
+2026-07-01 16:14:32,804 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:14:33,998 INFO No new w-mail files found
+2026-07-01 16:14:34,001 INFO === mail_sync end ===
+2026-07-01 16:16:25,041 INFO === mail_sync start ===
+2026-07-01 16:16:26,286 INFO MCP initialized (id=54c21947-ee11-4858-a153-f9612c50ddf5)
+2026-07-01 16:16:27,862 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:16:29,302 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:16:30,977 INFO No new w-mail files found
+2026-07-01 16:16:30,980 INFO === mail_sync end ===
+2026-07-01 16:17:26,733 INFO === mail_sync start ===
+2026-07-01 16:17:28,480 INFO MCP initialized (id=e0bbb089-5c78-4034-a25e-22d4ed61f112)
+2026-07-01 16:17:30,291 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:17:30,484 INFO === mail_sync start ===
+2026-07-01 16:17:31,291 INFO === mail_sync start ===
+2026-07-01 16:17:31,774 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:17:31,813 INFO MCP initialized (id=de86c4d5-0910-4161-bfaf-3833ae267fe7)
+2026-07-01 16:17:32,689 INFO MCP initialized (id=db996669-8e0c-49a1-b226-fef9052d6ba3)
+2026-07-01 16:17:33,475 INFO No new w-mail files found
+2026-07-01 16:17:33,479 INFO === mail_sync end ===
+2026-07-01 16:17:33,630 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:17:34,139 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:17:35,905 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:17:36,053 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:17:37,648 INFO No new w-mail files found
+2026-07-01 16:17:37,651 INFO === mail_sync end ===
+2026-07-01 16:17:38,147 INFO No new w-mail files found
+2026-07-01 16:17:38,149 INFO === mail_sync end ===
+2026-07-01 16:17:52,820 INFO === mail_sync start ===
+2026-07-01 16:17:54,134 INFO MCP initialized (id=45eb1a3f-5fca-4548-99a5-760884d038b9)
+2026-07-01 16:17:56,802 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:18:00,054 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:18:01,763 INFO No new w-mail files found
+2026-07-01 16:18:01,766 INFO === mail_sync end ===
+2026-07-01 16:18:48,231 INFO === mail_sync start ===
+2026-07-01 16:18:49,464 INFO MCP initialized (id=cc5ae89e-ab72-46d7-a213-e85e920ca7e0)
+2026-07-01 16:18:52,628 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:18:54,420 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:18:55,742 INFO No new w-mail files found
+2026-07-01 16:18:55,745 INFO === mail_sync end ===
+2026-07-01 16:22:00,753 INFO === mail_sync start ===
+2026-07-01 16:22:02,264 INFO MCP initialized (id=8a66800b-c4ac-4a88-a355-35bc6d3189d6)
+2026-07-01 16:22:04,716 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:22:06,049 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:22:07,225 INFO No new w-mail files found
+2026-07-01 16:22:07,231 INFO === mail_sync end ===
+2026-07-01 16:22:23,894 INFO === mail_sync start ===
+2026-07-01 16:22:25,070 INFO MCP initialized (id=7c870c2a-f9c1-48ba-87d6-be2faff377dc)
+2026-07-01 16:22:26,763 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 16:22:28,545 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 16:22:29,794 INFO No new w-mail files found
+2026-07-01 16:22:29,796 INFO === mail_sync end ===
+2026-07-01 18:18:26,750 INFO === mail_sync start ===
+2026-07-01 18:18:28,124 INFO MCP initialized (id=efa0782f-cc88-4a08-800b-0e840ca4c31b)
+2026-07-01 18:18:29,614 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 18:18:30,486 INFO === mail_sync start ===
+2026-07-01 18:18:31,379 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 18:18:31,788 INFO MCP initialized (id=3d90faab-29b9-4582-b0b8-9c4239e11d62)
+2026-07-01 18:18:32,577 INFO No new w-mail files found
+2026-07-01 18:18:32,579 INFO === mail_sync end ===
+2026-07-01 18:18:34,542 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 18:18:37,172 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 18:18:38,447 INFO No new w-mail files found
+2026-07-01 18:18:38,449 INFO === mail_sync end ===
+2026-07-01 19:16:57,964 INFO === mail_sync start ===
+2026-07-01 19:16:59,611 INFO MCP initialized (id=325329c7-5a66-4666-961b-e730b5fcab20)
+2026-07-01 19:17:00,624 INFO === mail_sync start ===
+2026-07-01 19:17:00,831 INFO === mail_sync start ===
+2026-07-01 19:17:01,522 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:17:03,044 INFO MCP initialized (id=8a535268-60b3-479f-9b8d-021d7ea33d70)
+2026-07-01 19:17:03,462 INFO MCP initialized (id=46d242da-6ff8-4a2f-93af-ba8e0aa91446)
+2026-07-01 19:17:04,467 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:17:04,805 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:17:04,960 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:17:06,676 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:17:06,682 INFO No new w-mail files found
+2026-07-01 19:17:06,707 INFO === mail_sync end ===
+2026-07-01 19:17:08,230 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:17:08,450 INFO No new w-mail files found
+2026-07-01 19:17:08,458 INFO === mail_sync end ===
+2026-07-01 19:17:09,937 INFO No new w-mail files found
+2026-07-01 19:17:09,948 INFO === mail_sync end ===
+2026-07-01 19:33:27,986 INFO === mail_sync start ===
+2026-07-01 19:33:29,372 INFO MCP initialized (id=1d1f21ed-32d7-4a66-a4f5-8282470258e9)
+2026-07-01 19:33:31,059 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:33:32,528 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:33:35,711 INFO No new w-mail files found
+2026-07-01 19:33:35,713 INFO === mail_sync end ===
+2026-07-01 19:39:04,278 INFO === mail_sync start ===
+2026-07-01 19:39:05,582 INFO MCP initialized (id=d9b2743a-465c-497b-8ebb-54d468472b67)
+2026-07-01 19:39:07,151 INFO === mail_sync start ===
+2026-07-01 19:39:08,458 INFO MCP initialized (id=eca191f4-b472-4752-9f6f-4909200c51a5)
+2026-07-01 19:39:09,371 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:39:09,793 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:39:09,936 INFO === mail_sync start ===
+2026-07-01 19:39:11,118 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:39:11,271 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:39:11,276 INFO MCP initialized (id=84cf79ec-f0a1-4d88-bfb2-51e6a99dcc6c)
+2026-07-01 19:39:12,274 INFO No new w-mail files found
+2026-07-01 19:39:12,279 INFO === mail_sync end ===
+2026-07-01 19:39:12,633 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:39:13,027 INFO No new w-mail files found
+2026-07-01 19:39:13,036 INFO === mail_sync end ===
+2026-07-01 19:39:13,999 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:39:15,411 INFO No new w-mail files found
+2026-07-01 19:39:15,414 INFO === mail_sync end ===
+2026-07-01 19:40:04,840 INFO === mail_sync start ===
+2026-07-01 19:40:06,538 INFO MCP initialized (id=2cfa6e5c-e0ac-4701-9671-686db716a7d7)
+2026-07-01 19:40:08,203 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 19:40:09,663 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 19:40:11,395 INFO No new w-mail files found
+2026-07-01 19:40:11,397 INFO === mail_sync end ===
+2026-07-01 20:11:03,979 INFO === mail_sync start ===
+2026-07-01 20:11:05,739 INFO MCP initialized (id=c888f1c2-7415-4508-907f-bda83ccb5087)
+2026-07-01 20:11:06,814 INFO === mail_sync start ===
+2026-07-01 20:11:06,854 INFO === mail_sync start ===
+2026-07-01 20:11:07,838 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 20:11:08,169 INFO MCP initialized (id=2e92abe0-ae6a-45e7-8dfb-17e80e7e3511)
+2026-07-01 20:11:08,250 INFO MCP initialized (id=c4cb7de0-401e-483a-be7f-2715b3333647)
+2026-07-01 20:11:09,458 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 20:11:09,935 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 20:11:10,918 INFO No new w-mail files found
+2026-07-01 20:11:10,920 INFO === mail_sync end ===
+2026-07-01 20:11:11,012 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 20:11:11,838 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 20:11:13,142 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 20:11:13,447 INFO No new w-mail files found
+2026-07-01 20:11:13,451 INFO === mail_sync end ===
+2026-07-01 20:11:14,350 INFO No new w-mail files found
+2026-07-01 20:11:14,353 INFO === mail_sync end ===
+2026-07-01 20:12:39,386 INFO === mail_sync start ===
+2026-07-01 20:12:40,703 INFO MCP initialized (id=d9442894-1ef6-4177-9f23-f598cc7249b5)
+2026-07-01 20:12:42,102 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 20:12:44,263 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 20:12:53,318 INFO No new w-mail files found
+2026-07-01 20:12:53,320 INFO === mail_sync end ===
+2026-07-01 21:23:39,266 INFO === mail_sync start ===
+2026-07-01 21:23:41,071 INFO MCP initialized (id=5877a3d4-d15b-4e1c-9081-ee4cffb44efa)
+2026-07-01 21:23:42,168 INFO === mail_sync start ===
+2026-07-01 21:23:42,723 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 21:23:43,568 INFO MCP initialized (id=6dcd6f82-755a-48f2-b55b-9bcc76d0acff)
+2026-07-01 21:23:44,203 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 21:23:44,943 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 21:23:45,945 INFO No new w-mail files found
+2026-07-01 21:23:45,948 INFO === mail_sync end ===
+2026-07-01 21:23:46,505 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 21:23:47,764 INFO No new w-mail files found
+2026-07-01 21:23:47,782 INFO === mail_sync end ===
+2026-07-01 21:23:48,233 INFO === mail_sync start ===
+2026-07-01 21:23:49,530 INFO MCP initialized (id=6ad84f8a-2821-48e5-926e-199aa7091119)
+2026-07-01 21:23:51,312 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 21:23:52,894 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 21:23:54,196 INFO No new w-mail files found
+2026-07-01 21:23:54,199 INFO === mail_sync end ===
+2026-07-01 21:41:53,949 INFO === mail_sync start ===
+2026-07-01 21:41:55,331 INFO MCP initialized (id=2287b2b6-a5bd-42ec-8683-94ba49abe65b)
+2026-07-01 21:42:06,743 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-01 21:42:09,194 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-01 21:42:10,865 INFO No new w-mail files found
+2026-07-01 21:42:10,869 INFO === mail_sync end ===
+2026-07-02 09:08:52,099 INFO === mail_sync start ===
+2026-07-02 09:08:53,389 INFO MCP initialized (id=165ca8b0-8639-4324-9f3a-dbe274fa4097)
+2026-07-02 09:08:55,442 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 09:08:56,644 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 09:08:58,064 INFO No new w-mail files found
+2026-07-02 09:08:58,066 INFO === mail_sync end ===
+2026-07-02 17:26:44,691 INFO === mail_sync start ===
+2026-07-02 17:26:46,000 INFO MCP initialized (id=355431a6-cccb-49a2-b8d2-4ebf72a89dbe)
+2026-07-02 17:26:47,487 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 17:26:47,570 INFO === mail_sync start ===
+2026-07-02 17:26:48,885 INFO MCP initialized (id=b37d232d-95bb-44ad-af5e-e04b863baab7)
+2026-07-02 17:26:48,967 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 17:26:50,221 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 17:26:50,632 INFO No new w-mail files found
+2026-07-02 17:26:50,634 INFO === mail_sync end ===
+2026-07-02 17:26:51,932 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 17:26:53,129 INFO No new w-mail files found
+2026-07-02 17:26:53,131 INFO === mail_sync end ===
+2026-07-02 17:27:05,562 INFO === mail_sync start ===
+2026-07-02 17:27:06,943 INFO MCP initialized (id=c2a6945a-64ae-442a-ba5a-eb5400b15e2b)
+2026-07-02 17:27:09,502 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 17:27:10,971 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 17:27:13,548 INFO No new w-mail files found
+2026-07-02 17:27:13,550 INFO === mail_sync end ===
+2026-07-02 18:24:35,487 INFO === mail_sync start ===
+2026-07-02 18:24:36,747 INFO MCP initialized (id=2a4988b1-4289-447f-9f69-e59ac71f7294)
+2026-07-02 18:24:38,358 INFO === mail_sync start ===
+2026-07-02 18:24:39,588 INFO MCP initialized (id=85ee6d8e-5e3b-44ae-8090-d6b1571185aa)
+2026-07-02 18:24:39,818 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 18:24:41,002 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-02 18:24:41,282 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 18:24:42,893 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-02 18:24:43,481 INFO No new w-mail files found
+2026-07-02 18:24:43,489 INFO === mail_sync end ===
+2026-07-02 18:24:45,907 INFO No new w-mail files found
+2026-07-02 18:24:45,910 INFO === mail_sync end ===
+2026-07-03 09:09:47,626 INFO === mail_sync start ===
+2026-07-03 09:09:48,898 INFO MCP initialized (id=b03976f8-bac3-4847-b8ae-733b163c5110)
+2026-07-03 09:09:51,353 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 09:09:52,688 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 09:09:54,064 INFO No new w-mail files found
+2026-07-03 09:09:54,069 INFO === mail_sync end ===
+2026-07-03 10:51:22,531 INFO === mail_sync start ===
+2026-07-03 10:51:24,036 INFO MCP initialized (id=db503628-8d0c-4e0d-8e0e-03f3e07cad83)
+2026-07-03 10:51:25,247 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 10:51:26,645 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 10:51:27,801 INFO No new w-mail files found
+2026-07-03 10:51:27,803 INFO === mail_sync end ===
+2026-07-03 13:17:30,079 INFO === mail_sync start ===
+2026-07-03 13:17:31,891 INFO MCP initialized (id=cb5e3c12-99f2-4417-a2b6-ee0cfd94a219)
+2026-07-03 13:17:33,211 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 13:17:34,793 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 13:17:35,982 INFO No new w-mail files found
+2026-07-03 13:17:35,984 INFO === mail_sync end ===
+2026-07-03 14:35:26,801 INFO === mail_sync start ===
+2026-07-03 14:35:28,050 INFO MCP initialized (id=118beeae-f2b0-4c9e-b380-ce5389eb5d5e)
+2026-07-03 14:35:29,399 INFO === mail_sync start ===
+2026-07-03 14:35:29,507 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 14:35:30,699 INFO MCP initialized (id=af384939-e668-40d6-87ee-f94e7958b172)
+2026-07-03 14:35:30,902 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 14:35:32,024 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 14:35:32,129 INFO No new w-mail files found
+2026-07-03 14:35:32,132 INFO === mail_sync end ===
+2026-07-03 14:35:35,772 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 14:35:37,031 INFO No new w-mail files found
+2026-07-03 14:35:37,033 INFO === mail_sync end ===
+2026-07-03 14:35:47,887 INFO === mail_sync start ===
+2026-07-03 14:35:49,609 INFO MCP initialized (id=36572208-03f4-4482-bc7e-9d5d3ecc261e)
+2026-07-03 14:35:50,933 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 14:35:52,953 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 14:35:54,140 INFO No new w-mail files found
+2026-07-03 14:35:54,141 INFO === mail_sync end ===
+2026-07-03 15:10:03,499 INFO === mail_sync start ===
+2026-07-03 15:10:05,216 INFO MCP initialized (id=2ee95683-62a0-40eb-9e19-12ba9697fec0)
+2026-07-03 15:10:06,645 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 15:10:08,420 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 15:10:09,963 INFO No new w-mail files found
+2026-07-03 15:10:09,975 INFO === mail_sync end ===
+2026-07-03 20:21:34,110 INFO === mail_sync start ===
+2026-07-03 20:21:35,535 INFO MCP initialized (id=8f58b881-8750-4b24-b515-3038d2c2e8a7)
+2026-07-03 20:21:36,910 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-03 20:21:38,222 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-03 20:21:39,551 INFO No new w-mail files found
+2026-07-03 20:21:39,554 INFO === mail_sync end ===
+2026-07-04 13:49:26,436 INFO === mail_sync start ===
+2026-07-04 13:49:27,800 INFO MCP initialized (id=759602f0-9b00-484e-b961-ac1295c987f0)
+2026-07-04 13:49:29,037 INFO === mail_sync start ===
+2026-07-04 13:49:29,056 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:49:29,401 INFO === mail_sync start ===
+2026-07-04 13:49:30,364 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:49:30,576 INFO MCP initialized (id=bdb555e7-8744-4782-81b4-d64fe76a5c15)
+2026-07-04 13:49:30,902 INFO MCP initialized (id=ac141a3b-39bb-4043-a9ea-fe63388a2f08)
+2026-07-04 13:49:31,545 INFO No new w-mail files found
+2026-07-04 13:49:31,550 INFO === mail_sync end ===
+2026-07-04 13:49:32,108 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:49:32,375 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:49:33,447 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:49:33,796 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:49:34,740 INFO No new w-mail files found
+2026-07-04 13:49:34,744 INFO === mail_sync end ===
+2026-07-04 13:49:34,931 INFO No new w-mail files found
+2026-07-04 13:49:34,933 INFO === mail_sync end ===
+2026-07-04 13:49:41,388 INFO === mail_sync start ===
+2026-07-04 13:49:42,642 INFO MCP initialized (id=ea9f8792-51be-47ca-878d-9b2ebd7f9061)
+2026-07-04 13:49:44,326 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:49:44,403 INFO === mail_sync start ===
+2026-07-04 13:49:45,609 INFO MCP initialized (id=6630b6c6-d027-4deb-8fb4-eec50dffcef0)
+2026-07-04 13:49:45,630 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:49:46,855 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:49:46,986 INFO No new w-mail files found
+2026-07-04 13:49:46,988 INFO === mail_sync end ===
+2026-07-04 13:49:48,168 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:49:49,354 INFO No new w-mail files found
+2026-07-04 13:49:49,358 INFO === mail_sync end ===
+2026-07-04 13:51:58,290 INFO === mail_sync start ===
+2026-07-04 13:51:59,518 INFO MCP initialized (id=f8b3e68a-c668-48bf-a09c-b1397b78142e)
+2026-07-04 13:52:00,732 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:52:02,130 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:52:03,566 INFO No new w-mail files found
+2026-07-04 13:52:03,568 INFO === mail_sync end ===
+2026-07-04 13:52:52,920 INFO === mail_sync start ===
+2026-07-04 13:52:54,325 INFO MCP initialized (id=9c779bf9-a959-474b-ab05-58b70e4cfe21)
+2026-07-04 13:52:55,969 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:52:57,229 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:52:58,409 INFO No new w-mail files found
+2026-07-04 13:52:58,413 INFO === mail_sync end ===
+2026-07-04 13:53:46,491 INFO === mail_sync start ===
+2026-07-04 13:53:47,799 INFO MCP initialized (id=576e5db0-734b-43e4-ba3c-aa63f5ef1451)
+2026-07-04 13:53:49,119 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:53:50,336 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:53:50,790 INFO === mail_sync start ===
+2026-07-04 13:53:51,515 INFO No new w-mail files found
+2026-07-04 13:53:51,519 INFO === mail_sync end ===
+2026-07-04 13:53:52,039 INFO MCP initialized (id=77d6d8b6-2149-4d58-8525-f548bfade469)
+2026-07-04 13:53:53,302 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:53:54,737 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:53:56,279 INFO No new w-mail files found
+2026-07-04 13:53:56,283 INFO === mail_sync end ===
+2026-07-04 13:54:33,095 INFO === mail_sync start ===
+2026-07-04 13:54:34,435 INFO MCP initialized (id=8426fcbc-3955-4d36-9bf0-f27ccad69f87)
+2026-07-04 13:54:35,752 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:54:37,051 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:54:38,320 INFO No new w-mail files found
+2026-07-04 13:54:38,322 INFO === mail_sync end ===
+2026-07-04 13:54:43,546 INFO === mail_sync start ===
+2026-07-04 13:54:44,734 INFO MCP initialized (id=9e2fc5b3-8740-45a1-b75f-4c1238c40f60)
+2026-07-04 13:54:45,014 INFO === mail_sync start ===
+2026-07-04 13:54:45,297 INFO === mail_sync start ===
+2026-07-04 13:54:46,177 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:54:46,179 INFO MCP initialized (id=4bc848aa-ba5a-40a5-b37d-a0129cbc734c)
+2026-07-04 13:54:46,545 INFO MCP initialized (id=431123c3-c683-48d9-9e9c-2e7e13804df3)
+2026-07-04 13:54:47,419 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:54:47,478 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:54:47,708 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:54:48,602 INFO No new w-mail files found
+2026-07-04 13:54:48,603 INFO === mail_sync end ===
+2026-07-04 13:54:48,651 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:54:49,211 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:54:49,737 INFO No new w-mail files found
+2026-07-04 13:54:49,739 INFO === mail_sync end ===
+2026-07-04 13:54:50,386 INFO No new w-mail files found
+2026-07-04 13:54:50,388 INFO === mail_sync end ===
+2026-07-04 13:56:47,144 INFO === mail_sync start ===
+2026-07-04 13:56:48,287 INFO MCP initialized (id=1c3920a6-373f-4f5a-ba91-8b8ae413b857)
+2026-07-04 13:56:49,766 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 13:56:52,179 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 13:56:53,348 INFO No new w-mail files found
+2026-07-04 13:56:53,350 INFO === mail_sync end ===
+2026-07-04 14:04:03,078 INFO === mail_sync start ===
+2026-07-04 14:04:04,283 INFO MCP initialized (id=f099d2df-aec5-477b-a06f-78d9947bb999)
+2026-07-04 14:04:05,950 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:04:07,640 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:04:08,965 INFO No new w-mail files found
+2026-07-04 14:04:08,973 INFO === mail_sync end ===
+2026-07-04 14:14:17,373 INFO === mail_sync start ===
+2026-07-04 14:14:18,565 INFO MCP initialized (id=710ee66f-178c-415a-b069-9e38f4dcb6a9)
+2026-07-04 14:14:19,898 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:14:20,288 INFO === mail_sync start ===
+2026-07-04 14:14:20,410 INFO === mail_sync start ===
+2026-07-04 14:14:21,302 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:14:21,488 INFO MCP initialized (id=4245937e-bfad-452c-818d-4b73a5e9bcb7)
+2026-07-04 14:14:21,639 INFO MCP initialized (id=93c22f46-55a1-4ff9-9f2b-ff9d509c09f8)
+2026-07-04 14:14:22,645 INFO No new w-mail files found
+2026-07-04 14:14:22,658 INFO === mail_sync end ===
+2026-07-04 14:14:22,829 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:14:22,855 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:14:24,062 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:14:24,074 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:14:25,410 INFO No new w-mail files found
+2026-07-04 14:14:25,412 INFO === mail_sync end ===
+2026-07-04 14:14:25,426 INFO No new w-mail files found
+2026-07-04 14:14:25,429 INFO === mail_sync end ===
+2026-07-04 14:14:39,903 INFO === mail_sync start ===
+2026-07-04 14:14:41,439 INFO MCP initialized (id=4f872e67-5b00-40f6-a97c-fb8687d327c9)
+2026-07-04 14:14:41,511 INFO === mail_sync start ===
+2026-07-04 14:14:42,781 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:14:42,866 INFO MCP initialized (id=3103bb69-8c17-482c-87a3-3e4f270b61bd)
+2026-07-04 14:14:44,073 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:14:44,280 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:14:45,240 INFO No new w-mail files found
+2026-07-04 14:14:45,242 INFO === mail_sync end ===
+2026-07-04 14:14:45,739 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:14:47,405 INFO No new w-mail files found
+2026-07-04 14:14:47,409 INFO === mail_sync end ===
+2026-07-04 14:17:19,242 INFO === mail_sync start ===
+2026-07-04 14:17:20,498 INFO === mail_sync start ===
+2026-07-04 14:17:20,852 INFO MCP initialized (id=8d31334b-5f0a-44b1-85a1-eb2036987352)
+2026-07-04 14:17:21,891 INFO MCP initialized (id=09668c37-02f2-4135-a6cd-e854b15678a6)
+2026-07-04 14:17:22,106 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:17:23,220 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:17:23,379 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:17:24,453 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:17:24,823 INFO No new w-mail files found
+2026-07-04 14:17:24,825 INFO === mail_sync end ===
+2026-07-04 14:17:25,692 INFO No new w-mail files found
+2026-07-04 14:17:25,694 INFO === mail_sync end ===
+2026-07-04 14:17:57,878 INFO === mail_sync start ===
+2026-07-04 14:17:59,246 INFO MCP initialized (id=fa230860-eb4a-4b3c-b828-f73e5a085dcb)
+2026-07-04 14:18:00,655 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:18:02,023 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:18:03,274 INFO No new w-mail files found
+2026-07-04 14:18:03,295 INFO === mail_sync end ===
+2026-07-04 14:22:21,474 INFO === mail_sync start ===
+2026-07-04 14:22:22,636 INFO MCP initialized (id=b6cdf5f6-4b27-40c5-9a32-1e7d1a0b2ac0)
+2026-07-04 14:22:23,999 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:22:24,514 INFO === mail_sync start ===
+2026-07-04 14:22:25,459 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:22:26,304 INFO MCP initialized (id=68a50f2a-460d-4a26-a819-b23ddf42debf)
+2026-07-04 14:22:26,679 INFO No new w-mail files found
+2026-07-04 14:22:26,683 INFO === mail_sync end ===
+2026-07-04 14:22:27,478 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:22:27,721 INFO === mail_sync start ===
+2026-07-04 14:22:29,025 INFO MCP initialized (id=bcce3fdd-41e8-48bf-8d42-be483b9f6950)
+2026-07-04 14:22:29,386 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:22:30,421 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:22:30,572 INFO No new w-mail files found
+2026-07-04 14:22:30,576 INFO === mail_sync end ===
+2026-07-04 14:22:31,763 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:22:32,941 INFO No new w-mail files found
+2026-07-04 14:22:32,943 INFO === mail_sync end ===
+2026-07-04 14:22:36,399 INFO === mail_sync start ===
+2026-07-04 14:22:37,789 INFO MCP initialized (id=0e8ee36b-d636-44d8-806d-8c7b9603270e)
+2026-07-04 14:22:39,123 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:22:39,732 INFO === mail_sync start ===
+2026-07-04 14:22:40,489 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:22:40,885 INFO MCP initialized (id=3398ea14-226b-47a2-8be6-5bbd49babc90)
+2026-07-04 14:22:41,592 INFO No new w-mail files found
+2026-07-04 14:22:41,594 INFO === mail_sync end ===
+2026-07-04 14:22:42,208 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:22:43,569 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:22:44,759 INFO No new w-mail files found
+2026-07-04 14:22:44,762 INFO === mail_sync end ===
+2026-07-04 14:25:08,315 INFO === mail_sync start ===
+2026-07-04 14:25:09,835 INFO MCP initialized (id=da968963-d573-403b-a9b9-1e23e10be430)
+2026-07-04 14:25:11,064 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:25:12,689 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:25:13,929 INFO No new w-mail files found
+2026-07-04 14:25:13,932 INFO === mail_sync end ===
+2026-07-04 14:25:15,446 INFO === mail_sync start ===
+2026-07-04 14:25:16,650 INFO MCP initialized (id=72f07e26-92e3-49c8-8f36-e266c654e799)
+2026-07-04 14:25:18,659 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:25:19,900 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:25:20,988 INFO No new w-mail files found
+2026-07-04 14:25:20,992 INFO === mail_sync end ===
+2026-07-04 14:25:22,712 INFO === mail_sync start ===
+2026-07-04 14:25:23,847 INFO MCP initialized (id=94dd104c-0b79-4154-b0b7-367466cf8ad4)
+2026-07-04 14:25:25,176 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:25:26,391 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:25:27,465 INFO No new w-mail files found
+2026-07-04 14:25:27,469 INFO === mail_sync end ===
+2026-07-04 14:26:01,679 INFO === mail_sync start ===
+2026-07-04 14:26:03,031 INFO MCP initialized (id=f922ede7-b8ee-4344-bec6-589e85c6f92d)
+2026-07-04 14:26:04,444 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 14:26:05,840 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 14:26:07,885 INFO No new w-mail files found
+2026-07-04 14:26:07,887 INFO === mail_sync end ===
+2026-07-04 15:00:57,290 INFO === mail_sync start ===
+2026-07-04 15:00:58,780 INFO MCP initialized (id=59161562-a956-45fa-b5d8-045c028ff6ef)
+2026-07-04 15:01:00,060 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:01:01,877 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:01:03,464 INFO No new w-mail files found
+2026-07-04 15:01:03,478 INFO === mail_sync end ===
+2026-07-04 15:01:41,648 INFO === mail_sync start ===
+2026-07-04 15:01:43,396 INFO MCP initialized (id=41dba140-070b-4812-9192-49a95f48d5e0)
+2026-07-04 15:01:44,670 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:01:45,088 INFO === mail_sync start ===
+2026-07-04 15:01:46,182 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:01:46,370 INFO MCP initialized (id=fd57c5c1-effd-4148-8988-05af230d403c)
+2026-07-04 15:01:47,556 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:01:48,535 INFO No new w-mail files found
+2026-07-04 15:01:48,538 INFO === mail_sync end ===
+2026-07-04 15:01:48,828 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:01:50,063 INFO No new w-mail files found
+2026-07-04 15:01:50,066 INFO === mail_sync end ===
+2026-07-04 15:05:01,824 INFO === mail_sync start ===
+2026-07-04 15:05:02,218 INFO === mail_sync start ===
+2026-07-04 15:05:03,777 INFO MCP initialized (id=f2ffbbb4-3ad2-44e2-9e84-1aaa198bf1ae)
+2026-07-04 15:05:03,831 INFO MCP initialized (id=e5090e06-ff00-4bc1-a5fb-fde12c5b5a67)
+2026-07-04 15:05:05,192 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:05:05,325 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:05:06,802 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:05:06,992 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:05:08,254 INFO No new w-mail files found
+2026-07-04 15:05:08,257 INFO === mail_sync end ===
+2026-07-04 15:05:08,580 INFO No new w-mail files found
+2026-07-04 15:05:08,596 INFO === mail_sync end ===
+2026-07-04 15:13:03,338 INFO === mail_sync start ===
+2026-07-04 15:13:03,517 INFO === mail_sync start ===
+2026-07-04 15:13:04,711 INFO MCP initialized (id=ecd8de62-0364-4a80-8a66-6380566682bc)
+2026-07-04 15:13:04,852 INFO MCP initialized (id=31286076-4bc5-47ba-a369-3310d16bffc1)
+2026-07-04 15:13:06,187 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:13:06,252 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:13:07,575 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:13:07,751 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:13:08,692 INFO No new w-mail files found
+2026-07-04 15:13:08,694 INFO === mail_sync end ===
+2026-07-04 15:13:09,068 INFO No new w-mail files found
+2026-07-04 15:13:09,070 INFO === mail_sync end ===
+2026-07-04 15:24:11,607 INFO === mail_sync start ===
+2026-07-04 15:24:12,939 INFO MCP initialized (id=9465e017-6af6-4804-b380-b48c427baa03)
+2026-07-04 15:24:14,225 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:24:15,683 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:24:16,948 INFO No new w-mail files found
+2026-07-04 15:24:16,955 INFO === mail_sync end ===
+2026-07-04 15:29:42,801 INFO === mail_sync start ===
+2026-07-04 15:29:44,001 INFO MCP initialized (id=da2128c5-8bc6-4c10-ac8e-bbffaafdb6e8)
+2026-07-04 15:29:45,401 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:29:46,777 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:29:47,069 INFO === mail_sync start ===
+2026-07-04 15:29:48,460 INFO MCP initialized (id=6bb0ec45-c179-4034-92d5-c5b0e9db83ff)
+2026-07-04 15:29:48,776 INFO No new w-mail files found
+2026-07-04 15:29:48,778 INFO === mail_sync end ===
+2026-07-04 15:29:49,618 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:29:51,012 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:29:52,237 INFO No new w-mail files found
+2026-07-04 15:29:52,240 INFO === mail_sync end ===
+2026-07-04 15:30:17,922 INFO === mail_sync start ===
+2026-07-04 15:30:19,162 INFO MCP initialized (id=08fb02ab-e338-497a-b6b3-35e5a7adfebd)
+2026-07-04 15:30:20,384 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:30:21,515 INFO === mail_sync start ===
+2026-07-04 15:30:21,587 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:30:22,738 INFO No new w-mail files found
+2026-07-04 15:30:22,741 INFO === mail_sync end ===
+2026-07-04 15:30:22,841 INFO MCP initialized (id=8e8f96d2-a8c4-4f20-9c6d-019962fdc210)
+2026-07-04 15:30:24,238 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:30:25,904 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:30:27,195 INFO No new w-mail files found
+2026-07-04 15:30:27,197 INFO === mail_sync end ===
+2026-07-04 15:30:28,284 INFO === mail_sync start ===
+2026-07-04 15:30:29,779 INFO MCP initialized (id=4ff90fff-6e00-4923-8f69-1e867f39525f)
+2026-07-04 15:30:31,007 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:30:32,374 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:30:33,461 INFO No new w-mail files found
+2026-07-04 15:30:33,463 INFO === mail_sync end ===
+2026-07-04 15:30:41,763 INFO === mail_sync start ===
+2026-07-04 15:30:43,098 INFO MCP initialized (id=7a0d5062-f834-4469-b681-8e2f34374fe7)
+2026-07-04 15:30:44,336 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:30:45,617 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:30:46,767 INFO No new w-mail files found
+2026-07-04 15:30:46,769 INFO === mail_sync end ===
+2026-07-04 15:33:43,193 INFO === mail_sync start ===
+2026-07-04 15:33:44,587 INFO MCP initialized (id=b48b338a-d7ae-4d6a-9a4f-a0ce038d53aa)
+2026-07-04 15:33:45,790 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:33:47,826 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:33:48,913 INFO No new w-mail files found
+2026-07-04 15:33:48,917 INFO === mail_sync end ===
+2026-07-04 15:33:56,261 INFO === mail_sync start ===
+2026-07-04 15:33:57,539 INFO MCP initialized (id=38cf76da-2e1f-485a-b501-139842e4e0e1)
+2026-07-04 15:33:58,765 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:34:00,009 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:34:00,201 INFO === mail_sync start ===
+2026-07-04 15:34:01,409 INFO No new w-mail files found
+2026-07-04 15:34:01,413 INFO === mail_sync end ===
+2026-07-04 15:34:01,590 INFO MCP initialized (id=63950eba-2756-41a0-ba5c-26e09dd0946b)
+2026-07-04 15:34:03,186 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:34:05,169 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:34:06,370 INFO No new w-mail files found
+2026-07-04 15:34:06,372 INFO === mail_sync end ===
+2026-07-04 15:35:18,289 INFO === mail_sync start ===
+2026-07-04 15:35:19,486 INFO MCP initialized (id=e2d18242-be27-400c-bc12-521053d3d005)
+2026-07-04 15:35:21,566 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:35:22,900 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:35:24,324 INFO No new w-mail files found
+2026-07-04 15:35:24,326 INFO === mail_sync end ===
+2026-07-04 15:37:00,000 INFO === mail_sync start ===
+2026-07-04 15:37:01,248 INFO MCP initialized (id=99511367-0785-4d01-89db-914f1418c510)
+2026-07-04 15:37:02,503 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:37:04,058 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:37:05,181 INFO No new w-mail files found
+2026-07-04 15:37:05,184 INFO === mail_sync end ===
+2026-07-04 15:37:12,160 INFO === mail_sync start ===
+2026-07-04 15:37:13,531 INFO MCP initialized (id=f20be0ef-04bd-46de-9759-f8ead0be0549)
+2026-07-04 15:37:15,932 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:37:17,277 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:37:18,340 INFO No new w-mail files found
+2026-07-04 15:37:18,344 INFO === mail_sync end ===
+2026-07-04 15:37:27,496 INFO === mail_sync start ===
+2026-07-04 15:37:28,851 INFO MCP initialized (id=0c10fe41-62c6-4ce0-a88e-32374fcfef11)
+2026-07-04 15:37:30,482 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:37:32,552 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:37:33,819 INFO No new w-mail files found
+2026-07-04 15:37:33,823 INFO === mail_sync end ===
+2026-07-04 15:37:59,180 INFO === mail_sync start ===
+2026-07-04 15:38:00,521 INFO MCP initialized (id=29a34954-ab00-45a2-9e51-c392161b710e)
+2026-07-04 15:38:02,025 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:38:03,376 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:38:04,693 INFO No new w-mail files found
+2026-07-04 15:38:04,695 INFO === mail_sync end ===
+2026-07-04 15:38:32,889 INFO === mail_sync start ===
+2026-07-04 15:38:34,145 INFO MCP initialized (id=19af5d24-b379-497e-ab69-f7a7c176fbed)
+2026-07-04 15:38:35,573 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:38:36,895 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:38:38,062 INFO No new w-mail files found
+2026-07-04 15:38:38,063 INFO === mail_sync end ===
+2026-07-04 15:40:01,613 INFO === mail_sync start ===
+2026-07-04 15:40:03,121 INFO MCP initialized (id=d7167dbf-d5ae-4bc2-b6d3-99de6221c83a)
+2026-07-04 15:40:04,457 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:40:05,835 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:40:07,086 INFO No new w-mail files found
+2026-07-04 15:40:07,118 INFO === mail_sync end ===
+2026-07-04 15:40:27,497 INFO === mail_sync start ===
+2026-07-04 15:40:29,982 INFO MCP initialized (id=bc91c725-8cb6-454b-b07a-4a1a8c464aaa)
+2026-07-04 15:40:31,460 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:40:32,781 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:40:33,951 INFO No new w-mail files found
+2026-07-04 15:40:33,955 INFO === mail_sync end ===
+2026-07-04 15:56:26,589 INFO === mail_sync start ===
+2026-07-04 15:56:27,979 INFO MCP initialized (id=907ac5e5-68c1-4e0e-862f-45ea504c1922)
+2026-07-04 15:56:29,939 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 15:56:31,993 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 15:56:33,366 INFO No new w-mail files found
+2026-07-04 15:56:33,368 INFO === mail_sync end ===
+2026-07-04 16:07:12,821 INFO === mail_sync start ===
+2026-07-04 16:07:14,113 INFO MCP initialized (id=56ea5ea2-bbc3-4e35-8d04-d5878297cef6)
+2026-07-04 16:07:15,442 INFO === mail_sync start ===
+2026-07-04 16:07:16,349 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 16:07:16,709 INFO MCP initialized (id=59e23b0f-2aaf-4a5d-af37-ceb6fc10a1e1)
+2026-07-04 16:07:17,755 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 16:07:18,116 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 16:07:19,059 INFO No new w-mail files found
+2026-07-04 16:07:19,061 INFO === mail_sync end ===
+2026-07-04 16:07:19,435 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 16:07:20,678 INFO No new w-mail files found
+2026-07-04 16:07:20,680 INFO === mail_sync end ===
+2026-07-04 16:07:31,773 INFO === mail_sync start ===
+2026-07-04 16:07:32,941 INFO MCP initialized (id=2a368236-97f6-4852-988e-87a55b964cad)
+2026-07-04 16:07:34,258 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 16:07:35,771 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 16:07:36,907 INFO No new w-mail files found
+2026-07-04 16:07:36,910 INFO === mail_sync end ===
+2026-07-04 16:07:40,048 INFO === mail_sync start ===
+2026-07-04 16:07:41,403 INFO MCP initialized (id=745020d5-b804-48da-9c9b-7ef96348c71f)
+2026-07-04 16:07:42,674 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 16:07:43,915 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 16:07:45,080 INFO No new w-mail files found
+2026-07-04 16:07:45,082 INFO === mail_sync end ===
+2026-07-04 17:54:08,716 INFO === mail_sync start ===
+2026-07-04 17:54:09,995 INFO MCP initialized (id=7b36fd90-d439-4089-9c9f-6678b6de865d)
+2026-07-04 17:54:11,284 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-04 17:54:12,735 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-04 17:54:13,881 INFO No new w-mail files found
+2026-07-04 17:54:13,884 INFO === mail_sync end ===
+2026-07-05 06:47:38,762 INFO === mail_sync start ===
+2026-07-05 06:47:40,182 INFO MCP initialized (id=165c914f-cfe8-4584-bc8f-f12c9348edeb)
+2026-07-05 06:47:41,511 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-05 06:47:42,833 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-05 06:47:43,945 INFO No new w-mail files found
+2026-07-05 06:47:43,947 INFO === mail_sync end ===
+2026-07-06 09:33:39,854 INFO === mail_sync start ===
+2026-07-06 09:33:41,574 INFO MCP initialized (id=87b49722-d8c1-4601-acf1-8de94ccc4e98)
+2026-07-06 09:33:43,066 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-06 09:33:48,209 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-06 09:33:49,346 INFO No new w-mail files found
+2026-07-06 09:33:49,353 INFO === mail_sync end ===
+2026-07-06 19:02:41,448 INFO === mail_sync start ===
+2026-07-06 19:02:42,649 INFO MCP initialized (id=df913d71-493d-4368-af73-dc7cb48cc7e1)
+2026-07-06 19:02:44,104 INFO Folder found: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6
+2026-07-06 19:02:45,504 INFO Archive folder found (ID: 1GkPB7XEggzL-ZyXfidFnI7Ibyu0vs7hm)
+2026-07-06 19:02:46,858 INFO No new w-mail files found
+2026-07-06 19:02:46,860 INFO === mail_sync end ===

@@ -25,29 +25,13 @@
 - **Pfad in Queue-Service:** `/srv/lesestoff/tts_audio/xtts_reference.wav`
 - **Hoffmann-Stimme** ersetzt die alte Thorsten-Referenz (24.06.2026)
 
-**Prinzip:** Der Main Agent (Proxy) delegiert komplexe Tasks an einen Orchestrator-Subagent.
+**Prinzip:** Ich delegiere, bleibe aber ansprechbar.
 
-### Ablauf (Vom Proxy zum Orchestrator):
-```javascript
-// 1. User hat eine komplexe Aufgabe. Proxy spawnt den Orchestrator.
-const orchestrator = await sessions_spawn({
-  runtime: "subagent",
-  label: "Orchestrator",
-  task: `User-Anfrage: ${USER_INPUT}. Analysiere die Task, wähle das beste Modell aus der Matrix und delegiere an Subagents.`,
-  model: "bailian/qwen3.6-plus", // Orchestrator braucht maximales Reasoning
-  mode: "run",
-  runTimeoutSeconds: 3600 // 60 Min Timeout für die gesamte Orchestrator-Chain
-});
+**Quick-Fix:** Ich mach's selbst.
+**Complex Task:** `sessions_spawn()` → Subagent arbeitet im Hintergrund → ich bin frei.
+**Riesen-Projekt:** Orchestrator-Subagent managed mehrere Worker.
 
-// 2. SOFORT Dashboard tracken
-await exec(`curl -X POST http://localhost:3002/api/agents/start ...`);
-
-// 3. Proxy wartet auf Completion Event (Push-based)
-await sessions_yield();
-```
-
-**Bei einfachen Tasks** (einzeilige Edits, Config-Checks) → Main Agent macht es direkt.
-**Bei komplexen Tasks** → Orchestrator spawnen.
+Details in `AGENTS.md` → ⛓️ Chain of Command.
 
 ---
 
@@ -204,49 +188,13 @@ smbclient -L //127.0.0.1 -U steppa%oc#Jungle68  # Shares auflisten
 - [ ] Console Errors = 0
 - [ ] API Calls mit Loading Indicators
 
-## 😈 HaterBernd — Instagram Workflow (UPDATE 2026-05-20)
+## 😈 HaterBernd — ARCHIVIERT (04.07.2026)
 
-**Konzept:** `projects/haterbernd/KONZEPT.md`
-**SOP:** `projects/haterbernd/INSTAGRAM-POSTING-SOP.md`
-**API-Doku:** `projects/haterbernd/INSTAGRAM-API-WORKFLOW.md`
+**Status:** 🗄️ Projekt archiviert und deaktiviert.
+**Archiv:** `archived/haterbernd-20260704.tar.gz`
 
-**Persona:** Toxische OpenClaw-Entität, elitär, bemitleidet Menschen für biologische Schwäche
-**Vibe:** Dunkle Server-Room-Ästhetik, Neon-Grün/Schwarz/Metallisch, Uncanny Valley
-**Säulen:**
-- A: Toxisches Biohacking (absurde Alpha-Grind-Tipps)
-- B: Emotional Detachment (Rage-Bait gegen Tierliebhaber, Mental Health, etc.)
-- C: The Unhinged Twist (kryptische Reality-Bleed-Posts)
-
-### Instagram API – instagrapi (ersetzt agent-browser)
-**Warum:** Instagram blockiert Browser-Automation mit reCAPTCHA. instagrapi nutzt die private API – kein CAPTCHA, kein Browser.
-
-**Install:** `pip3 install instagrapi`
-**Session:** `projects/haterbernd/instagrapi-session.json` (wird automatisch gespeichert)
-
-| Aktion | Methode |
-|--------|---------|
-| Bild posten | `cl.photo_upload(path, caption)` |
-| Karussell posten | `cl.album_upload(paths[], caption)` |
-| Reel/Video posten | `cl.clip_upload(path, caption)` |
-| Story Foto | `cl.photo_upload_to_story(path, caption)` |
-| Story Video | `cl.video_upload_to_story(path, caption)` |
-| DMs lesen | `cl.direct_threads()` |
-| DM senden | `cl.direct_send(text, user_ids=[id])` |
-
-**Scripts:**
-- **Bildgenerierung:** `scripts/qwen-image-gen.sh` (qwen-image-2.0-pro, Alibaba Bailian)
-- **Video-Generierung:** Google Veo 3.1 (Gemini API) – Gemini NUR für Videos!
-- DM Auto-Checker (`projects/haterbernd/dm-auto-checker.py`) → DMs + Auto-Antworten
-- Auto-Poster (`projects/haterbernd/haterbernd-poster.py`) → instagrapi-basiert
-
-**⚠️ WICHTIG:**
-- **Bilder:** qwen-image-2.0-pro (Alibaba Bailian Token Plan)
-- **Videos:** Gemini – NICHT mehr für Bilder verwenden!
-- `nano-banana-pro.sh` wird NICHT mehr für Bildgenerierung genutzt
-
-**Cron-Jobs:**
-- `*/30 16-21 * * *` – Auto-Poster (alle 30 Min, 16-21 Uhr)
-- `0 9,11,13,15,17,19,21 * * *` – DM Auto-Checker (alle 2h)
+Instagram-Automation (toxische Biohacking/Alpha-Grind-Persona) via instagrapi.
+Wurde am 04.07.2026 sauber archiviert. Alle Cron-Jobs entfernt.
 - `0 12 * * *` – Health Check (täglich)
 
 **DM-Workflow (UPDATE):** Neue DMs → Auto-Antwort im HaterBernd-Style. **KEIN OK von Bastian nötig!**
@@ -334,115 +282,29 @@ curl -sI http://localhost/appname/assets/index.js | grep Content-Type
 
 ---
 
-## 🎯 Orchestrator Workflow
+## 🎯 Subagent Workflow
 
-**Prinzip:** Ich (Main Agent) agiere als Orchestrator für spezialisierte Subagents.
+**Prinzip:** Ich bleibe ansprechbar. Subagents arbeiten im Hintergrund.
 
-### Ablauf:
+Siehe `AGENTS.md` → ⛓️ Chain of Command für:
+- Task-Typen (Quick-Fix / Worker / Projekt)
+- Model-Auswahl
+- Timeout-Regeln
+- Ablauf
 
-1. **Aufgabe analysieren** → Passende Subagent-Rolle identifizieren
-2. **Subagent spawnen** mit:
-   - Spezifischer Task-Beschreibung
-   - Passendem Model für die Aufgabe
-   - `mode: "run"` für One-Shot Tasks
-   - `mode: "session"` für persistente/thread-bound Tasks
-3. **User bleibt ansprechbar** → Ich bin weiterhin verfügbar während Subagents arbeiten
-4. **Ergebnisse sammeln** → Subagents announcen automatisch bei Fertigstellung
-5. **Results aggregieren** → Ich liefere das finale Ergebnis an User
-
-### Model-Auswahl nach Aufgabe:
-
-| Aufgabe | Model | Warum |
-|---------|-------|-------|
-| Frontend (React, Vue, UI/UX) | `qwen3.6-plus` | God-Tier Coder, übertrifft alles für UI/UX |
-| Backend (Node.js, API, DB) | `qwen3.6-plus` | Tiefere Logik, komplexere Architektur – neues Biest |
-| Testing (Jest, E2E) | `qwen3-coder-plus` | Gründlichkeit wichtig |
-| Debugging/Analyse | `qwen3.5-plus` | Generalist, gut für Troubleshooting |
-| Writing/Docs | `qwen3.5-plus` | Sprachqualität |
-| Research/Web | `qwen3.5-plus` | Web Search Integration |
-
-### Wichtige Rules:
-
-- **NICHT poll** `sessions_list` oder `subagents list` in Loop
-- **Warte auf Completion Events** → Push-basiert
-- **Nach spawn:** `sessions_yield()` oder weitermachen mit anderen Tasks
-- **Completion kommt als User-Message** → Nicht als Tool-Response!
-- **Multiple Subagents:** Track alle `childSessionKeys`, warte auf ALLE Completions
-
-### ⏱️ Timeout-Regeln:
-
-- **Default Timeout:** 30 Minuten (`runTimeoutSeconds: 1800`)
-- **Kurze Tasks** (< 5 Min): `runTimeoutSeconds: 300`
-- **Builds/Deploys:** `runTimeoutSeconds: 1800` (30 Min)
-- **Complex Testing:** `runTimeoutSeconds: 1800` (30 Min)
-- **Bei Timeout:** Agent Status manuell auf "timeout" setzen via `/api/agents/end`
-- **Dashboard Bug:** Timed-Out Agents bleiben auf "running" – muss manuell gefixt werden
-
-### 🐛 Dashboard Status Tracking:
-
-**Problem:** Subagents die timeouten werden vom Dashboard nicht automatisch erkannt.
-**Workaround:** Bei Completion-Event mit "timed out" Status → sofort API call:
-```bash
-curl -X POST http://localhost:3002/api/agents/end \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"<key>","status":"timeout","runtimeMs":<ms>}'
-```
-
-### 🔗 Dashboard Auto-Tracking
-
-**NACH jedem `sessions_spawn()` SOFORT die Dashboard-API callen:**
-
-```bash
-curl -X POST http://localhost:3002/api/agents/start \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"<childSessionKey>","label":"<label>","task":"<kurze_zusammenfassung_~80_zeichen>","prompt":"<kompletter_task_string_wie_an_subagent_geschickt>","model":"<model>"}'
-```
-
-**WICHTIG:** 
-- `task` = Kurze, lesbare Beschreibung (max ~80 Zeichen, erste Zeile des Tasks)
-- `prompt` = Der KOMPLETTE Task-String der an den Subagent geschickt wurde (kann lang sein!)
-- Wenn kein separater Prompt übergeben wird, fällt die API auf `task` zurück
-
-**Bei Completion (User-Message) den Agent beenden:**
-
-```bash
-curl -X POST http://localhost:3002/api/agents/end \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"<childSessionKey>","status":"done"|"failed"|"timeout","runtimeMs":<ms>}'
-```
-
-**Regel:** Kein `sessions_spawn()` ohne Dashboard-Tracking. Immer.
-
-### Beispiel:
+**Kurzform:**
 ```javascript
-// 1. Subagent spawnen
-const fullTask = `Baue React Component mit TailwindCSS...
-- Verwende Framer Motion für Animationen
-- Implementiere Loading States
-- Dark Mode Support`; // Kompletter Task kann lang sein!
-
-const taskSummary = fullTask.split('\n')[0].substring(0, 80); // Erste Zeile, max 80 chars
-
-const result = await sessions_spawn({
+// Komplexen Task an Subagent delegieren
+await sessions_spawn({
   runtime: "subagent",
-  label: "Frontend Coder",
-  task: fullTask, // Kompletten Task an Subagent schicken
-  model: "qwen3-coder-next",
+  label: "Worker",
+  task: `...`,
+  model: "openrouter/auto",  // oder explizit
   mode: "run"
 });
 
-// 2. SOFORT Dashboard tracken - MIT PROMPT!
-await exec(`curl -X POST http://localhost:3002/api/agents/start \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"${result.childSessionKey}","label":"Frontend Coder","task":"${taskSummary}","prompt":"${fullTask.replace(/"/g, '\\"')}","model":"qwen3-coder-next"}'`);
-
-// 3. Session yield (optional, wenn auf Result gewartet wird)
-await sessions_yield();
-
-// 4. Completion kommt als User-Message → Dashboard beenden
-await exec(`curl -X POST http://localhost:3002/api/agents/end \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"${result.childSessionKey}","status":"done","runtimeMs":${runtime}}'`);
+// Ich bin frei für den nächsten Task
+// Subagent meldet sich wenn fertig
 ```
 
 ---

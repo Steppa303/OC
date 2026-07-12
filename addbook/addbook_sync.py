@@ -379,6 +379,86 @@ def parse_content_for_question(text: str) -> Optional[str]:
     return question if len(question) >= 5 else None
 
 
+def parse_content_for_list(text: str) -> Optional[dict]:
+    """
+    Parse content for 'Liste:' trigger.
+
+    Expected format:
+      "Liste: Einkaufen"
+      - Milch
+      - Eier
+      Brot
+      Käse
+
+    Returns dict with 'title' and 'items' (list of str), or None if no list trigger found.
+    Stops scanning at the next trigger line (Buch:/Rezept:/Frage:/Liste:).
+    """
+    lines = text.splitlines()
+    title = None
+    items = []
+    in_list = False
+    title_line = None
+
+    for i, raw_line in enumerate(lines):
+        line = raw_line.strip()
+
+        if in_list:
+            # Stop at next trigger
+            if line.lower().startswith(("buch:", "rezept:", "frage:", "liste:")):
+                break
+            if not line:
+                continue
+            # Strip leading bullet markers
+            item = re.sub(r'^[-*•]\s*', '', line).strip()
+            if item and len(item) >= 1:
+                items.append(item)
+            continue
+
+        if not line.lower().startswith("liste:"):
+            continue
+
+        rest = line[6:].strip()
+        if rest:
+            title = rest
+            title_line = i
+            in_list = True
+        elif i + 1 < len(lines):
+            # Title on next line
+            next_line = lines[i + 1].strip()
+            if not next_line.lower().startswith(("buch:", "rezept:", "frage:", "liste:")):
+                title = next_line
+                title_line = i
+                in_list = True
+
+        if in_list and not items:
+            # Continue to collect items
+            continue
+
+    # Also scan next lines after the title line for items
+    if title is None:
+        return None
+
+    # Clean up title (trailing special chars)
+    title = re.sub(r'[\s\u2713\u2714\u2716-\u271A\u271D\u274C\u2705\u2605\u2606✔✅]+$', '', title).strip()
+
+    if not items:
+        # Try scanning all subsequent non-trigger lines
+        for j in range((title_line or 0) + 1, len(lines)):
+            line = lines[j].strip()
+            if line.lower().startswith(("buch:", "rezept:", "frage:", "liste:")):
+                break
+            if not line:
+                continue
+            item = re.sub(r'^[-*•]\s*', '', line).strip()
+            if item and len(item) >= 1:
+                items.append(item)
+
+    if not items:
+        return None
+
+    return {"title": title, "items": items}
+
+
 def parse_content_for_recipe(text: str) -> Optional[tuple]:
     """
     Parse content for 'Rezept:' trigger.
@@ -714,139 +794,137 @@ def process_question_trigger(file_id: str, file_name: str, question: str) -> boo
         answer_preview = answer[:200].replace("\n", " ").strip()
         try:
             send_telegram_simple(
-                f"❓ *Frage beantwortet*: '{clean_q}'\n\n"
-                f"*Antwort*: {answer_preview}…\n\n"
-                f"📬 An Kindle gesendet."
+                f"❓ *Frage beantwortet*: '{clean_q}'\n"
+                f"📖 Antwort: {answer_preview}...\n\n"
+                f"📄 [PDF anzeigen](https://addbook.steppa.online/a/{output_pdf.name})"
             )
-        except Exception as tel_e:
-            log.warning("Telegram notification failed (non-fatal): %s", tel_e)
+        except Exception as e:
+            log.warning("Telegram preview failed: %s", e)
         return True
     else:
-        log.error("Kindle send failed for '%s'", clean_q)
-        try:
-            send_telegram_simple(f"❌ *Kindle-Fehler* für '{clean_q}'")
-        except Exception:
-            pass
+        log.error("Failed to send Q&A to Kindle")
         return False
 
+# ============================================================
+# List Pipeline
+# ============================================================
+def process_list_trigger(file_id: str, file_name: str, list_data: dict) -> bool:
+    """
+    Handle 'Liste:' trigger: create a new list via POST to local server.
+    Returns True on success.
+    """
+    import requests
+    try:
+        r = requests.post(
+            "http://localhost:3006/api/lists",
+            json={"title": list_data["title"], "items": list_data["items"]},
+            timeout=10
+        )
+        if r.status_code == 201:
+            result = r.json()
+            list_id = result["id"]
+            log.info("✅ List created: %s (ID: %s)", list_data["title"], list_id)
+            send_telegram_simple(
+                f"📋 *Liste erstellt*: '{list_data['title']}'\n"
+                f"{len(list_data['items'])} Einträge\n\n"
+                f"[Liste öffnen](https://addbook.steppa.online/l/{list_id})"
+            )
+            return True
+        else:
+            log.error("Server returned %d: %s", r.status_code, r.text[:200])
+            return False
+    except Exception as e:
+        log.error("Failed to create list via server: %s", e)
+        return False
 
 # ============================================================
-# Recipe Pipeline Main Entry
+# Recipe Pipeline
 # ============================================================
 def process_recipe_trigger(file_id: str, file_name: str, query: str, count: int) -> bool:
     """
-    Handle 'Rezept:' trigger: search → filter ≥4.2⭐ → PDF → send to Kindle.
-
-    Dedup per query: never send the same recipe URL twice.
-    Returns True if at least one recipe was successfully sent to Kindle.
+    Handle 'Rezept:' trigger: search → filter → PDF → send to Kindle.
+    Returns True on success.
     """
-    clean = "".join(c for c in query if c.isascii() and (c.isalnum() or c in " _-'")).strip()[:40] or "Rezept"
     recipe_state = load_recipe_state()
-    exclude_urls = set(recipe_state.get(clean, []))
+    exclude_urls = set(recipe_state.get(query, []))
 
-    log.info("🍳 Search: '%s' (need %d, %d excluded)", clean, count, len(exclude_urls))
-
-    recipes = run_recipe_search(clean, count, exclude_urls)
+    # Step 1: Search for recipes
+    recipes = run_recipe_search(query, count, exclude_urls)
     if not recipes:
-        log.warning("No ≥4.2⭐ recipes found for '%s'", query)
-        send_telegram_simple(
-            f"🍳 *Keine Rezepte gefunden* für '{clean}'\n"
-            f"Keine Rezepte mit ≥ 4.2⭐ gefunden."
-        )
+        log.warning("No recipes found for '%s'", query)
+        send_telegram_simple(f"🍳 *Keine Rezepte* für '{query}' gefunden")
         return False
 
-    found_count = len(recipes)
-    log.info("Found %d recipes for '%s'", found_count, clean)
+    log.info("Found %d recipes for '%s'", len(recipes), query)
 
-    # Generate PDF
-    pdf_filename = f"rezept-{clean}-{time.strftime('%Y%m%d-%H%M%S')}.pdf"
-    pdf_path = str(RECIPE_PDF_DIR / pdf_filename)
-
-    pdf_result = generate_recipe_pdf(recipes, pdf_path)
-    if not pdf_result:
-        log.error("PDF gen failed for '%s'", clean)
-        send_telegram_simple(f"🍳 *PDF-Fehler* für '{clean}'")
+    # Step 2: Generate PDF
+    pdf_name = f"rezept-{query}-{time.strftime('%Y%m%d-%H%M%S')}.pdf"
+    pdf_path = RECIPE_PDF_DIR / pdf_name
+    pdf_generated = generate_recipe_pdf(recipes, str(pdf_path))
+    if not pdf_generated:
+        log.error("Failed to generate PDF for '%s'", query)
         return False
 
-    # Send to Kindle
-    pdf_title = f"Rezepte: {clean} ({found_count}x)"
-    sent = send_pdf_to_kindle(pdf_path, pdf_title)
+    log.info("PDF generated: %s", pdf_path)
 
-    if sent:
-        # Dedup: mark all sent URLs
-        new_urls = [r["url"] for r in recipes if r.get("url")]
-        recipe_state[clean] = list(set(recipe_state.get(clean, []) + new_urls))
-        save_recipe_state(recipe_state)
-
-        ratings = ", ".join(f"{r.get('title','?')} ({r.get('rating',0)}*)" for r in recipes)
-        log.info("✅ Recipes sent to Kindle: %s", ratings)
-        send_telegram_simple(f"🍳 *{found_count} Rezepte gesendet* für '{clean}'\n{ratings}")
-        return True
-    else:
-        log.error("Kindle send failed for '%s'", clean)
-        send_telegram_simple(f"🍳 *Fehler* Kindle-Versand für '{clean}' fehlgeschlagen.")
+    # Step 3: Send to Kindle
+    sent = send_pdf_to_kindle(str(pdf_path), f"Rezepte: {query}")
+    if not sent:
+        log.error("Failed to send recipes to Kindle")
         return False
+
+    # Step 4: Update recipe state (mark URLs as sent)
+    new_urls = [r["url"] for r in recipes if "url" in r]
+    if query not in recipe_state:
+        recipe_state[query] = []
+    recipe_state[query].extend(new_urls)
+    save_recipe_state(recipe_state)
+
+    # Step 5: Telegram notification
+    send_telegram_simple(
+        f"🍳 *Rezepte gesendet*: '{query}'\n"
+        f"📖 {len(recipes)} Rezepte\n\n"
+        f"📄 [PDF anzeigen](https://addbook.steppa.online/r/{pdf_name})"
+    )
+    return True
 
 # ============================================================
-# Main Workflow
+# Main File Processing
 # ============================================================
 def process_files():
-    """Main processing loop with file lock (race condition guard)."""
-    # File lock: only one instance at a time
-    lock_path = BASE_DIR / ".sync.lock"
-    try:
-        lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
-        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except (IOError, OSError):
-        log.info("Another sync instance is already running, skipping")
-        return
-
-    try:
-        _process_files_inner()
-    finally:
-        try:
-            fcntl.flock(lock_fd, fcntl.LOCK_UN)
-            os.close(lock_fd)
-            lock_path.unlink(missing_ok=True)
-        except:
-            pass
-
-
-def _process_files_inner():
-    """Actual sync logic (wrapped by file lock)."""
-    state = load_state()
-    mcp = MCPClient(MCP_URL, str(OAUTH_FILE))
-
-    # Step 1: Find the "Kindle Scribe" folder
+    """Process all unprocessed files in the Kindle Scribe folder."""
+    processed_count = 0
+    mcp = MCPClient(MCP_URL, OAUTH_FILE)
     folder_id = find_folder(mcp, DRIVE_FOLDER_NAME)
     if not folder_id:
-        log.error("Folder '%s' not found", DRIVE_FOLDER_NAME)
+        log.error("Could not find folder '%s'", DRIVE_FOLDER_NAME)
         return
-    log.info("Found folder '%s' (ID: %s)", DRIVE_FOLDER_NAME, folder_id)
 
-    # Step 2: Find/create "p-gen-archiv" subfolder
-    archive_id = find_folder(mcp, "p-gen-archiv")
+    # Archive folder (create if needed)
+    archive_id = find_folder(mcp, "Kindle Scribe Archive")
     if not archive_id:
         result = mcp.call_tool("COMPOSIO_MULTI_EXECUTE_TOOL", {
             "tools": [{
                 "tool_slug": "GOOGLEDRIVE_CREATE_FOLDER",
-                "arguments": {"name": "p-gen-archiv", "parentId": folder_id}
+                "arguments": {"name": "Kindle Scribe Archive", "parents": [folder_id]}
             }],
             "memory": {}
         })
-        archive_id = _extract_from_results(result, ["id"])
-        if not archive_id:
-            log.error("Could not create archive folder")
+        archive_data = _extract_from_results(result)
+        if not isinstance(archive_data, dict) or not archive_data.get("id"):
+            log.error("Failed to create archive folder: %s", json.dumps(result)[:200])
             return
-        log.info("Created archive folder (ID: %s)", archive_id)
+        archive_id = archive_data["id"]
+        log.info("Created archive folder: %s", archive_id)
 
-    # Step 3: List p-gen files
+    # Load state
+    state = load_state()
+
+    # List files
     files = list_pgen_files(mcp, folder_id)
     if not files:
-        log.info("No new p-gen files found")
+        log.info("No new files to process")
         return
-
-    processed_count = 0
 
     for f in files:
         fid = f["id"]
@@ -877,7 +955,15 @@ def _process_files_inner():
 
         log.info("Downloaded %d chars from %s", len(content), fname)
 
-        # Step 5: Check for question trigger
+        # Step 5: Check for list trigger FIRST (before other triggers)
+        list_data = parse_content_for_list(content)
+        list_processed = False
+
+        if list_data:
+            log.info("📋 List trigger: '%s' (%d items)", list_data['title'], len(list_data['items']))
+            list_processed = process_list_trigger(fid, fname, list_data)
+
+        # Step 6: Check for question trigger
         question_text = parse_content_for_question(content)
         question_processed = False
 
@@ -889,20 +975,29 @@ def _process_files_inner():
             log.info("❓ Question trigger found: '%s'", question_text[:100])
             question_processed = process_question_trigger(fid, fname, question_text)
 
-            if question_processed and not parse_content_to_title(content) and not parse_content_for_recipe(content):
-                # Question-only file → archive and done
-                if move_file(mcp, fid, archive_id, current_parents=folder_id):
-                    log.info("Moved %s to archive (question)", fname)
-                state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done"}
-                save_state(state)
-                processed_count += 1
-                continue
-            elif question_processed:
-                # File has question AND other triggers
-                log.info("Question processed, continuing for other triggers")
-                state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done_also_other"}
+        # Check if this is a list-only file (no other triggers)
+        if list_processed and not question_text and not parse_content_to_title(content) and not parse_content_for_recipe(content):
+            if move_file(mcp, fid, archive_id, current_parents=folder_id):
+                log.info("Moved %s to archive (list)", fname)
+            state[fid] = {"name": fname, "processed_at": time.time(), "status": "list_done"}
+            save_state(state)
+            processed_count += 1
+            continue
 
-        # Step 6: Check for recipe trigger (independent of book trigger)
+        if question_processed and not parse_content_to_title(content) and not parse_content_for_recipe(content) and not list_data:
+            # Question-only file → archive and done
+            if move_file(mcp, fid, archive_id, current_parents=folder_id):
+                log.info("Moved %s to archive (question)", fname)
+            state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done"}
+            save_state(state)
+            processed_count += 1
+            continue
+        elif question_processed:
+            # File has question AND other triggers
+            log.info("Question processed, continuing for other triggers")
+            state[fid] = {"name": fname, "processed_at": time.time(), "status": "question_done_also_other"}
+
+        # Step 7: Check for recipe trigger (independent of book trigger)
         recipe_info = parse_content_for_recipe(content)
         recipe_processed = False
 
@@ -924,7 +1019,7 @@ def _process_files_inner():
                 log.info("Recipe processed, file also has book trigger — continuing")
                 state[fid] = {"name": fname, "processed_at": time.time(), "status": "recipe_done_also_book"}
 
-        # Step 7: Parse book title
+        # Step 8: Parse book title
         title = parse_content_to_title(content)
         if not title:
             if recipe_info or question_processed:

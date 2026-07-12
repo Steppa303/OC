@@ -39,7 +39,7 @@ const moduleList: RegisteredModule[] = [
   {
     id: 'synth', name: 'Synth Manager', icon: 'Radio',
     category: 'mixer', minWidth: 2, minHeight: 3,
-    defaults: { synth: 0, num_voices: 6, patch: 0, midiCh: 1 },
+    defaults: { synth: 0, num_voices: 6, patch: 0, midiCh: 1, portamento: 0 },
     component: SynthModule,
   },
 ]

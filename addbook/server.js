@@ -10,9 +10,10 @@ const app = express();
 const PORT = 3006;
 const RESULTS_DIR = '/srv/addbook/results';
 const EPUB_DIR = '/srv/addbook/epubs';
+const LISTS_DIR = '/srv/addbook/lists';
 
 // Ensure directories exist
-[RESULTS_DIR, EPUB_DIR].forEach(dir => {
+[RESULTS_DIR, EPUB_DIR, LISTS_DIR].forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -38,6 +39,9 @@ const downloads = new Map();
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+
+// Static files (checklist frontend, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================================
 // Root — landing page
@@ -268,6 +272,110 @@ app.get('/api/status/:id', (req, res) => {
 // ============================================================
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+// ============================================================
+// LIST CHECKLISTS — API & Frontend
+// ============================================================
+
+// POST /api/lists — Neue Liste anlegen
+app.post('/api/lists', (req, res) => {
+  const { title, items } = req.body;
+  if (!title || !items || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'title and non-empty items[] required' });
+  }
+
+  const id = require('crypto').randomUUID();
+  const list = {
+    id,
+    title: title.trim(),
+    createdAt: new Date().toISOString(),
+    items: items.map((text, i) => ({
+      id: String(i + 1),
+      text: typeof text === 'string' ? text.trim() : String(text),
+      checked: false
+    }))
+  };
+
+  fs.writeFileSync(path.join(LISTS_DIR, `${id}.json`), JSON.stringify(list, null, 2));
+  console.log(`📋 List created: "${list.title}" (${list.items.length} items, ID: ${id})`);
+
+  res.status(201).json({ id: list.id, title: list.title, url: `/l/${id}` });
+});
+
+// GET /api/lists/:listId — Liste als JSON
+app.get('/api/lists/:listId', (req, res) => {
+  const filePath = path.join(LISTS_DIR, `${req.params.listId}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'List not found' });
+  }
+  res.json(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+});
+
+// POST /api/lists/:listId/toggle/:itemIndex — Item umschalten
+app.post('/api/lists/:listId/toggle/:itemIndex', (req, res) => {
+  const filePath = path.join(LISTS_DIR, `${req.params.listId}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'List not found' });
+  }
+  const list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const idx = parseInt(req.params.itemIndex, 10);
+  if (isNaN(idx) || idx < 0 || idx >= list.items.length) {
+    return res.status(400).json({ error: 'Invalid item index' });
+  }
+  list.items[idx].checked = !list.items[idx].checked;
+  fs.writeFileSync(filePath, JSON.stringify(list, null, 2));
+  res.json(list);
+});
+
+// POST /api/lists/:listId/add — Neues Item hinzufügen
+app.post('/api/lists/:listId/add', (req, res) => {
+  const { text } = req.body;
+  if (!text || !text.trim()) {
+    return res.status(400).json({ error: 'text required' });
+  }
+  const filePath = path.join(LISTS_DIR, `${req.params.listId}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'List not found' });
+  }
+  const list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const nextId = String(list.items.length + 1);
+  list.items.push({ id: nextId, text: text.trim(), checked: false });
+  fs.writeFileSync(filePath, JSON.stringify(list, null, 2));
+  res.json(list);
+});
+
+// GET /api/lists/:listId/share — Share-Info
+app.get('/api/lists/:listId/share', (req, res) => {
+  const filePath = path.join(LISTS_DIR, `${req.params.listId}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'List not found' });
+  }
+  const list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  res.json({ id: list.id, title: list.title, url: `https://addbook.steppa.online/l/${list.id}` });
+});
+
+// GET /l/:listId — Frontend (Checkliste als SPA)
+app.get('/l/:listId', (req, res) => {
+  const filePath = path.join(LISTS_DIR, `${req.params.listId}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send(getErrorPage('Liste nicht gefunden', 'Die Liste existiert nicht oder wurde gelöscht.'));
+  }
+
+  const templatePath = path.join(__dirname, 'public', 'checklist.html');
+  if (!fs.existsSync(templatePath)) {
+    return res.status(500).send(getErrorPage('Serverfehler', 'Template nicht gefunden.'));
+  }
+
+  try {
+    const list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    let html = fs.readFileSync(templatePath, 'utf8');
+    html = html.replace('__LIST_ID__', list.id);
+    html = html.replace('__LIST_DATA__', JSON.stringify(list));
+    res.type('html').send(html);
+  } catch (e) {
+    res.status(500).send(getErrorPage('Serverfehler', e.message));
+  }
 });
 
 // ============================================================

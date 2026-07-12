@@ -1,14 +1,14 @@
-# AMYboard Projekt – Session Handover v6
+# AMYboard Projekt – Session Handover v7
 
-> Erstellt: 11.07.2026 18:15  
-> Letzte Session: 11.07.2026, 17:21–18:10  
-> Nächster Schritt: amylive — Permissions-Prompt testen & Module bauen
+> Erstellt: 12.07.2026 12:00
+> Letzte Session: 12.07.2026, 10:58–12:00
+> Nächster Schritt: amylive — WebMIDI Live-Test + MIDI Keyboard via USB
 
 ---
 
 ## 1. Aktueller Status (10.07.2026)
 
-### 🟢 Board 1 (192.168.178.89) — Valhalla Shimmer
+### 🟢 Board 1 (192.168.178.89) - Valhalla Shimmer
 - **Auto-Boot:** ✅ Läuft sauber via boot.py
 - **TCP Server:** Port 2323, PONG vom VPS ✅
 - **Sketch:** Valhalla Shimmer + CV gate drums
@@ -17,39 +17,39 @@
   - Synth 15: TR-808 Drums (patch=384, 4 voices)
   - Synth 18: Audio pass-through (AUDIO_IN0/1)
   - CV1 → Kick (GM note 36), CV2 → Snare (GM note 38)
-  - Encoder 0: Reverb Liveness (0.50–0.999)
+  - Encoder 0: Reverb Liveness (0.50-0.999)
   - Encoder 1: Shimmer Rate (4/8/12/16/24/32 steps)
   - Effekte: Reverb 0.0/0.97/0.15, Chorus, Echo
   - Display: Valhalla Shimmer + CV Labels
   - Sequencer Tempo: 60 BPM
-- **Kritisches Detail:** `boot.py` hat `except: pass` — **schluckt KeyboardInterrupt!**
+- **Kritisches Detail:** `boot.py` hat `except: pass` - **schluckt KeyboardInterrupt!**
   → Siehe Abschnitt 4 ("The Trap")
 
-### 🟢 Board 2 (192.168.178.94) — 909 Snare (FRISCH RESETTET)
+### 🟢 Board 2 (192.168.178.94) - 909 Snare (FRISCH RESETTET)
 - **Status:** ✅ Board wurde per BOOT-Taster + .uf2 geflasht → Firmware ist frisch
 - **Keine blockierende boot.py mehr!** REPL ist frei zugänglich
-- **IP:** Unbekannt (muss nach Reset neu gesehen werden) — FritzBox DHCP
+- **IP:** Unbekannt (muss nach Reset neu gesehen werden) - FritzBox DHCP
 - **Noch zu tun:** Alles neu deployen:
-  1. `current/remote.py` — WLAN + TCP Server
-  2. `current/sketch.py` — TR-909 Snare CV Gate
-  3. `boot.py` — **Safe-Start boot.py** (mit KeyboardInterrupt-Check, KEIN `except: pass`!)
+  1. `current/remote.py` - WLAN + TCP Server
+  2. `current/sketch.py` - TR-909 Snare CV Gate
+  3. `boot.py` - **Safe-Start boot.py** (mit KeyboardInterrupt-Check, KEIN `except: pass`!)
 
 ### ⚠️ Wichtige Erkenntnisse (ARCHIVIERT)
 1. ✅ `except: pass` blockiert KeyboardInterrupt → **gefixed, nie wieder machen**
 2. ✅ Lösung für Zukunft: Safe-Start boot.py mit KeyboardInterrupt-Check vor Loop
-3. ⚠️ **Tulip CC executed NUR `boot.py`** — kein `main.py`/`sketch.py` auto-exec
+3. ⚠️ **Tulip CC executed NUR `boot.py`** - kein `main.py`/`sketch.py` auto-exec
 
 ---
 
-## 3. Valhalla Shimmer — Board 1 (89) — DEPLOYED ✅
+## 3. Valhalla Shimmer - Board 1 (89) - DEPLOYED ✅
 
 ### Dateien auf Board 1
 | Pfad | Lokal | Status |
 |------|-------|--------|
-| `/boot.py` | — | ✅ Auto-Boot (import sketch + remote_loop) |
+| `/boot.py` | - | ✅ Auto-Boot (import sketch + remote_loop) |
 | `/current/remote.py` | `remote.py` | ✅ TCP Server Port 2323 (settimeout 0.05) |
 | `/current/sketch.py` | `sketch.py` | ✅ Valhalla Shimmer + CV Drums |
-| `/current/quantizer.py` | — | Vom alten Quantizer — wird nicht importiert |
+| `/current/quantizer.py` | - | Vom alten Quantizer - wird nicht importiert |
 
 ### Patch Detail
 ```
@@ -62,20 +62,20 @@ Audio-Thru: Synth 18 (AUDIO_IN0/1 → stereo)
 
 ---
 
-## 4. 909 Snare — Board 2 (94) — PENDING DEPLOY 🔴
+## 4. 909 Snare - Board 2 (94) - PENDING DEPLOY 🔴
 
 ### Deployte Dateien (vor RST)
-- `boot.py` — gleicher Bootstrap (blockt REPL!)
-- `current/remote.py` — TCP Server
-- `current/sketch.py` — Original Tulip Template (pass loop)
+- `boot.py` - gleicher Bootstrap (blockt REPL!)
+- `current/remote.py` - TCP Server
+- `current/sketch.py` - Original Tulip Template (pass loop)
 
 ### Wartet auf Deployment
-`current/sketch.py` — TR-909 Snare Code:
+`current/sketch.py` - TR-909 Snare Code:
 ```python
 # CV1 gate triggers TR-909 snare (GM 38)
 # CV2 controls tail length (snappiness + decay)
-# Exponential mapping: 30ms–1200ms decay
-# Linear mapping: 5ms–80ms snap
+# Exponential mapping: 30ms-1200ms decay
+# Linear mapping: 5ms-80ms snap
 # Display: Snare Label, Snap ms, Decay ms
 amy.send(synth=10, patch=385, num_voices=2, synth_flags=3, amp=5)
 amy.send(cv_trigger='0,3.0,1.0,i10l1n38')
@@ -121,7 +121,7 @@ interface: wg-amy (192.168.178.204/24)
 
 ## 7. Person
 
-- **Bastian** (@Steppa_tg) – Telegram Direktchat
+- **Bastian** (@Steppa_tg) - Telegram Direktchat
 - **Sprache:** Deutsch, Sarkasmus, Gen-Z Slang
 - **Remote via:** Telegram + VPS + WireGuard
 - **MacBook:** Bastian am Mac, kein SSH (kein Key deployed)
@@ -129,7 +129,7 @@ interface: wg-amy (192.168.178.204/24)
 
 ---
 
-## 8. Session 11.07.2026 – amylive Web Deployment & Bugfixes
+## 8. Session 11.07.2026 - amylive Web Deployment & Bugfixes
 
 ### Überblick
 Amylive (`amylive.steppa.online`) ist jetzt live deployt und erreichbar. Die Session fokussierte auf Debugging von WebMIDI-Problemen auf Android Chrome (Pixel 10 Pro).
@@ -137,18 +137,18 @@ Amylive (`amylive.steppa.online`) ist jetzt live deployt und erreichbar. Die Ses
 ### Gefundene & gefixte Probleme
 
 #### 1. ❌ HTTPS fehlte (WebMIDI → Secure Context erforderlich)
-**Problem:** `amylive.steppa.online` lief auf HTTP – DNS war grey cloud (unproxied) auf Cloudflare. WebMIDI (`navigator.requestMIDIAccess()`) benötigt zwingend HTTPS.
+**Problem:** `amylive.steppa.online` lief auf HTTP - DNS war grey cloud (unproxied) auf Cloudflare. WebMIDI (`navigator.requestMIDIAccess()`) benötigt zwingend HTTPS.
 **Symptom:** `navigator.requestMIDIAccess is not a function`, Banner "WebMIDI nicht verfügbar" obwohl Chrome + funktioniert auf permission.site
 **Fix:** Cloudflare Proxy an: `proxied: true` (orange cloud). DNS-ID: `7eefa0d3188418fb796bb28e4da3ac4f`
-**Erkenntnis:** `amysim.steppa.online` hatte die COOP/COEP Header wegen SharedArrayBuffer – amylive hat die fälschlich geerbt.
+**Erkenntnis:** `amysim.steppa.online` hatte die COOP/COEP Header wegen SharedArrayBuffer - amylive hat die fälschlich geerbt.
 
 #### 2. ❌ COOP/COEP Header killten WebMIDI auf Mobile
 **Problem:** `Cross-Origin-Embedder-Policy: require-corp` + `Cross-Origin-Opener-Policy: same-origin` waren fälschlich auf amylive gesetzt (von amysim rüberkopiert).
 **Fix:** Aus Caddyfile entfernt. Nur noch `Access-Control-Allow-Origin "*"`.
 
 #### 3. ❌ `e.toLowerCase is not a function` bei Connect
-**Problem:** `ConnectionPanel.tsx` hatte `onClick={connect}` – React übergab MouseEvent als erstes Argument → `connect(event)` → `deviceName` war Event-Objekt → `nameFilter.toLowerCase()` crashte.
-**Fix:** `onClick={() => connect()}` – Arrow Function damit kein Event-Objekt durchgereicht wird.
+**Problem:** `ConnectionPanel.tsx` hatte `onClick={connect}` - React übergab MouseEvent als erstes Argument → `connect(event)` → `deviceName` war Event-Objekt → `nameFilter.toLowerCase()` crashte.
+**Fix:** `onClick={() => connect()}` - Arrow Function damit kein Event-Objekt durchgereicht wird.
 
 #### 4. ❌ TypeScript Build Errors (Vite 8 / TS 7)
 - `test` Config in `vite.config.ts` inkompatibel mit Vite 8 → auf `vitest/config` umgestellt
@@ -192,10 +192,69 @@ amylive.steppa.online:80 {
 ```
 
 ### Noch offen (Nächste Schritte)
-- [ ] Permission-Prompt live testen (Android Chrome, Pixel 10)
-- [ ] AMYboard per USB-C verbinden & Connect testen
-- [ ] Module-Bibliothek erweitern (FX Rack, LFO)
-- [ ] Patch-Management (localStorage)
+- [ ] Permission-Prompt live testen (Android Chrome, Pixel 10)  *(NICHT getestet)*
+- [ ] AMYboard per USB-C verbinden & MIDI Keyboard + Patch-Load testen
+- [ ] Module-Bibliothek erweitern (Oscillator, Filter, Envelope, LFO, FX Rack)
+- [ ] Patch-Management (Save/Load/Delete aus Board → Browser)
+- [ ] Sequencer Modul
+- [ ] WebMIDI onMessage hook für echte AMYboard-Responses (ACK, State Dumps)
+
+---
+
+## 10. Session 12.07.2026 – Event Log + Patch Browser
+
+### Überblick
+Zwei große Features live deployt:
+1. **Echtzeit Event Log** (LogPanel + Backend-Persistenz)
+2. **Patch Browser & Loading** (Synth Manager mit Patch-DB)
+
+### 10.1 Event Log System
+
+#### Frontend (`src/stores/log-store.ts`, `src/components/LogPanel.tsx`)
+- **Log Store** mit Zustand: Ringbuffer (500 in Mem, 200 in localStorage)
+- Periodischer Flush ans Backend (alle 10s, max 50 entries)
+- 9 Log-Kategorien: CONN, ERR, MIDI, SYSX, WIRE, PING, DUMP, DBG, USER
+- **LogPanel**: Filter-Buttons pro Kind, Suchfeld, Pause/Resume, Clear, expandierbare Details, Copy-to-Clipboard
+- Integration in connection-store (connect/disconnect/ping/error), Dashboard (param changes, module add/clear) und synth.tsx (patch-laden, notes)
+
+#### Backend (`/srv/amylive-log-server/server.js`)
+- Minimaler HTTP-Server auf Port 3011, systemd `amylive-log.service` (enabled)
+- `POST /api/amy/log` – Batch-Ingestion (JSONL, tägliche Files `/srv/amylive-logs/amylive-YYYY-MM-DD.jsonl`)
+- `GET /api/amy/log` – Query mit `kind`, `since`, `until`, `limit`, `offset`
+- `GET /api/amy/log/stats` – Übersicht (Anzahl entries, kinds-Verteilung)
+- Caddy: `/api/amy/*` → localhost:3011
+
+### 10.2 Patch Browser & Synth Manager
+
+#### Patch-Datenbank (`src/lib/amy-patches.ts`)
+- **Juno-106 (0-127)**: Alle 112 Factory Presets mit Original-Namen (A11 Brass Set 1 … B88 Owgan) + Custom-Slots
+- **DX7 (128-255)**: 128 Patches mit ROM1A/1B/2A/2B/3A/3B Namen
+- **Piano (256)**: "Acoustic Piano"
+- **Drums (384-390)**: TR-808, TR-909, CR-78, Linndrum, Oberheim DMX, Simmons SDS-V, GM Kit
+- **User Slots (1024-1055)**: 32 leere Patches
+- Exporte: `ALL_PATCHES`, `PATCHES_BY_ID`, `getPatchName()`, `getPatchCategory()`
+
+#### Synth Manager Module (`src/modules/synth.tsx`) — KOMPLETT NEU
+- **Patch-Browser**: Klick auf aktuellen Patch-Namen → aufklappbare Liste mit Suchfeld + Category-Filter (All/Juno/DX7/Drums/Piano)
+- **Live-Load**: Klick auf Patch → `i{synth}K{num}Z` wird via onSendWire gefeuert
+- **Synth Config**: Synth# (0-7), Voices (1-16), MIDI CH (1-16), Portamento-Slider
+- **MIDI Keyboard**: 13 Tasten (C4-C5) mit schwarzen Tasten + Quick-Notes C3/C4/C5/C6
+  - MouseDown/Up für Note On/Off: `i{synth}n{note}l{vel}Z` / `i{synth}n{note}l0Z`
+  - "All Notes Off" Button
+  - Aktive Noten-Anzeige
+- **Dashboard Status-Bar** zeigt geladenen Patch-Namen an
+
+### Aktueller Status (Deployed)
+- **Event Log**: ✅ Läuft (Frontend + Backend)
+- **Patch Browser**: ✅ Läuft (Synth Manager Module)
+- **MIDI Keyboard Pads**: ✅ Phase 1 (Mouse-basiert, ohne echte MIDI-Inputs)
+- **Wire Output**: ✅ `onSendWire` feuert korrekt (console.log für Phase 1)
+
+### Nächste Schritte
+1. **Echten WebMIDI Output** statt console.log — WebMIDI `midiOutput.send()` aus amy-connection.ts in onSendWire einbauen
+2. **MIDI Input Hook** — eingehende MIDI-Noten (USB Keyboard) → visualisieren
+3. Module: Oscillator, Filter, Envelope, LFO, FX Rack bauen
+4. **Save/Load Patches** vom Board (zDZ/zA)
 
 ---
 

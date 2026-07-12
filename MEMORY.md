@@ -1,6 +1,6 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-06-26 ~13:45_
+_Letzte Aktualisierung: 2026-07-04 ~00:42_
 
 ---
 
@@ -272,25 +272,12 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 - Session-Files (`memory/sessions/*.md`) werden automatisch vom Ingest geschrieben
 
 
-## 📸 Instagram Workflow – instagrapi (18.05.2026)
-**Problem:** Instagram blockiert Browser-Automation (agent-browser, Firefox, Chrome) mit reCAPTCHA.
-**Lösung:** `instagrapi` – private Instagram API, kein Browser, kein CAPTCHA.
-**Session:** `projects/haterbernd/instagrapi-session.json` (wird automatisch gespeichert)
-**Scripts:**
-- `projects/haterbernd/dm-auto-checker.py` – DMs checken & automatisch antworten
-- `projects/haterbernd/haterbernd-poster.py` – Bilder, Karussels, Reels posten
-**API-Doku:** `projects/haterbernd/INSTAGRAM-API-WORKFLOW.md`
-**Posting-Methoden:**
-- `cl.photo_upload()` – Einzelbild
-- `cl.album_upload()` – Karussell
-- `cl.clip_upload()` – Reel/Video
-- `cl.direct_send()` – DM senden
-- `cl.direct_threads()` – DMs lesen
-**WICHTIG:**
-- KEIN VPN-Proxy nötig für instagrapi
-- KEIN agent-browser mehr für Instagram-Aktionen
-- Cron: DM-Checker alle 2h, Auto-Poster alle 30 Min (16-21 Uhr)
-**Videos:** Google Veo 3.1 → ffmpeg Overlays → `cl.clip_upload()`
+## 📸 HaterBernd Instagram – ARCHIVIERT (04.07.2026)
+**Status:** 🗄️ Projekt archiviert und deaktiviert.
+**Archiv:** `archived/haterbernd-20260704.tar.gz`
+
+War ein toxisches Biohacking/Alpha-Grind Instagram-Projekt via instagrapi.
+Alle Cron-Jobs entfernt, Projekt sauber verpack
 
 ## 🧠 Persönliche Notizen
 
@@ -300,7 +287,7 @@ grep -i "conflict\|getUpdates" /tmp/openclaw/openclaw-$(date +%Y-%m-%d).log
 
 ---
 
-_Stand: 20.05.2026 ~10:15. Image Model Wechsel: Gemini → qwen-image-2.0-pro. HaterBernd Poster angepasst._
+_Stand: 04.07.2026 ~00:42. HaterBernd archiviert & deaktiviert._
 
 ---
 

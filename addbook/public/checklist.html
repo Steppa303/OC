@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>📋 Liste</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2ff 0%, #ffffff 50%, #fdf2f8 100%);
+    color: #1e293b;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: linear-gradient(135deg, #0f172a 0%, #020617 50%, #1e1b4b 100%); color: #e2e8f0; }
+  }
+
+  .max-w-xl { max-width: 600px; margin: 0 auto; }
+  .px-4 { padding-left: 16px; padding-right: 16px; }
+  .py-6 { padding-top: 24px; padding-bottom: 24px; }
+  @media (min-width: 768px) { .md\:py-10 { padding-top: 40px; padding-bottom: 40px; } }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.08);
+    margin-bottom: 12px;
+  }
+  @media (max-width: 640px) { .card { padding: 16px 18px; border-radius: 14px; } }
+
+  @media (prefers-color-scheme: dark) {
+    .card {
+      background: rgba(15,23,42,0.7);
+      border-color: rgba(99,102,241,0.12);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+  }
+
+  /* Header */
+  .header-title { font-size: 20px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (min-width: 640px) { .header-title { font-size: 22px; } }
+  .header-date { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+  @media (prefers-color-scheme: dark) { .header-date { color: #64748b; } }
+
+  /* Back link */
+  .back-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: #94a3b8; text-decoration: none; margin-bottom: 12px; }
+  .back-link:hover { color: #64748b; }
+  @media (prefers-color-scheme: dark) { .back-link { color: #64748b; } .back-link:hover { color: #94a3b8; } }
+
+  /* Items */
+  .items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; min-height: 48px; }
+  .item-wrap {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 11px 14px;
+    cursor: pointer; transition: all 0.15s ease; user-select: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    .item-wrap { background: rgba(15,23,42,0.7); border-color: rgba(99,102,241,0.08); }
+  }
+  .item-wrap:active { transform: scale(0.98); }
+  .item-wrap:hover { background: rgba(255,255,255,0.85); }
+  @media (prefers-color-scheme: dark) { .item-wrap:hover { background: rgba(30,41,59,0.6); } }
+
+  .check-box {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 8px;
+    border: 2px solid #cbd5e1; background: white;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  @media (prefers-color-scheme: dark) { .check-box { border-color: #475569; background: #1e293b; } }
+  .check-box.checked { background: #22c55e; border-color: #22c55e; }
+
+  .check-box svg { width: 14px; height: 14px; color: white; transform: scale(0); transition: transform 0.2s cubic-bezier(0.4,0,0.2,1); }
+  .check-box.checked svg { transform: scale(1); }
+  .item-text { flex: 1; font-size: 15px; line-height: 1.4; transition: all 0.2s ease; }
+  .item-text.checked { text-decoration: line-through; opacity: 0.45; }
+
+  /* Progress */
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .progress-label { font-size: 13px; font-weight: 500; color: #64748b; }
+  @media (prefers-color-scheme: dark) { .progress-label { color: #94a3b8; } }
+  .progress-pct { font-size: 13px; font-weight: 700; color: #6366f1; }
+  @media (prefers-color-scheme: dark) { .progress-pct { color: #818cf8; } }
+  .progress-track { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+  @media (prefers-color-scheme: dark) { .progress-track { background: #334155; } }
+  .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #818cf8, #6366f1); transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+  /* Add item */
+  .add-row { display: flex; align-items: center; gap: 8px; }
+  .add-input {
+    flex: 1; background: transparent; border: none; border-bottom: 2px solid #e2e8f0;
+    padding: 8px 4px; font-size: 14px; color: inherit; outline: none;
+    transition: border-color 0.2s ease;
+  }
+  @media (prefers-color-scheme: dark) { .add-input { border-color: #334155; } }
+  .add-input:focus { border-color: #6366f1; }
+  .add-input::placeholder { color: #94a3b8; }
+  .add-btn {
+    flex-shrink: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    border: none; border-radius: 12px; background: #6366f1; color: white; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .add-btn:active { transform: scale(0.92); }
+  .add-btn:hover { background: #4f46e5; }
+  .add-btn:disabled { opacity: 0.35; cursor: default; }
+  .add-btn:disabled:active { transform: none; }
+
+  /* Share button & dropdown */
+  .share-wrap { position: relative; flex-shrink: 0; }
+  .share-btn {
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    border: none; border-radius: 12px; background: #e0e7ff; color: #6366f1; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  @media (prefers-color-scheme: dark) { .share-btn { background: rgba(99,102,241,0.15); color: #818cf8; } }
+  .share-btn:hover { background: #c7d2fe; }
+  .share-btn:active { transform: scale(0.92); }
+  @media (prefers-color-scheme: dark) { .share-btn:hover { background: rgba(99,102,241,0.25); } }
+
+  .share-dropdown {
+    position: fixed; min-width: 180px; z-index: 999;
+    background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 4px; display: none;
+  }
+  .share-dropdown.open { display: block; }
+  @media (prefers-color-scheme: dark) { .share-dropdown { background: #1e293b; border: 1px solid #334155; } }
+
+  .share-opt {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px;
+    border: none; background: none; font-size: 14px; color: #1e293b; cursor: pointer;
+    border-radius: 10px; transition: background 0.12s;
+  }
+  @media (prefers-color-scheme: dark) { .share-opt { color: #e2e8f0; } }
+  .share-opt:hover { background: #eef2ff; }
+  @media (prefers-color-scheme: dark) { .share-opt:hover { background: rgba(99,102,241,0.2); } }
+  .share-opt svg { width: 16px; height: 16px; color: #94a3b8; flex-shrink: 0; }
+  @media (prefers-color-scheme: dark) { .share-opt svg { color: #64748b; } }
+
+  /* Footer */
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 20px; padding-bottom: 40px; }
+  @media (prefers-color-scheme: dark) { .footer { color: #475569; } }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 48px 16px; display: none; }
+  .empty-state.visible { display: block; }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; color: #94a3b8; }
+
+  /* Error state */
+  .error-state { display: none; text-align: center; padding: 32px; }
+  .error-state.visible { display: block; }
+  .error-icon { font-size: 28px; margin-bottom: 8px; }
+  .error-msg { font-size: 13px; color: #ef4444; margin-bottom: 12px; }
+  @media (prefers-color-scheme: dark) { .error-msg { color: #f87171; } }
+  .error-retry { font-size: 12px; color: #6366f1; background: none; border: none; cursor: pointer; text-decoration: underline; }
+  .error-retry:hover { text-decoration: none; }
+
+  /* QR Modal */
+  .qr-overlay {
+    position: fixed; inset: 0; z-index: 30; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.35); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  .qr-overlay.open { display: flex; }
+  .qr-card { max-width: 280px; width: 90%; }
+  .qr-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; text-align: center; }
+  .qr-holder { display: flex; justify-content: center; margin-bottom: 12px; }
+  .qr-url { font-size: 11px; color: #94a3b8; word-break: break-all; margin-bottom: 16px; text-align: center; }
+  .qr-close {
+    display: block; margin: 0 auto; padding: 8px 20px; border: none; border-radius: 10px;
+    background: #e2e8f0; color: #475569; font-size: 13px; cursor: pointer;
+  }
+  @media (prefers-color-scheme: dark) { .qr-close { background: #334155; color: #cbd5e1; } }
+
+  /* Toast */
+  .toast {
+    position: fixed; top: 16px; right: 16px; z-index: 40;
+    padding: 10px 18px; border-radius: 12px; font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: none;
+  }
+  .toast.show { display: block; }
+  .toast-success { background: #f0fdf4; color: #15803d; }
+  .toast-error { background: #fef2f2; color: #dc2626; }
+  @media (prefers-color-scheme: dark) { .toast-success { background: #052e16; color: #86efac; } }
+  @media (prefers-color-scheme: dark) { .toast-error { background: #450a0a; color: #fca5a5; } }
+
+  /* Shimmer loading */
+  .shimmer-block { margin-bottom: 12px; }
+  .shimmer-line { height: 14px; border-radius: 6px; background: #e2e8f0; animation: pulse 1.5s ease-in-out infinite; margin-bottom: 8px; }
+  @media (prefers-color-scheme: dark) { .shimmer-line { background: #334155; } }
+  .shimmer-line.w-48 { width: 192px; }
+  .shimmer-line.w-32 { width: 128px; }
+  .shimmer-line.w-full { width: 100%; }
+  .shimmer-line.h-8 { height: 8px; }
+  .shimmer-line.h-12 { height: 48px; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Loading: hidden by default, shown when #main-content:empty + #loading-state visible */
+  #main-content { display: block; }
+</style>
+</head>
+<body>
+  <div class="max-w-xl px-4 py-6 md:py-10">
+
+    <!-- Loading State (hidden once JS renders) -->
+    <div id="loading-state">
+      <div class="card">
+        <div class="shimmer-line w-48"></div>
+        <div class="shimmer-line w-32"></div>
+      </div>
+      <div class="card">
+        <div class="shimmer-line w-full h-8"></div>
+        <div class="shimmer-line w-32" style="margin-top:4px"></div>
+      </div>
+      <div class="items">
+        <div class="shimmer-line w-full h-12"></div>
+        <div class="shimmer-line w-full h-12"></div>
+        <div class="shimmer-line w-full h-12"></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" style="display:none">
+      <a href="https://addbook.steppa.online" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+        AddBook
+      </a>
+
+      <!-- Header -->
+      <div class="card" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div id="list-title" class="header-title"></div>
+          <div id="list-date" class="header-date"></div>
+        </div>
+        <div class="share-wrap">
+          <button id="share-btn" class="share-btn" aria-label="Teilen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Share Dropdown (outside card to avoid backdrop-filter stacking context) -->
+      <div id="share-dropdown" class="share-dropdown">
+        <button class="share-opt" data-action="copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Link kopieren
+        </button>
+        <button class="share-opt" data-action="share">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-3-3m3 3l3-3"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          Teilen…
+        </button>
+        <button class="share-opt" data-action="qr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M18 14v5M14 18h5"/></svg>
+          QR-Code anzeigen
+        </button>
+      </div>
+
+      <!-- Progress -->
+      <div id="progress-card" class="card" style="display:none">
+        <div class="progress-header">
+          <span id="progress-label" class="progress-label"></span>
+          <span id="progress-pct" class="progress-pct"></span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div id="items" class="items"></div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p class="empty-text">Keine Einträge in dieser Liste.<br>Füge unten einen hinzu!</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-state" class="error-state">
+        <div class="error-icon">⚠️</div>
+        <p id="error-msg" class="error-msg"></p>
+        <button onclick="location.reload()" class="error-retry">Neu laden</button>
+      </div>
+
+      <!-- Add Item -->
+      <div class="card">
+        <div class="add-row">
+          <input id="add-input" type="text" placeholder="Neuen Eintrag hinzufügen…" maxlength="200" class="add-input">
+          <button id="add-btn" class="add-btn" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="list-footer" class="footer"></div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" class="qr-overlay">
+      <div class="card qr-card">
+        <div class="qr-title">QR-Code</div>
+        <div id="qr-holder" class="qr-holder"></div>
+        <p id="qr-url" class="qr-url"></p>
+        <button onclick="closeQR()" class="qr-close">Schließen</button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <!-- QR Code library: loaded async so it never blocks -->
+  <script defer src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <script>
+    'use strict';
+    (function() {
+      const LIST_ID = '__LIST_ID__';
+      const LIST_DATA = __LIST_DATA__;
+
+      let list = LIST_DATA;
+      let qrInstance = null;
+
+      // Wait for DOM
+      const $ = id => document.getElementById(id);
+
+      function formatDate(iso) {
+        try { return new Date(iso).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+        catch(e) { return iso; }
+      }
+
+      function render() {
+        // Render title/date
+        $('list-title').textContent = list.title;
+        $('list-date').textContent = formatDate(list.createdAt);
+        $('list-footer').textContent = 'Erstellt via Kindle Scribe am ' + formatDate(list.createdAt);
+
+        // Render items
+        const container = $('items');
+        container.innerHTML = '';
+        const total = list.items.length;
+        const done = list.items.filter(i => i.checked).length;
+
+        if (total === 0) {
+          $('empty-state').classList.add('visible');
+          $('progress-card').style.display = 'none';
+        } else {
+          $('empty-state').classList.remove('visible');
+          $('progress-card').style.display = 'block';
+          $('progress-label').textContent = done + '/' + total + ' erledigt';
+          $('progress-pct').textContent = Math.round((done/total)*100) + '%';
+          $('progress-fill').style.width = Math.round((done/total)*100) + '%';
+
+          list.items.forEach((item, idx) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'item-wrap';
+            wrap.dataset.idx = idx;
+
+            const cb = document.createElement('div');
+            cb.className = 'check-box' + (item.checked ? ' checked' : '');
+            cb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 13 9 17 19 7"/></svg>';
+
+            const txt = document.createElement('span');
+            txt.className = 'item-text' + (item.checked ? ' checked' : '');
+            txt.textContent = item.text;
+
+            wrap.appendChild(cb);
+            wrap.appendChild(txt);
+            wrap.addEventListener('click', () => toggle(idx));
+            container.appendChild(wrap);
+          });
+        }
+      }
+
+      async function toggle(idx) {
+        const prev = list.items[idx].checked;
+        // Optimistic
+        list.items[idx].checked = !prev;
+        render();
+        try {
+          const r = await fetch('/api/lists/' + LIST_ID + '/toggle/' + idx, { method:'POST' });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          list = await r.json();
+          render();
+        } catch(e) {
+          list.items[idx].checked = prev;
+          render();
+          toast('Fehler beim Umschalten', 'error');
+        }
+      }
+
+      async function addItem() {
+        const input = $('add-input');
+        const text = input.value.trim();
+        if (!text) return;
+        const btn = $('add-btn');
+        btn.disabled = true; input.disabled = true;
+        try {
+          const r = await fetch('/api/lists/' + LIST_ID + '/add', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({text})
+          });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          list = await r.json();
+          render();
+          input.value = '';
+          input.focus();
+        } catch(e) {
+          toast('Fehler beim Hinzufügen', 'error');
+        }
+        btn.disabled = true; input.disabled = false;
+      }
+
+      // Share - position fixed dropdown under button
+      var shareOpen = false;
+      function positionShareDropdown() {
+        var btn = $('share-btn');
+        var dd = $('share-dropdown');
+        var rect = btn.getBoundingClientRect();
+        dd.style.top = (rect.bottom + 8) + 'px';
+        dd.style.right = (window.innerWidth - rect.right) + 'px';
+        dd.style.left = 'auto';
+      }
+      function toggleShare() {
+        shareOpen = !shareOpen;
+        if (shareOpen) positionShareDropdown();
+        $('share-dropdown').classList.toggle('open', shareOpen);
+      }
+      document.addEventListener('click', function(e) {
+        if (shareOpen && !$('share-btn').contains(e.target) && !$('share-dropdown').contains(e.target)) {
+          shareOpen = false;
+          $('share-dropdown').classList.remove('open');
+        }
+      });
+
+      function copyLink() {
+        var url = 'https://addbook.steppa.online/l/' + list.id;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function() { toast('✅ Link kopiert!'); }).catch(function() { fallbackCopy(url); });
+        } else { fallbackCopy(url); }
+      }
+      function fallbackCopy(url) {
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.style.cssText = 'position:fixed;opacity:0;left:-999px;top:0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); toast('✅ Link kopiert!'); } catch(e) { toast('❌ Konnte nicht kopiert werden', 'error'); }
+        document.body.removeChild(ta);
+      }
+      function webShare() {
+        var url = 'https://addbook.steppa.online/l/' + list.id;
+        if (navigator.share) { navigator.share({ title:list.title, url:url }).then(function() { shareOpen=false;$('share-dropdown').classList.remove('open'); }).catch(function(){}); }
+        else { copyLink(); }
+      }
+      function showQR() {
+        shareOpen=false;$('share-dropdown').classList.remove('open');
+        var url = 'https://addbook.steppa.online/l/' + list.id;
+        $('qr-url').textContent = url;
+        var holder = $('qr-holder');
+        holder.innerHTML = '';
+        if (qrInstance) { try{qrInstance.clear();}catch(e){} }
+        if (typeof QRCode !== 'undefined') {
+          try {
+            qrInstance = new QRCode(holder, { text:url, width:160, height:160, colorDark:'#1e293b', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.H });
+          } catch(e) { holder.innerHTML = '<p class="empty-text">QR-Code konnte nicht geladen werden</p>'; }
+        } else {
+          // QR lib not loaded yet – try inline fallback (simple dot pattern won't work, show placeholder)
+          holder.innerHTML = '<p class="empty-text">QR-Code wird geladen…</p>';
+          setTimeout(function() {
+            if (typeof QRCode !== 'undefined') {
+              holder.innerHTML = '';
+              try { qrInstance = new QRCode(holder, { text:url, width:160, height:160, colorDark:'#1e293b', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.H }); } catch(e) {}
+            }
+          }, 1000);
+        }
+        $('qr-modal').classList.add('open');
+      }
+      window.closeQR = function() { $('qr-modal').classList.remove('open'); };
+      $('qr-modal').addEventListener('click', function(e) { if (e.target === $('qr-modal')) closeQR(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeQR(); });
+
+      function toast(msg, type) {
+        var el = $('toast');
+        el.className = 'toast ' + (type === 'error' ? 'toast-error' : 'toast-success');
+        el.textContent = msg;
+        el.classList.add('show');
+        if (window._toastTimer) clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
+      }
+
+      // Init
+      render();
+      $('loading-state').style.display = 'none';
+      $('main-content').style.display = 'block';
+
+      // Events
+      var addInput = $('add-input');
+      var addBtn = $('add-btn');
+      addInput.addEventListener('input', function() { addBtn.disabled = !addInput.value.trim(); });
+      addInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && addInput.value.trim()) addItem(); });
+      addBtn.addEventListener('click', addItem);
+      $('share-btn').addEventListener('click', function(e) { e.stopPropagation(); toggleShare(); });
+      document.querySelectorAll('.share-opt').forEach(function(b) {
+        b.addEventListener('click', function(e) {
+          var act = e.currentTarget.dataset.action;
+          if (act === 'copy') copyLink();
+          else if (act === 'share') webShare();
+          else if (act === 'qr') showQR();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

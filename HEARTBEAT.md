@@ -17,45 +17,6 @@
 
 ---
 
-## 📸 HaterBernd Instagram – instagrapi (UPDATE 2026-05-18)
-
-**Status:** ✅ AKTIV mit **instagrapi** (private API, kein Browser, kein CAPTCHA!)
-
-### Scripts:
-- **DM Auto-Checker:** `/root/.openclaw/workspace/projects/haterbernd/dm-auto-checker.py`
-- **Session-File:** `projects/haterbernd/instagrapi-session.json`
-- **State:** `projects/haterbernd/dm-state.json`
-- **API-Doku:** `projects/haterbernd/INSTAGRAM-API-WORKFLOW.md`
-- **Log:** `/tmp/haterbernd-dm-checker.log`
-
-### Cron-Jobs:
-- `0 9,11,13,15,17,19,21 * * *` – DM Auto-Checker (alle 2h, 9-22 Uhr)
-- `*/30 16-21 * * *` – Auto-Poster (alle 30 Min, 16-21 Uhr)
-- `0 12 * * *` – Health Check (täglich 12:00)
-
-### DM-Workflow:
-1. `instagrapi` loggt sich ein (Session wird gecached)
-2. Liest DM-Inbox via `cl.direct_threads()`
-3. Neue DMs erkennen → Antwort generieren (HaterBernd-Style)
-4. Antwort senden via `cl.direct_send()`
-5. **KEIN OK von Bastian nötig** – direkt antworten
-6. DM-State speichern (keine doppelten Antworten)
-
-### Posting mit instagrapi:
-- **Einzelbild:** `cl.photo_upload(path, caption)`
-- **Karussell:** `cl.album_upload(paths[], caption)`
-- **Reel/Video:** `cl.clip_upload(path, caption)`
-- **Story Foto:** `cl.photo_upload_to_story(path, caption)`
-- **Story Video:** `cl.video_upload_to_story(path, caption)`
-
-### WICHTIG:
-- **KEIN VPN-Proxy nötig** für instagrapi-API-Calls
-- **KEIN agent-browser** mehr für Instagram-Aktionen
-- Session-File `instagrapi-session.json` wird bei jedem Login gespeichert
-- Bei Session-Expiry → Auto-Fallback auf Fresh Login
-
----
-
 ## 🧠 Session Startup
 
 **Beim Session-Start:**
@@ -118,6 +79,11 @@
 
 ### NANO_SCRIPT nicht mehr verwenden!
 Das alte nano-banana-pro.sh (Gemini für Bilder) wird nicht mehr genutzt.
+
+---
+
+## 📦 Archivierte Projekte
+- **HaterBernd** — 2026-07-04 archiviert nach `archived/haterbernd-20260704.tar.gz`
 
 ---
 

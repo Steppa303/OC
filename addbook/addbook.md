@@ -2,7 +2,7 @@
 
 **Zweck:** Bücher per Kindle Scribe Notiz suchen (Telegram-Link), Rezepte suchen/filtern/direkt senden, ODER Fragen beantworten und als Deep-Research-PDF auf den Kindle liefern.
 **URL:** `addbook.steppa.online`
-**Stand:** 01.07.2026 (Frage-Trigger + Free Model Chain)
+**Stand:** 01.07.2026 (Frage-Trigger + Free Model Chain + Quality Check)
 
 ---
 

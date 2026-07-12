@@ -1361,8 +1361,8 @@ async def poll_completed(ctx: ContextTypes.DEFAULT_TYPE):
         # Untrackte Completed-Jobs: nur tracken wenn noch nie verarbeitet
         if nzo_id not in tracked_jobs and nzo_id not in notified_completed:
             name = slot.get("name", nzo_id)
-            log.info("Neuer untrackter Completed-Job gefunden: %s (%s) – tracke …", name, nzo_id)
-            tracked_jobs[nzo_id] = {"name": name, "chat_id": ALLOWED_CHAT}
+            log.info("Neuer untrackter Completed-Job gefunden: %s (%s) – tracke als Martin (Web UI)", name, nzo_id)
+            tracked_jobs[nzo_id] = {"name": name, "chat_id": None}
             save_jobs()
 
         info = tracked_jobs[nzo_id]
@@ -1394,14 +1394,16 @@ async def poll_completed(ctx: ContextTypes.DEFAULT_TYPE):
             save_jobs()
             continue
 
-        # Ziel-Ordner bestimmen: Bastian → usedown, Martin → Martin
-        chat_id = info.get("chat_id", ALLOWED_CHAT)
-        if chat_id == ALLOWED_CHAT:  # Bastian
+        # Ziel-Ordner bestimmen: Bastian (Bot) → usedown, alles andere → Martin
+        chat_id = info.get("chat_id")
+        if chat_id == ALLOWED_CHAT:  # Bastian via Bot
             target_folder_id = USEDOWN_FOLDER_ID
             folder_label = "usedown"
-        else:  # Martin & andere
+            notify_id = chat_id
+        else:  # Martin & andere & Web UI (untracked)
             target_folder_id = DRIVE_FOLDER_ID
             folder_label = "Martin"
+            notify_id = chat_id or ALLOWED_CHAT
 
         # Nur Video-Dateien hochladen (MKV, MP4, AVI, MOV, M4V, WMV)
         VIDEO_EXTS = {".mkv", ".mp4", ".avi", ".mov", ".m4v", ".wmv", ".webm"}
@@ -1427,7 +1429,7 @@ async def poll_completed(ctx: ContextTypes.DEFAULT_TYPE):
             save_completed_notified()
             try:
                 await ctx.bot.send_message(
-                    chat_id=chat_id,
+                    chat_id=notify_id,
                     text=f"✅ Fertig + Hochgeladen ↳ Google Drive → {folder_label}\n{name}",
                 )
             except Exception:

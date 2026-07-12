@@ -123,6 +123,28 @@ Oder alles zusammen.
 
 **Timeout:** 300s pro Modell, gesamte Pipeline max ~20 Min
 
+### 3.5. List Pipeline (Google Docs Checklist)
+
+**Trigger:** `Liste: Einkaufen` im Datei-Content
+
+**Format auf dem Scribe:**
+```
+Liste: Einkaufen
+- Milch
+Eier
+• Brot
+Käse
+```
+
+**Pipeline:**
+1. `parse_content_for_list()` → extrahiert `{title, items}` (erkennt Bulletpoints, einfache Zeilen)
+2. `process_list_trigger()` → Markdown mit Checkboxes generieren
+3. **`GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`** → Google Doc mit `- [ ] Item` Checkliste
+4. Telegram: "📋 Liste erstellt: 'Einkaufen' — 4 Einträge" mit Link
+
+**Archiv:** Datei wird nach `p-gen-archiv` verschoben.
+**Priority:** Liste wird vor anderen Triggern geprüft.
+
 ### 4. Recipe Pipeline (`recipes/`)
 
 **Trigger:** `Rezept: Suchbegriff 2x` im Datei-Content

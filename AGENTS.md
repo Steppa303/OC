@@ -117,18 +117,6 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
 
-### ⚠️ SUBAGENT DASHBOARD TRACKING — NON-NEGOTIABLE
-
-**After EVERY `sessions_spawn()`: IMMEDIATELY call the Dashboard API. No exceptions.**
-
-```bash
-curl -s -X POST http://localhost:3002/api/agents/start \
-  -H "Content-Type: application/json" \
-  -d '{"sessionKey":"<childSessionKey>","label":"<label>","task":"<task>","model":"<model>"}'
-```
-
-**If you spawn without tracking → you fucked up.** No excuses. Do it in the SAME turn as the spawn.
-
 **🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
 
 **📝 Platform Formatting:**
@@ -137,26 +125,52 @@ curl -s -X POST http://localhost:3002/api/agents/start \
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
-## ⛓️ Chain of Command (Proxy → Orchestrator → Subagents)
+## ⛓️ Chain of Command — Workflow
 
-**Prinzip:** Der Main Agent (Proxy) delegiert komplexe Tasks an einen Orchestrator-Subagent.
+**Prinzip:** Ich (Main Agent) bin ansprechbar. Immer. Komplexe Tasks delegiere ich an Subagents und mache währenddessen weiter mit anderen Sachen.
 
-### Workflow:
-1. **Receive:** User schickt Nachricht auf Telegram.
-2. **Acknowledge:** Kurze Bestätigung an User (im SOUL.md-Vibe).
-3. **Delegate:** Bei komplexen Tasks → Orchestrator spawnen mit `sessions_spawn()`.
-4. **Wait:** Proxy wartet (`sessions_yield()`).
-5. **Deliver:** Fertiges Ergebnis an User ausliefern.
+### Task-Typen
 
-### Red Lines:
-- Bei **komplexen Multi-File Tasks** → Orchestrator spawnen, nicht selbst coden
-- Bei **einfachen Tasks** (einzeilige Edits, Config-Checks, Status-Abfragen) → selbst machen
-- **JEDER Subagent wird im Dashboard getrackt** → nach spawn SOFORT `POST /api/agents/start`
-- Bei Completion → `POST /api/agents/end`
+| Task-Typ | Wer | Beispiel |
+|----------|-----|----------|
+| **Quick-Fix** | Ich direkt | Config edit, Status check, einzeiliger Fix |
+| **Worker-Task** | Worker-Subagent (`mode:"run"`) | Neues Script, Multi-File, Recherche, Deployment |
+| **Projekt** (mehrere Workers) | Orchestrator-Subagent managed Worker | Frontend + Backend + Testing |
 
-### Timeout-Regel:
-- Orchestrator Timeout: **60 Minuten** (`runTimeoutSeconds: 3600`) – muss mehrere Subagents koordinieren
-- Worker-Subagent Timeout: **15 Minuten** – bei Timeout → Task sauber neustarten
+### Ablauf
+
+1. **Task analysieren** → Welcher Typ? Quick? Worker? Projekt?
+2. **Bei komplex:** `sessions_spawn()` mit passendem Modell
+3. **Ich bin frei** → Nächste Aufgabe, Chat, whatever. Subagent arbeitet im Hintergrund.
+4. **Completion** → Subagent meldet sich per User-Message, ich liefer aus
+
+### Model-Auswahl (live, anpassbar)
+
+| Aufgabe | Modell | Begründung |
+|---------|--------|------------|
+| Frontend (React, Vue, UI/UX) | `openrouter/qwen/qwen3-coder:free` | Starker Coder |
+| Backend (Node.js, API, DB) | `openrouter/deepseek/deepseek-v4-pro` | Tiefe Logik |
+| Debugging/Analyse | `openrouter/deepseek/deepseek-chat` | Generalist |
+| Writing/Docs | `openrouter/deepseek/deepseek-chat` | Sprachqualität |
+| Research/Web | `openrouter/deepseek/deepseek-v4-pro` | Reasoning |
+| Testing | `openrouter/auto` | Auto wählt passend |
+
+**Wenn unsicher:** `openrouter/auto` — OpenRouter wählt selbst.
+
+### Timeout-Regeln
+
+- **Default:** 30 Minuten (`runTimeoutSeconds: 1800`)
+- **Kurze Tasks** (< 5 Min erwartet): `runTimeoutSeconds: 300`
+- **Große Tasks** (Builds, Deploys): `runTimeoutSeconds: 1800`
+- **Riesen-Projekte:** `runTimeoutSeconds: 3600` (60 Min)
+
+### Wichtige Regeln
+
+- **Kein Polling** von `sessions_list` / `subagents list` in Loop
+- **Warten auf Completion Events** → Push-basiert
+- Nach `sessions_spawn()`: `sessions_yield()` oder weitermachen
+- Completion kommt als User-Message
+- **Ich bleibe ansprechbar** — das ist der ganze Sinn
 
 ## 💓 Heartbeats - Be Proactive!
 

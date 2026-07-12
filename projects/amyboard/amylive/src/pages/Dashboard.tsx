@@ -1,8 +1,11 @@
-import { Plus, Layout, Save, Download } from 'lucide-react'
+import { Plus, Layout, Save, Download, Radio } from 'lucide-react'
 import { useCanvasStore } from '../stores/canvas-store'
 import { useConnectionStore } from '../stores/connection-store'
+import { useLogStore } from '../stores/log-store'
 import { Sidebar } from '../components/Sidebar'
+import { LogPanel } from '../components/LogPanel'
 import { moduleRegistry } from '../modules'
+import { getPatchName } from '../lib/amy-patches'
 
 export function Dashboard() {
   const { modules, selectedId, addModule, removeModule, selectModule, clear } = useCanvasStore()
@@ -15,7 +18,7 @@ export function Dashboard() {
       <Sidebar />
 
       {/* Main Canvas */}
-      <div className="flex-1">
+      <div className="flex-1 space-y-4">
         {/* Toolbar */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -39,7 +42,11 @@ export function Dashboard() {
                     return (
                       <button
                         key={mod.id}
-                        onClick={() => addModule(mod.id, 0, 0, 280, 200, mod.defaults)}
+                        onClick={() => {
+                          const log = useLogStore.getState()
+                          log.log('user', `Added module: ${mod.name}`)
+                          addModule(mod.id, 0, 0, 280, 200, mod.defaults)
+                        }}
                         className="w-full flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-[var(--color-surface-hover)] transition-colors text-left"
                       >
                         <Icon size={14} className="text-[var(--color-primary)]" />
@@ -53,7 +60,10 @@ export function Dashboard() {
             </div>
 
             <button
-              onClick={clear}
+              onClick={() => {
+                useLogStore.getState().log('user', `Cleared ${modules.length} modules`)
+                clear()
+              }}
               className="py-2 px-3 rounded-lg bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] text-xs text-[var(--color-text-dim)] border border-[var(--color-border)] transition-colors"
             >
               Clear
@@ -63,7 +73,7 @@ export function Dashboard() {
 
         {/* Module Grid */}
         {modules.length === 0 ? (
-          <div className="module-canvas rounded-xl border border-dashed border-[var(--color-border)] flex items-center justify-center" style={{ minHeight: '60vh' }}>
+          <div className="module-canvas rounded-xl border border-dashed border-[var(--color-border)] flex items-center justify-center" style={{ minHeight: '40vh' }}>
             <div className="text-center space-y-2">
               <Layout size={32} className="mx-auto text-[var(--color-text-muted)]" />
               <p className="text-sm text-[var(--color-text-dim)]">Noch keine Module</p>
@@ -89,10 +99,11 @@ export function Dashboard() {
                     id={m.id}
                     params={m.params}
                     onParamChange={(key, value) => {
+                      useLogStore.getState().log('wire', `Param ${key} = ${value}`, `${m.moduleType}#${m.id}`)
                       useCanvasStore.getState().updateParams(m.id, { [key]: value })
                     }}
                     onSendWire={(wire) => {
-                      // TODO: Send via WebMIDI
+                      useLogStore.getState().log('wire', wire, m.moduleType + '#' + m.id)
                       console.log('Wire:', wire)
                     }}
                   />
@@ -103,10 +114,29 @@ export function Dashboard() {
         )}
 
         {/* Status Bar */}
-        <div className="mt-4 flex items-center justify-between text-[10px] text-[var(--color-text-muted)] border-t border-[var(--color-border)] pt-3">
-          <span>
-            {connected ? '🟢 AMYboard connected' : '🔴 disconnected'}
-          </span>
+        <div className="flex items-center justify-between text-[10px] text-[var(--color-text-muted)] border-t border-[var(--color-border)] pt-3">
+          <div className="flex items-center gap-3">
+            <span>
+              {connected ? '🟢 AMYboard connected' : '🔴 disconnected'}
+            </span>
+            <span className="text-[var(--color-text-dim)]">|</span>
+            {(() => {
+              const synthModule = modules.find(m => m.moduleType === 'synth')
+              const patchNum = synthModule?.params?.patch
+              if (patchNum !== undefined) {
+                // Import directly for cleaner code, but for the status bar we keep inline
+                const name = getPatchName(patchNum)
+                return (
+                  <span className="flex items-center gap-1">
+                    <Radio size={10} className="text-[var(--color-primary)]" />
+                    {name}
+                    <span className="text-[8px] font-mono">(#{patchNum})</span>
+                  </span>
+                )
+              }
+              return null
+            })()}
+          </div>
           <div className="flex items-center gap-3">
             <button className="hover:text-[var(--color-text)] transition-colors flex items-center gap-1">
               <Save size={12} /> Save Patch
@@ -116,6 +146,9 @@ export function Dashboard() {
             </button>
           </div>
         </div>
+
+        {/* Event Log */}
+        <LogPanel />
       </div>
     </div>
   )
