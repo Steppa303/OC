@@ -24,6 +24,7 @@ export interface CanvasStore {
     targetOsc?: number,
     targetSynth?: number,
     targetBus?: number,
+    cardIndex?: number,
   ) => string;
 
   /** Remove a module by its canvas id. */
@@ -73,6 +74,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     targetOsc,
     targetSynth,
     targetBus,
+    cardIndex = 0,
   ) => {
     const id = generateId();
     const mod: CanvasModule = {
@@ -86,6 +88,9 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
       targetOsc,
       targetSynth,
       targetBus,
+      cardIndex,
+      chainInputs: [],
+      chainOutputs: [],
     };
 
     set((state) => ({

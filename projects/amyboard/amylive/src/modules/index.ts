@@ -1,14 +1,20 @@
 import { type ComponentType } from 'react'
-import { AudioWaveform, Filter, Activity, Waves, Radio, Disc3, ChartNoAxesColumn, Piano, ChartGantt } from 'lucide-react'
+import { AudioWaveform, Filter, Activity, Waves, Radio, Disc3, ChartNoAxesColumn, Piano, ChartGantt, GitBranch } from 'lucide-react'
 import { OscillatorModule } from './oscillator'
 import { FilterModule } from './filter'
 import { EnvelopeModule } from './envelope'
 import { LFOModule } from './lfo'
 import { SynthModule } from './synth'
-import type { AmyModule, ModuleProps } from '../types/amy'
+import { OscillatorCard } from './oscillator-card'
+import { FilterCard } from './filter-card'
+import { EnvelopeCard } from './envelope-card'
+import { SynthCard } from './synth-card'
+import { ChainViewCard } from './chain-view-card'
+import type { AmyModule, ModuleProps, CardProps } from '../types/amy'
 
 interface RegisteredModule extends AmyModule {
   component: ComponentType<ModuleProps>
+  cardComponent?: ComponentType<CardProps>
 }
 
 const moduleList: RegisteredModule[] = [
@@ -17,18 +23,21 @@ const moduleList: RegisteredModule[] = [
     category: 'source', minWidth: 2, minHeight: 3,
     defaults: { osc: 0, wave: 0, freq: 440, amp: 0.8, pan: 0.5, bus: 0, detune: 0, portamento: 0 },
     component: OscillatorModule,
+    cardComponent: OscillatorCard,
   },
   {
     id: 'filter', name: 'Filter', icon: 'Filter',
     category: 'filter', minWidth: 2, minHeight: 3,
     defaults: { osc: 0, filter_type: 1, cutoff: 8000, resonance: 0.7, modEg1: 0, modLfo: 0, modKey: 0 },
     component: FilterModule,
+    cardComponent: FilterCard,
   },
   {
     id: 'envelope', name: 'Envelope', icon: 'Activity',
     category: 'envelope', minWidth: 2, minHeight: 3,
     defaults: { egId: 0, attack: 100, decay: 200, sustain: 0.5, release: 300, eg_type: 0 },
     component: EnvelopeModule,
+    cardComponent: EnvelopeCard,
   },
   {
     id: 'lfo', name: 'LFO', icon: 'Waves',
@@ -37,15 +46,23 @@ const moduleList: RegisteredModule[] = [
     component: LFOModule,
   },
   {
+    id: 'chain-view', name: 'Signal Chain', icon: 'GitBranch',
+    category: 'mixer', minWidth: 2, minHeight: 3,
+    defaults: {},
+    component: undefined as any,
+    cardComponent: ChainViewCard,
+  },
+  {
     id: 'synth', name: 'Synth Manager', icon: 'Radio',
     category: 'mixer', minWidth: 2, minHeight: 3,
     defaults: { synth: 0, num_voices: 6, patch: 0, midiCh: 1, portamento: 0 },
     component: SynthModule,
+    cardComponent: SynthCard,
   },
 ]
 
 const iconMap: Record<string, typeof AudioWaveform> = {
-  AudioWaveform, Filter, Activity, Waves, Radio, Disc3, ChartNoAxesColumn, Piano, ChartGantt,
+  AudioWaveform, Filter, Activity, Waves, Radio, Disc3, ChartNoAxesColumn, Piano, ChartGantt, GitBranch,
 }
 
 class ModuleRegistry {
@@ -80,9 +97,20 @@ class ModuleRegistry {
     if (!mod) return AudioWaveform
     return iconMap[mod.icon] ?? AudioWaveform
   }
+
+  /** Get the card component for a module type (or undefined) */
+  getCard(id: string): RegisteredModule['cardComponent'] {
+    return this.get(id)?.cardComponent
+  }
+
+  /** Check if a module type has a card component */
+  hasCardComponent(id: string): boolean {
+    return !!this.get(id)?.cardComponent
+  }
 }
 
 export const moduleRegistry = new ModuleRegistry()
 moduleRegistry.registerAll(moduleList)
 
 export { OscillatorModule, FilterModule, EnvelopeModule, LFOModule, SynthModule }
+export { OscillatorCard, FilterCard, EnvelopeCard, SynthCard, ChainViewCard }

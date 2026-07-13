@@ -1,3 +1,5 @@
+import { type ComponentType } from 'react'
+
 // ─── Wave Type ────────────────────────────────────────────────────────
 export type WaveType =
   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -192,6 +194,32 @@ export interface AmyModule {
   defaults: Record<string, any>;
 }
 
+// ─── Card Module Interface ───────────────────────────────────────────
+export interface CardModule extends AmyModule {
+  cardComponent: ComponentType<CardProps>
+}
+
+export interface CardProps {
+  id: string
+  params: Record<string, any>
+  onParamChange: (key: string, value: any) => void
+  onSendWire: (wire: string) => void
+  cardIndex: number
+  totalCards: number
+  chainInfo?: {
+    inputs: string[]
+    outputs: string[]
+    onNavigateToModule?: (id: string) => void
+  }
+}
+
+// ─── Signal Chain Link ────────────────────────────────────────────────
+export interface SignalChainLink {
+  id: string
+  from: { moduleId: string; output: string }
+  to: { moduleId: string; input: string }
+}
+
 // ─── Canvas Module Instance ───────────────────────────────────────────
 export interface CanvasModule {
   id: string;
@@ -204,7 +232,35 @@ export interface CanvasModule {
   targetOsc?: number;
   targetSynth?: number;
   targetBus?: number;
+  cardIndex: number;
+  chainInputs?: string[];
+  chainOutputs?: string[];
+  derivedFromPatch?: boolean;
+  locked?: boolean;
 }
 
 // ─── Connection State ─────────────────────────────────────────────────
 export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
+
+// ─── Patch → Module parsing result ────────────────────────────────────
+export interface PatchParseResult {
+  modules: CanvasModule[]
+  chainLinks: SignalChainLink[]
+  patchName?: string
+  patchNumber?: number
+}
+
+// ─── For the AMY state dump parser ────────────────────────────────────
+export interface AmyDumpLine {
+  osc: number
+  key: string
+  value: string
+}
+
+// ─── Breakpoint parser result ─────────────────────────────────────────
+export interface ParsedBreakpoints {
+  attack: number
+  decay: number
+  sustain: number
+  release: number
+}

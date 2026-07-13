@@ -1,7 +1,7 @@
-# AMYboard Projekt – Session Handover v7
+# AMYboard Projekt – Session Handover v8
 
-> Erstellt: 12.07.2026 12:00
-> Letzte Session: 12.07.2026, 10:58–12:00
+> Erstellt: 13.07.2026 19:30
+> Letzte Session: 13.07.2026, 15:39–19:30
 > Nächster Schritt: amylive — WebMIDI Live-Test + MIDI Keyboard via USB
 
 ---
@@ -321,3 +321,119 @@ try:
 except KeyboardInterrupt:
     print("\\nBoot abgebrochen. REPL bereit.")
 ```
+---
+
+## 11. Session 13.07.2026 – UI Refactor (Quick Actions + Dump Parser + amyuipimp)
+
+### Überblick
+Komplette UI-Überholung geplant. Quick Actions (Save/Load Patch, Save to Board) implementiert.
+Dump-Parser für zDZ Board-Dumps gebaut. UI-Refactor-Plan dokumentiert.
+
+### Neue Engine-Files (13.07.2026)
+
+| File | Zweck |
+|------|-------|
+| `src/engine/dump-parser.ts` | Parst zDZ Wire-Dump (Uint8Array) → AmyPatch (regex-basiert, lenient) |
+| `src/engine/patch-from-board.ts` | `loadPatchFromBoard()` — Board-Dump + Factory-Fallback mit PatchSelectorModal |
+| `src/engine/patch-from-canvas.ts` | `canvasToPatch()` — CanvasModule[] → AmyPatch serializer |
+| `src/engine/__tests__/dump-parser.test.ts` | Tests für Wire-Format Parsing |
+| `src/engine/__tests__/patch-from-canvas.test.ts` | Tests für Canvas→Patch Konvertierung |
+
+### Quick Actions (Dashboard Status Bar)
+
+| Button | Status | Funktion |
+|--------|--------|----------|
+| **Save Patch** | ✅ | CanvasModule[] → AmyPatch → localStorage (via patch-store) |
+| **Save to Board** | ✅ | Module → sketch.py → zT Upload → zP restart (Board nur) |
+| **Load from Board** | ✅ | zDZ Dump → parse → Canvas-Module (mit Factory-Fallback) |
+| **Instantiate Modules** | ⚠️ alt | Parse Patch → Module — wird durch Live Board ersetzt |
+
+### Bugs gefixt (13.07.2026)
+
+1. **`sendWireMessage` hat Board via `S` (reset) resettet** — Dump enthält Reset-Lines, die als `amy.send(reset=0)` ans Board gingen. Fix: Raw Dump-Lines nicht ans Board senden.
+2. **`parsePatchState` silently crashed** — Null try/catch, ein einziger `parseBreakpoints()`-Fehler → 0 Module. Fix: try/catch pro Oszillator + console.log.
+3. **`sendWireMessage` konnte nur `i{synth}K{patch}`** — Alles andere aus Dump (`v0w0f440`, `A100,1,300`, etc.) flog raus. Fix: Generischer `parseWire()` → Key/Value-Mapping → `amy.send()`.
+4. **SwipeStack rendert Module nicht sichtbar** — Debug-Badge + Fallback-Grid eingebaut.
+
+### UI-Refactor-Plan (amyuipimp.md)
+
+**Problem:** Dashboard ist aufgebläht (782 Zeilen), Module verschwinden im Mobile-SwipeStack, Usability grottig.
+
+**Lösung: 3 klare Screens**
+
+| Route | Name | Funktion |
+|-------|------|----------|
+| `/` | Dashboard | Nur Connect + "Start Live Session" (entschlackt) |
+| `/live` | **Live Board** (NEU) | Vollbild Patch-Editor + Keyboard Flyout |
+| `/patches` | Patches | Patch Library (unverändert) |
+| `/settings` | Settings | (unverändert) |
+
+**Live Board Features:**
+- Auto-Load Patch vom Board beim Betreten
+- Modul-Grid (OSC, Filter, Envelope, LFO, Synth)
+- **Keyboard Flyout** (30-60% Höhe, swipe-up, multi-touch, velocity)
+- Add Module Bottom Sheet
+- Multi-Synth Tabs (Tab-System für Synth 0, Synth 1, etc.)
+- Desktop: Sidebar + Grid, Mobile: SwipeStack
+
+**Implementierungs-Phasen (geplant):**
+
+| Phase | Inhalt | Aufwand |
+|-------|--------|---------|
+| 1 | LiveBoard.tsx, Routing, Dashboard entschlacken | 1 Session |
+| 2 | KeyboardFlyout (WebMIDI + Touch + Desktop) | 1 Session |
+| 3 | Polish (Add Module Sheet, Multi-Synth, Loading States) | 1 Session |
+
+### Neue Dateien (13.07.2026)
+
+```
+src/engine/dump-parser.ts               # zDZ Wire-Parser (lenient, regex)
+src/engine/patch-from-board.ts           # Board-Load + Factory-Fallback
+src/engine/patch-from-canvas.ts          # Canvas→AmyPatch Serializer
+src/engine/__tests__/dump-parser.test.ts
+src/engine/__tests__/patch-from-canvas.test.ts
+src/components/touch/SwipeStack.tsx       # Mobile Card Stack (Framer Motion)
+src/components/touch/TouchSlider.tsx      # 36px Touch-Slider
+src/components/touch/Pills.tsx            # Touch-Pills
+src/components/touch/CardHeader.tsx       # Einheitlicher Card-Header
+src/modules/oscillator-card.tsx           # OSC Full-Card
+src/modules/filter-card.tsx              # Filter Full-Card
+src/modules/envelope-card.tsx            # Envelope Full-Card
+src/modules/synth-card.tsx               # Synth Manager Full-Card
+src/modules/chain-view-card.tsx          # Chain View Card
+src/stores/chain-store.ts               # Signal Chain State
+amyuipimp.md                             # UI-Refactor Plan
+```
+
+### Wire→Python Bridge (final)
+
+Generische Conversion jedes AMY Wire-Formats:
+```typescript
+// v0w0f440a0.8Z  →  amy.send(osc=0, wave=0, freq=440, amp=0.8)
+// i0K42Z         →  amy.send(synth=0, patch=42, num_voices=6)
+//
+// Codes: v=osc, w=wave, f=freq, a=amp, d=duty, Q=pan, y=bus,
+//        F=filter_freq, G=filter_type, R=resonance, b=feedback,
+//        A=bp0, B=bp1, T=eg0_type, X=eg1_type, L=mod_source,
+//        i=synth, K=patch, n=note, l=vel, m=portamento,
+//        c=chained_osc, P=phase, S=reset,
+//        iv=num_voices, in=oscs_per_voice,
+//        h=reverb, j=chorus, k=echo, V=volume
+```
+
+### Nächste Schritte
+1. ⬜ **Phase 1** — `LiveBoard.tsx` erstellen, Routing umstellen, Dashboard entschlacken
+2. ⬜ **Phase 2** — Keyboard Flyout (Touch + Desktop + WebMIDI)
+3. ⬜ **Phase 3** — Add Module Bottom Sheet, Multi-Synth Tabs, Loading States
+4. ⬜ **Deployment** — `npm run build` → Caddy reload
+5. ⬜ **Board 2 (94)** — TR-909 Snare deployen (Safe-Start boot.py!)
+6. ⬜ **MIDI Input Hook** — Externe USB-Keyboards visualisieren
+
+### TODOs (13.07.2026)
+- [ ] git commit mit neuem Handover + README + allen Source-Files
+- [ ] amyuipimp.md umsetzen (Phase 1)
+- [ ] Fallback-Grid aus Dashboard entfernen (wenn SwipeStack funktioniert)
+- [ ] Debug-Badge aus Dashboard entfernen (nach UI-Refactor)
+- [ ] Keyboard mit echter Velocity per Pointer Events
+- [ ] Multi-Synth: Module nach Synth gruppieren
+- [ ] Add Module: Bottom Sheet mit Modul-Typen
