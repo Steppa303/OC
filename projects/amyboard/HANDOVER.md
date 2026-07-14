@@ -1,8 +1,8 @@
 # AMYboard Projekt – Session Handover v8
 
 > Erstellt: 13.07.2026 19:30
-> Letzte Session: 13.07.2026, 15:39–19:30
-> Nächster Schritt: amylive — WebMIDI Live-Test + MIDI Keyboard via USB
+> Letzte Session: 14.07.2026, 07:35–07:42
+> Nächster Schritt: Sound-Test (Board gibt Ton aus) + Computer Keyboard → MIDI Output
 
 ---
 
@@ -290,7 +290,28 @@ Beim Mount wurde der Synth nicht initialisiert.
 
 ---
 
-## 9. Critical Lessons Learned
+## 12. Session 14.07.2026 – Build Fix + Documentation + Git Commit
+
+### Überblick
+Letzte Session vor Commit. TypeScript Build Error gefixt und Deployment durchgeführt.
+
+### Gefixt
+1. **`chainInfo` Type Error (TS2769):** `CardProps.chainInfo.inputs`/`outputs` waren als `string[]` deklariert, aber `LiveBoard.tsx` übergibt Objekt-Arrays (`{moduleId, output}`). Typ in `src/types/amy.ts` korrigiert zu `{moduleId: string; output: string}[]`.
+
+### Status (Deployed 14.07.2026 07:38)
+- **URL:** `https://amylive.steppa.online` ✅
+- **Build:** 0 Fehler, 0 Warnungen
+- **Caddy:** Reloaded, HTTP 200
+- **Assets:** CSS 43KB gzip + JS 487KB gzip
+
+### Nächste Schritte
+1. ⬜ **Computer Keyboard → MIDI Output** — KeyboardFlyout hat `onKeyDown`, routed aber nur per console.log. Echten WebMIDI Output braucht's.
+2. ⬜ **Sound-Test** — Bastian muss Seite laden, AMYboard connecten, Patch laden, Note spielen. Prüfen ob Sound rauskommt.
+3. ⬜ **Board 2 (94)** — IP rausfinden, Safe-Start boot.py + TR-909 Snare deployen
+
+---
+
+## 13. Critical Lessons Learned
 
 | Problem | Lösung |
 |---------|--------|
@@ -429,11 +450,15 @@ Generische Conversion jedes AMY Wire-Formats:
 5. ⬜ **Board 2 (94)** — TR-909 Snare deployen (Safe-Start boot.py!)
 6. ⬜ **MIDI Input Hook** — Externe USB-Keyboards visualisieren
 
-### TODOs (13.07.2026)
-- [ ] git commit mit neuem Handover + README + allen Source-Files
-- [ ] amyuipimp.md umsetzen (Phase 1)
-- [ ] Fallback-Grid aus Dashboard entfernen (wenn SwipeStack funktioniert)
-- [ ] Debug-Badge aus Dashboard entfernen (nach UI-Refactor)
-- [ ] Keyboard mit echter Velocity per Pointer Events
-- [ ] Multi-Synth: Module nach Synth gruppieren
-- [ ] Add Module: Bottom Sheet mit Modul-Typen
+### TODOs (13.07.2026) — ✔️ Done
+- [x] **git commit mit Handover + allen Source-Files** — 14.07.2026
+- [x] **amyuipimp.md umsetzen (Phase 1-5)** — LiveBoard, KeyboardFlyout, AddModuleSheet, PatchSelector, Dashboard entschlackt
+- [x] Fallback-Grid aus Dashboard entfernt ✅
+- [x] Debug-Badge aus Dashboard entfernt ✅
+- [x] Keyboard Flyout mit 3 Zuständen (collapsed/normal/full) ✅
+- [x] Multi-Synth: Synth-Tabs im LiveBoard ✅
+- [x] Add Module: Bottom Sheet mit Modul-Typen ✅
+- [ ] **Computer Keyboard → MIDI Output** — console.log statt echtem Output
+- [ ] **Sound-Test** — Board gibt Ton aus bestätigen
+- [ ] Responsive Testing (iPhone SE, iPad, 13", 27")
+- [ ] Board 2 (94) — TR-909 Snare deployen (Safe-Start boot.py!)

@@ -604,15 +604,19 @@ curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID
 - [x] Live-Parameter-Update (Slider → sofortiger Sound, geloggt)
 - [x] Fix: Touch-freundlicher "+ Modul" Button (click statt group-hover)
 - [x] Fix: `onSendWire` feuert echte SysEx/zP statt console.log
-- [ ] Modul-Canvas (Drag&Drop Grid)
-- [ ] **Oszillator-Modul** (alle Wellenformen, Freq, Amp, Pan, Detune)
-- [ ] **Filter-Modul** (LPF/BPF/HPF, Cutoff, Resonance, CtrlCoefs)
-- [ ] **Envelope 0 + 1** (ADSR mit Breakpoints)
-- [ ] **Echter WebMIDI Output** (midiOutput.send statt console.log)
-- [ ] **FX Rack** (Reverb, Chorus, Echo)
-- [ ] Lokale Patch Library (Speichern/Laden/Löschen)
-- [ ] State vom Board laden (zDZ) + auf Board schreiben (zA/zT)
-- [ ] ♻️ Sound-Test bestanden (board gibt Ton aus)
+- [x] **LiveBoard Page (/live)** — Vollbild Patch Editor mit Signal Chain + Synth-Tabs + Auto-Load/Save
+- [x] **Keyboard Flyout** — 3 Zustände (collapsed/normal/full), Multi-Touch, Desktop-Sidebar
+- [x] **Add Module Bottom Sheet** — Modul-Typen-Auswahl (OSC, Filter, Envelope, LFO, Synth)
+- [x] **Patch Selector Sheet** — Factory + User Patches mit Suchfilter + Category-Tabs
+- [x] **Dashboard entschlackt** — Connect + "Start Live Session" + Recent Patches (kein Grid-Layout)
+- [x] **Framer Motion** — AnimatePresence für SwipeStack, motion für Module, Smooth Reorder
+- [x] **Skeleton Loader** — Loading States für Patch-Load, Module-Instantiation
+- [x] **Disconnected Overlay** — Blur + "Connect to AMYboard" Message wenn nicht verbunden
+- [x] **Dashboard/Patches Fallback** — Grid entfernt, Debug-Badge entfernt
+- [x] **Save/Load/Board Quick Actions** — Save to Board via Sketch Upload, Load from Board via zDZ Dump
+- [x] **TypeScript Build Fix (14.07.)** — chainInfo Typ in amy.ts korrigiert
+- [ ] **Echter WebMIDI Output** (midiOutput.send statt console.log in KeyboardFlyout)
+- [ ] **Sound-Test bestanden** (board gibt Ton aus bei Patch-Load + Note-Play)
 
 ### 🟡 Phase 2 – FX & FM
 - [ ] **FX Rack** (Reverb, Chorus, Echo, EQ pro Bus)

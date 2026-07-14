@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Library, Music, Settings } from 'lucide-react'
+import { LayoutDashboard, Library, Music, Settings, Sliders } from 'lucide-react'
 import { Dashboard } from './pages/Dashboard'
 import { Patches } from './pages/Patches'
+import { LiveBoard } from './pages/LiveBoard'
 import { MidiUnavailableBanner } from './components/Sidebar'
 
 function NavLink({ to, icon, label }: { to: string; icon: React.ReactNode; label: string }) {
@@ -31,6 +32,7 @@ function AppLayout() {
       <main className="flex-1 pb-16">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/live" element={<LiveBoard />} />
           <Route path="/patches" element={<Patches />} />
           <Route path="/settings" element={
             <div className="p-4 max-w-5xl mx-auto">
@@ -45,6 +47,7 @@ function AppLayout() {
       <nav className="fixed bottom-0 left-0 right-0 bg-[var(--color-surface)] border-t border-[var(--color-border)] z-50 lg:hidden">
         <div className="flex justify-around py-1">
           <NavLink to="/" icon={<LayoutDashboard size={18} />} label="Dashboard" />
+          <NavLink to="/live" icon={<Sliders size={18} />} label="Live" />
           <NavLink to="/patches" icon={<Library size={18} />} label="Patches" />
           <NavLink to="/settings" icon={<Settings size={18} />} label="Settings" />
         </div>
@@ -59,6 +62,7 @@ function AppLayout() {
           </Link>
           <div className="flex gap-1">
             <NavLink to="/" icon={<LayoutDashboard size={14} />} label="Dashboard" />
+            <NavLink to="/live" icon={<Sliders size={14} />} label="Live" />
             <NavLink to="/patches" icon={<Library size={14} />} label="Patches" />
             <NavLink to="/settings" icon={<Settings size={14} />} label="Settings" />
           </div>

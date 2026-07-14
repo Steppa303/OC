@@ -207,8 +207,8 @@ export interface CardProps {
   cardIndex: number
   totalCards: number
   chainInfo?: {
-    inputs: string[]
-    outputs: string[]
+    inputs: { moduleId: string; output: string }[]
+    outputs: { moduleId: string; input: string }[]
     onNavigateToModule?: (id: string) => void
   }
 }
