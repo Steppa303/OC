@@ -1,8 +1,9 @@
-# AMYboard Projekt – Session Handover v8
+# AMYboard Projekt – Session Handover v9
 
 > Erstellt: 13.07.2026 19:30
-> Letzte Session: 14.07.2026, 07:35–07:42
-> Nächster Schritt: Sound-Test (Board gibt Ton aus) + Computer Keyboard → MIDI Output
+> Letzte Session: 25.07.2026, 21:26–21:40
+> Nächster Schritt: Board-Dateien via Thonny hochladen + TCP-Verbindung testen
+> **Neu:** amypatch-Projekt gestartet (`projects/amypatch/`)
 
 ---
 
@@ -462,3 +463,34 @@ Generische Conversion jedes AMY Wire-Formats:
 - [ ] **Sound-Test** — Board gibt Ton aus bestätigen
 - [ ] Responsive Testing (iPhone SE, iPad, 13", 27")
 - [ ] Board 2 (94) — TR-909 Snare deployen (Safe-Start boot.py!)
+
+---
+
+## 14. amypatch-Projekt (25.07.2026)
+
+**Status:** 🔄 Infrastruktur-Setup
+**Repo:** `projects/amypatch/` (Git)
+**Doku:** `projects/amypatch/STATUS.md`
+
+### Was ist amypatch?
+Natural-Language Patch-Deployment für AMYboard. Sound auf Deutsch beschreiben → Code generieren → via TCP aufs Board.
+
+### Entscheidungen
+- TCP FILEWRITE (remote.py erweitert)
+- Wählbare Boards (board1/board2), kein Default
+- amytool PatchDoc-Pipeline wiederverwenden
+- Skill im Projekt-Repo
+
+### Nächste Schritte
+1. Board-Dateien via Thonny hochladen (remote.py, boot.py, sketch.py)
+2. IP-Adressen rausfinden
+3. TCP-Verbindung vom VPS testen
+4. PatchDoc-Pipeline extrahieren
+5. SKILL.md schreiben
+
+### Board-Setup (nach Upload)
+| Pfad | Zweck |
+|------|-------|
+| `boot.py` | Safe-Start Bootstrap |
+| `current/remote.py` | WLAN + TCP Server (Port 2323, mit FILEWRITE) |
+| `current/sketch.py` | Patch (wird von amypatch überschrieben) |

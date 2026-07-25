@@ -145,6 +145,7 @@ export function parsePatchState(patch: {
         ampCoefs: coefToSliders(ampCoefs),
       },
       targetOsc: oscNum,
+      targetSynth: patch.state.synths?.[0]?.synth ?? 0,
       cardIndex: cardIndex++,
       derivedFromPatch: true,
     })
@@ -172,6 +173,7 @@ export function parsePatchState(patch: {
           modKey: 0,
         },
         targetOsc: oscNum,
+      targetSynth: patch.state.synths?.[0]?.synth ?? 0,
         cardIndex: cardIndex++,
         derivedFromPatch: true,
       })
@@ -208,6 +210,7 @@ export function parsePatchState(patch: {
           release: bp.release,
         },
         targetOsc: oscNum,
+      targetSynth: patch.state.synths?.[0]?.synth ?? 0,
         cardIndex: cardIndex++,
         derivedFromPatch: true,
       })
@@ -242,6 +245,7 @@ export function parsePatchState(patch: {
           release: bp.release,
         },
         targetOsc: oscNum,
+      targetSynth: patch.state.synths?.[0]?.synth ?? 0,
         cardIndex: cardIndex++,
         derivedFromPatch: true,
       })
@@ -281,6 +285,7 @@ export function parsePatchState(patch: {
           targetPan: 0,
         },
         targetOsc: oscNum,
+      targetSynth: patch.state.synths?.[0]?.synth ?? 0,
         cardIndex: cardIndex++,
         derivedFromPatch: true,
       })
@@ -296,6 +301,57 @@ export function parsePatchState(patch: {
       console.error('[parsePatchState] Error processing osc', osc.osc, ':', err)
       errors.push(`OSC ${osc.osc}: ${err}`)
     }
+  }
+
+  // Phase 2: Create synth module for each synth in patch state
+  if (patch.state.synths && patch.state.synths.length > 0) {
+    for (const synth of patch.state.synths) {
+      const synthId = genId()
+      const patchNum = synth.patch
+      const foundPatch = patch.state.oscillators.length > 0
+        ? patch.state.synths[0]
+        : null
+
+      modules.push({
+        id: synthId,
+        moduleType: 'synth',
+        x: 0,
+        y: cardIndex * 220,
+        width: 280,
+        height: 200,
+        params: {
+          synth: synth.synth,
+          patch: synth.patch,
+          num_voices: synth.num_voices ?? 6,
+          midiCh: synth.midi_channel ?? 1,
+          portamento: synth.portamento ?? 0,
+        },
+        targetSynth: synth.synth,
+        cardIndex: cardIndex++,
+        derivedFromPatch: true,
+      })
+    }
+  } else {
+    // Fallback: create a default synth module if no synths in dump
+    const synthId = genId()
+    modules.push({
+      id: synthId,
+      moduleType: 'synth',
+      x: 0,
+      y: cardIndex * 220,
+      width: 280,
+      height: 200,
+      params: {
+        synth: 0,
+        patch: patch.number,
+        num_voices: 6,
+        midiCh: 1,
+        portamento: 0,
+      },
+      targetSynth: 0,
+      cardIndex: cardIndex++,
+      derivedFromPatch: true,
+    })
   }
 
   if (errors.length > 0) {

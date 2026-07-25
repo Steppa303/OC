@@ -1,9 +1,9 @@
 {
-  "id": "81c44ca0-9975-45b8-bc82-7d09dd9f0b19",
+  "id": "56791323-d1d5-429c-98bc-e242529802e1",
   "resource_id": "GmowZyszFwEcn3sHGH8cRX9-uXw",
-  "token": "scribe-wh-v2-1783850457",
-  "expiration": 1783936857000,
-  "page_token": "136864",
-  "created_at": 1783850457,
+  "token": "scribe-wh-v2-24c36f170627",
+  "expiration": 1785061804086,
+  "page_token": "137490",
+  "created_at": 1784975407,
   "address": "https://lesestoff.steppa.online/api/scribe/webhook"
 }

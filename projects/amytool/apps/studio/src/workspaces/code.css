@@ -1,0 +1,101 @@
+.code-workspace {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-app);
+}
+
+.code-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  height: 40px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-panel);
+  flex-shrink: 0;
+}
+
+.code-title {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.code-sync {
+  font-size: 12px;
+}
+
+.code-sync-ok {
+  color: var(--ok);
+}
+
+.code-sync-dirty {
+  color: var(--warn);
+}
+
+.code-apply-btn {
+  margin-left: auto;
+  color: var(--text-primary);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.code-apply-btn:disabled {
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.code-editor {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+.code-editor .cm-editor {
+  height: 100%;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.code-editor .cm-gutters {
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  border-right: 1px solid var(--border-panel);
+}
+
+.code-editor .cm-activeLine {
+  background: var(--bg-panel-raised);
+}
+
+.code-editor .cm-cursor {
+  border-left-color: var(--accent);
+}
+
+.code-warnings {
+  flex-shrink: 0;
+  max-height: 30%;
+  overflow: auto;
+  padding: 8px 16px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-panel);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.code-warn-none {
+  color: var(--text-dim);
+}
+
+.code-warnings ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.code-warnings li {
+  color: var(--warn);
+  margin: 2px 0;
+}

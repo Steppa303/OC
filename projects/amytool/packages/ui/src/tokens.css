@@ -1,0 +1,41 @@
+/* Design tokens — the ONLY place where colors/sizes are defined (docs/04 §1).
+   Components must reference these vars; hard-coded values are rejected in review + tests. */
+:root {
+  /* surfaces */
+  --bg-app: #0e0f12;
+  --bg-rack: #121318;
+  --bg-panel: #1a1c22;
+  --bg-panel-raised: #20232b;
+  --border-panel: #2a2e38;
+
+  /* text */
+  --text-primary: #e6e8ee;
+  --text-secondary: #9aa0ae;
+  --text-dim: #5c6270;
+
+  /* accents & states */
+  --accent: #4fc3f7;
+  --danger: #ff5964;
+  --warn: #ffcf5c;
+  --ok: #57d99b;
+
+  /* jack / cable kinds */
+  --jack-audio: #ffb648;
+  --jack-cv: #7ee08a;
+  --jack-gate: #f26d85;
+  --jack-midi: #8f7ef2;
+
+  /* displays (green-on-black instrument look) */
+  --display-bg: #0a0c10;
+  --display-fg: #7ee08a;
+
+  /* typography */
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* rack geometry */
+  --hp: 24px;
+  --panel-h: 380px;
+  --radius-panel: 6px;
+  --radius-control: 4px;
+}

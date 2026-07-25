@@ -1,0 +1,3 @@
+# TR8 — TR-8S Pattern & Kit Generator
+streamlit>=1.28.0
+numpy>=1.24.0

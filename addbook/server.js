@@ -11,9 +11,11 @@ const PORT = 3006;
 const RESULTS_DIR = '/srv/addbook/results';
 const EPUB_DIR = '/srv/addbook/epubs';
 const LISTS_DIR = '/srv/addbook/lists';
+const ANSWER_DIR = '/srv/addbook/answers';
+const RECIPE_JSON_DIR = '/srv/addbook/recipes';
 
 // Ensure directories exist
-[RESULTS_DIR, EPUB_DIR, LISTS_DIR].forEach(dir => {
+[RESULTS_DIR, EPUB_DIR, LISTS_DIR, ANSWER_DIR, RECIPE_JSON_DIR].forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
@@ -118,9 +120,10 @@ app.post('/api/drive-webhook', (req, res) => {
   // Only trigger sync on 'change' or 'add' events
   if (state === 'change' || state === 'add') {
     const syncScript = path.join(__dirname, 'addbook_sync.py');
-    execFile('python3', [syncScript], { timeout: 120000 }, (error, stdout, stderr) => {
-      if (error) console.error('Webhook sync error:', stderr);
-      else console.log('Webhook sync done');
+    // Phase 1: nur discover + job creation, < 5s
+    execFile('python3', [syncScript, 'phase1'], { timeout: 30000 }, (error, stdout, stderr) => {
+      if (error) console.error('Webhook phase1 error:', stderr ? stderr.slice(-300) : error.message);
+      else console.log('Webhook phase1 done');
     });
   }
 
@@ -133,13 +136,14 @@ app.post('/api/drive-webhook', (req, res) => {
 // ============================================================
 app.post('/api/sync', (req, res) => {
   const syncScript = path.join(__dirname, 'addbook_sync.py');
-  execFile('python3', [syncScript], { timeout: 120000 }, (error, stdout, stderr) => {
+  const mode = req.body.mode || 'phase1';
+  execFile('python3', [syncScript, mode], { timeout: 120000 }, (error, stdout, stderr) => {
     if (error) {
-      console.error('Sync error:', stderr);
+      console.error('Sync error [' + mode + ']:', stderr);
       return res.status(500).json({ error: 'Sync failed', details: stderr });
     }
-    console.log('Sync completed');
-    res.json({ status: 'ok', output: stdout.slice(-500) });
+    console.log('Sync [' + mode + '] completed');
+    res.json({ status: 'ok', mode, output: stdout.slice(-500) });
   });
 });
 
@@ -456,6 +460,301 @@ function renderTemplate(template, data) {
 
   return html;
 }
+
+// ============================================================
+// Simple Markdown-to-HTML converter
+// ============================================================
+function markdownToHtml(md) {
+  if (!md) return '';
+  let html = md;
+
+  // Escape HTML entities first
+  html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Code blocks (fenced) - do this before inline processing
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    return `<pre><code>${code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Headers (must be before bold/italic)
+  html = html.replace(/^#### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // Horizontal rules
+  html = html.replace(/^(\*{3,}|-{3,}|_{3,})$/gm, '<hr>');
+
+  // Bold and italic
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // Unordered lists
+  html = html.replace(/^[*-] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+  // Ordered lists
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  // Wrap consecutive <li> after ordered items (but not inside existing <ul>)
+  html = html.replace(/(<ul>[\s\S]*?<\/ul>)/g, (match) => {
+    return match;
+  });
+
+  // Blockquotes
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  html = html.replace(/((?:<blockquote>.*<\/blockquote>\n?)+)/g, (match) => {
+    return match.replace(/<\/blockquote>\n?<blockquote>/g, '<br>');
+  });
+
+  // Paragraphs: split by double newline, wrap non-tag blocks in <p>
+  const blocks = html.split(/\n\n+/);
+  html = blocks.map(block => {
+    const trimmed = block.trim();
+    if (!trimmed) return '';
+    // Don't wrap tags in <p>
+    if (/^<(h[1-4]|ul|ol|pre|hr|blockquote|li)/.test(trimmed)) {
+      return trimmed;
+    }
+    // Replace single newlines with <br> within paragraphs
+    const withBreaks = trimmed.replace(/\n/g, '<br>');
+    return `<p>${withBreaks}</p>`;
+  }).join('\n');
+
+  return html;
+}
+
+// ============================================================
+// Answer template rendering
+// ============================================================
+function renderAnswerTemplate(template, data) {
+  const { question, answer, timestamp } = data;
+  let html = template;
+
+  html = html.split('__QUESTION__').join(escHtml(question || 'Frage'));
+  html = html.split('__ANSWER_HTML__').join(markdownToHtml(answer || ''));
+
+  // Format date
+  let dateStr = '';
+  if (timestamp) {
+    try {
+      const d = new Date(timestamp);
+      dateStr = d.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { dateStr = timestamp; }
+  }
+  html = html.split('__DATE__').join(dateStr || new Date().toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }));
+
+  return html;
+}
+
+// ============================================================
+// Recipe list template rendering (multiple recipes, selection view)
+// ============================================================
+function renderRecipeListTemplate(template, data) {
+  const { id, query, recipes, count } = data;
+  let html = template;
+
+  html = html.split('__QUERY__').join(escHtml(query || 'Rezepte'));
+  html = html.split('__COUNT__').join(String(count || recipes.length));
+
+  const cards = (recipes || []).map((r, i) => {
+    const stars = '★'.repeat(Math.round(r.rating || 0)) + '☆'.repeat(5 - Math.round(r.rating || 0));
+    const imageHtml = r.image
+      ? `<img src="${escAttr(r.image)}" alt="" loading="lazy">`
+      : '<span class="no-img">🍽️</span>';
+    const meta = [r.prep_time, r.cook_time, r.yield].filter(Boolean).join(' · ');
+
+    return `<a class="recipe-card" href="/rezepte/${id}/r/${i}">
+      <div class="card-image">${imageHtml}</div>
+      <div class="card-info">
+        <div class="recipe-title">${escHtml(r.title || 'Rezept')}</div>
+        ${meta ? `<div class="recipe-meta">${escHtml(meta)}</div>` : ''}
+        <div class="recipe-rating"><span class="stars">${stars}</span> ${r.rating} (${r.rating_count || 0})</div>
+        <div class="recipe-source">${escHtml(r.source_domain || '')}</div>
+      </div>
+    </a>`;
+  }).join('\n');
+
+  html = html.split('__RECIPE_CARDS__').join(cards || '<li class="recipe-card"><div class="card-info"><em>Keine Rezepte gefunden.</em></div></li>');
+
+  return html;
+}
+
+// ============================================================
+// Recipe detail template rendering (single recipe)
+// ============================================================
+function renderRecipeDetailTemplate(template, recipe, resultId, hasMultiple) {
+  let html = template;
+
+  html = html.split('__TITLE__').join(escHtml(recipe.title || 'Rezept'));
+
+  // Back link (only if part of a multi-recipe result)
+  const backLink = hasMultiple
+    ? `<a class="back-link" href="/rezepte/${resultId}">← Zurück zur Übersicht</a>`
+    : '';
+  html = html.split('__BACK_LINK__').join(backLink);
+
+  // Image
+  const imageHtml = recipe.image
+    ? `<img src="${escAttr(recipe.image)}" alt="${escAttr(recipe.title)}" loading="lazy">`
+    : '<span class="no-img">🍽️</span>';
+  html = html.split('__IMAGE__').join(imageHtml);
+
+  // Meta items
+  const metaItems = [];
+  const timeFormat = (iso) => {
+    if (!iso) return null;
+    const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
+    if (!m) return iso;
+    const parts = [];
+    if (m[1]) parts.push(`${m[1]} Std`);
+    if (m[2]) parts.push(`${m[2]} Min`);
+    return parts.join(' ');
+  };
+  if (recipe.prep_time) metaItems.push({ label: 'Vorbereitung', value: timeFormat(recipe.prep_time) || recipe.prep_time });
+  if (recipe.cook_time) metaItems.push({ label: 'Kochzeit', value: timeFormat(recipe.cook_time) || recipe.cook_time });
+  if (recipe.total_time) metaItems.push({ label: 'Gesamtzeit', value: timeFormat(recipe.total_time) || recipe.total_time });
+  if (recipe.yield) metaItems.push({ label: 'Portionen', value: recipe.yield });
+
+  html = html.split('__META_ITEMS__').join(metaItems.map(m =>
+    `<div class="meta-item"><div class="meta-label">${escHtml(m.label)}</div><div class="meta-value">${escHtml(m.value)}</div></div>`
+  ).join(''));
+
+  // Rating
+  let ratingHtml = '';
+  if (recipe.rating) {
+    const stars = '★'.repeat(Math.round(recipe.rating)) + '☆'.repeat(5 - Math.round(recipe.rating));
+    ratingHtml = `<div class="rating-box"><span class="stars">${stars}</span> ${recipe.rating} / 5 (${recipe.rating_count || 0} Bewertungen)</div>`;
+  }
+  html = html.split('__RATING__').join(ratingHtml);
+
+  // Ingredients
+  const ingredients = (recipe.ingredients || []).map(i => `<li>${escHtml(i)}</li>`).join('\n');
+  html = html.split('__INGREDIENTS__').join(ingredients || '<li><em>Keine Zutaten gefunden</em></li>');
+
+  // Instructions
+  const instructions = (recipe.instructions || []).map(i => `<li>${escHtml(i)}</li>`).join('\n');
+  html = html.split('__INSTRUCTIONS__').join(instructions || '<li><em>Keine Anleitung gefunden</em></li>');
+
+  // Source
+  let sourceHtml = '';
+  if (recipe.url) {
+    sourceHtml = `<div class="source-link">Quelle: <a href="${escAttr(recipe.url)}" target="_blank" rel="noopener">${escHtml(recipe.source_domain || recipe.url)}</a></div>`;
+  }
+  html = html.split('__SOURCE__').join(sourceHtml);
+
+  return html;
+}
+
+// HTML escape helpers (used in template rendering, not for browser JS)
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function escAttr(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ============================================================
+// ANSWER ROUTES
+// ============================================================
+app.get('/a', (req, res) => {
+  const latestFile = path.join(ANSWER_DIR, 'latest.json');
+  if (!fs.existsSync(latestFile)) {
+    return res.status(404).send(getErrorPage('Keine Antwort', 'Es wurde noch keine Frage beantwortet.'));
+  }
+  try {
+    const data = JSON.parse(fs.readFileSync(latestFile, 'utf8'));
+    const template = fs.readFileSync(path.join(__dirname, 'templates', 'answer.html'), 'utf8');
+    const html = renderAnswerTemplate(template, data);
+    res.type('html').send(html);
+  } catch (e) {
+    console.error('Error serving latest answer:', e);
+    res.status(500).send(getErrorPage('Serverfehler', e.message));
+  }
+});
+
+app.get('/a/:id', (req, res) => {
+  const answerFile = path.join(ANSWER_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(answerFile)) {
+    return res.status(404).send(getErrorPage('Antwort nicht gefunden', 'Diese Antwort existiert nicht oder wurde gelöscht.'));
+  }
+  try {
+    const data = JSON.parse(fs.readFileSync(answerFile, 'utf8'));
+    const template = fs.readFileSync(path.join(__dirname, 'templates', 'answer.html'), 'utf8');
+    const html = renderAnswerTemplate(template, data);
+    res.type('html').send(html);
+  } catch (e) {
+    console.error('Error serving answer:', e);
+    res.status(500).send(getErrorPage('Serverfehler', e.message));
+  }
+});
+
+// ============================================================
+// RECIPE ROUTES
+// ============================================================
+app.get('/rezepte', (req, res) => {
+  const latestFile = path.join(RECIPE_JSON_DIR, 'latest.json');
+  if (!fs.existsSync(latestFile)) {
+    return res.status(404).send(getErrorPage('Keine Rezepte', 'Es wurden noch keine Rezepte gesucht.'));
+  }
+  const id = JSON.parse(fs.readFileSync(latestFile, 'utf8')).id;
+  res.redirect(302, `/rezepte/${id}`);
+});
+
+app.get('/rezepte/:id', (req, res) => {
+  const recipeFile = path.join(RECIPE_JSON_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(recipeFile)) {
+    return res.status(404).send(getErrorPage('Rezepte nicht gefunden', 'Diese Rezeptsammlung existiert nicht oder wurde gelöscht.'));
+  }
+
+  try {
+    const data = JSON.parse(fs.readFileSync(recipeFile, 'utf8'));
+    const recipes = data.recipes || [];
+
+    if (recipes.length === 1) {
+      // Single recipe → render detail page directly
+      const template = fs.readFileSync(path.join(__dirname, 'templates', 'recipe-detail.html'), 'utf8');
+      const html = renderRecipeDetailTemplate(template, recipes[0], data.id, false);
+      res.type('html').send(html);
+    } else {
+      // Multiple recipes → render selection page
+      const template = fs.readFileSync(path.join(__dirname, 'templates', 'recipe-list.html'), 'utf8');
+      const html = renderRecipeListTemplate(template, data);
+      res.type('html').send(html);
+    }
+  } catch (e) {
+    console.error('Error serving recipes:', e);
+    res.status(500).send(getErrorPage('Serverfehler', e.message));
+  }
+});
+
+app.get('/rezepte/:id/r/:index', (req, res) => {
+  const recipeFile = path.join(RECIPE_JSON_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(recipeFile)) {
+    return res.status(404).send(getErrorPage('Rezept nicht gefunden', 'Diese Rezeptsammlung existiert nicht.'));
+  }
+
+  try {
+    const data = JSON.parse(fs.readFileSync(recipeFile, 'utf8'));
+    const recipes = data.recipes || [];
+    const index = parseInt(req.params.index, 10);
+
+    if (isNaN(index) || index < 0 || index >= recipes.length) {
+      return res.status(404).send(getErrorPage('Rezept nicht gefunden', 'Dieses Rezept existiert nicht in dieser Sammlung.'));
+    }
+
+    const template = fs.readFileSync(path.join(__dirname, 'templates', 'recipe-detail.html'), 'utf8');
+    const html = renderRecipeDetailTemplate(template, recipes[index], data.id, recipes.length > 1);
+    res.type('html').send(html);
+  } catch (e) {
+    console.error('Error serving recipe detail:', e);
+    res.status(500).send(getErrorPage('Serverfehler', e.message));
+  }
+});
 
 function getErrorPage(title, message) {
   return `<!DOCTYPE html>

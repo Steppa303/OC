@@ -1,0 +1,512 @@
+/* Component styles for @amy/ui primitives. Colors/sizes come exclusively from tokens.css. */
+
+/* ---- Panel ---- */
+.ui-panel {
+  display: flex;
+  flex-direction: column;
+  width: calc(var(--hp) * var(--panel-hp, 8));
+  height: var(--panel-h);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-panel);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  overflow: hidden;
+  user-select: none;
+  transition: width 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-panel {
+    transition: none;
+  }
+}
+
+.ui-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  padding: 0 8px;
+  background: var(--bg-panel-raised);
+  border-bottom: 1px solid var(--border-panel);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* Cosmetic color tag (P7-02): a stripe on the panel header + tinted top border. */
+.ui-panel-accented {
+  border-top: 2px solid var(--panel-accent, var(--accent));
+}
+
+.ui-panel-accented .ui-panel-header {
+  box-shadow: inset 0 2px 0 var(--panel-accent, var(--accent));
+}
+
+.ui-panel-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-panel-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.ui-panel-header .ui-panel-menu,
+.ui-panel-header .ui-panel-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.ui-panel-header .ui-panel-close {
+  font-size: 16px;
+}
+
+.ui-panel-header .ui-panel-close:hover {
+  color: var(--danger);
+}
+
+.ui-panel-controls {
+  flex: 1;
+  padding: 10px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: flex-start;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ui-panel-jackfield {
+  flex-shrink: 0;
+  min-height: 96px;
+  border-top: 1px solid var(--border-panel);
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ui-panel-jacks-in,
+.ui-panel-jacks-out {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+
+/* ---- Node layout (Stufe 2): Blender-style rows with edge pins ---- */
+.ui-panel-node {
+  height: auto;
+  min-height: 96px;
+}
+
+.ui-panel-node .ui-panel-controls {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 8px 0;
+  overflow: visible;
+}
+
+.ui-noderow {
+  display: grid;
+  grid-template-columns: 14px 1fr 14px;
+  align-items: center;
+  min-height: 24px;
+  width: 100%;
+}
+
+.ui-noderow-pin {
+  position: relative;
+  width: 14px;
+  height: 100%;
+}
+
+.ui-noderow-body {
+  min-width: 0;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* full-width widget rows (keyboard, drum grid, scope, displays) */
+.ui-noderow-wide .ui-noderow-body {
+  display: block;
+}
+
+/* An edge pin: a small kind-colored socket dot. */
+.ui-node-pin {
+  position: relative;
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 1.5px solid var(--pin-color, var(--text-dim));
+  background: var(--bg-panel);
+}
+
+.ui-node-pin.connected {
+  background: var(--pin-color, var(--text-dim));
+}
+
+.ui-node-pin-audio {
+  --pin-color: var(--jack-audio);
+}
+.ui-node-pin-cv {
+  --pin-color: var(--jack-cv);
+}
+.ui-node-pin-gate {
+  --pin-color: var(--jack-gate);
+}
+.ui-node-pin-midi {
+  --pin-color: var(--jack-midi);
+}
+
+/* Output rows label sits right, next to the right pin. */
+.ui-noderow-out .ui-noderow-body {
+  justify-content: flex-end;
+}
+
+.ui-noderow-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ---- Knob ---- */
+.ui-knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.ui-knob:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-control);
+}
+
+.ui-knob-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ui-knob-tooltip {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 2px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ---- Jack ---- */
+.ui-jack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: crosshair;
+  color: inherit;
+  font: inherit;
+}
+
+.ui-jack:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: var(--radius-control);
+}
+
+.ui-jack-ring {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid var(--jack-color);
+  background: var(--bg-app);
+  box-sizing: border-box;
+}
+
+.ui-jack-connected .ui-jack-ring {
+  background: var(--jack-color);
+}
+
+.ui-jack-audio {
+  --jack-color: var(--jack-audio);
+}
+.ui-jack-cv {
+  --jack-color: var(--jack-cv);
+}
+.ui-jack-gate {
+  --jack-color: var(--jack-gate);
+}
+.ui-jack-midi {
+  --jack-color: var(--jack-midi);
+}
+
+.ui-jack-label {
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ---- Select ---- */
+.ui-select {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-select select {
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  padding: 3px 6px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.ui-select select:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+/* ---- Toggle ---- */
+.ui-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ui-toggle-track {
+  width: 28px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-panel);
+  position: relative;
+  transition: background 0.15s;
+}
+
+.ui-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition:
+    left 0.15s,
+    background 0.15s;
+}
+
+.ui-toggle input:checked + .ui-toggle-track {
+  background: var(--accent);
+}
+
+.ui-toggle input:checked + .ui-toggle-track .ui-toggle-thumb {
+  left: 14px;
+  background: var(--bg-app);
+}
+
+.ui-toggle input:focus-visible + .ui-toggle-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- Slider ---- */
+.ui-slider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-slider-label {
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-slider-track {
+  position: relative;
+  display: flex;
+  flex: 1;
+  /* Keep the track draggable even in narrow (low-HP) modules. */
+  min-width: 44px;
+}
+
+.ui-slider-track input {
+  accent-color: var(--accent);
+  width: 100%;
+  min-width: 0;
+}
+
+/* Value overlaid on the right of the track — no horizontal footprint. */
+.ui-slider-value {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  padding: 0 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--bg-panel) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-primary);
+  text-transform: none;
+}
+
+/* ---- Display ---- */
+.ui-display {
+  background: var(--display-bg);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  color: var(--display-fg);
+  font-family: var(--font-mono);
+  padding: 4px 6px;
+  min-width: 60px;
+}
+
+.ui-display-value {
+  font-size: 16px;
+  text-align: right;
+}
+
+.ui-display-text {
+  font-size: 11px;
+  white-space: pre-wrap;
+}
+
+.ui-display-scope svg {
+  display: block;
+}
+
+.ui-display-scope polyline {
+  fill: none;
+  stroke: var(--display-fg);
+  stroke-width: 1.5;
+}
+
+.ui-stepgrid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ui-stepgrid-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ui-stepgrid-label {
+  width: 56px;
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-stepgrid-cells {
+  display: flex;
+  gap: 3px;
+}
+
+.ui-stepgrid-cell {
+  width: 16px;
+  height: 20px;
+  border: 1px solid var(--border-panel);
+  border-radius: 3px;
+  background: var(--bg-app);
+  cursor: pointer;
+  padding: 0;
+}
+
+.ui-stepgrid-cell.beat {
+  border-color: var(--text-dim);
+}
+
+.ui-stepgrid-cell.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.ui-stepgrid-cell.accent.on {
+  background: var(--jack-gate);
+  border-color: var(--jack-gate);
+}
+
+.ui-stepgrid-cell.playhead {
+  box-shadow: inset 0 0 0 2px var(--ok);
+}

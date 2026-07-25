@@ -21,16 +21,8 @@ export function Dashboard() {
   // Recent Patches (last 5)
   const recentPatches = [...patches].reverse().slice(0, 5)
 
-  // Auto-Load & Navigate on Connect
-  useEffect(() => {
-    if (state === 'connected') {
-      // Short delay to let the connection settle, then go to Live Board
-      const timer = setTimeout(() => {
-        navigate('/live')
-      }, 500)
-      return () => clearTimeout(timer)
-    }
-  }, [state, navigate])
+  // No auto-navigate anymore — user stays on Dashboard to see Log, etc.
+  // User navigates to /live manually via "Start Live Session" button.
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 lg:p-8">

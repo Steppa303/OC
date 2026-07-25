@@ -1,6 +1,6 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-07-04 ~00:42_
+_Letzte Aktualisierung: 2026-07-25 ~21:40_
 
 ---
 
@@ -77,6 +77,55 @@ _Letzte Aktualisierung: 2026-07-04 ~00:42_
 - Runpod API v1 Schema geändert: `gpuTypeIds` (Array), `containerDiskInGb`
 - GHCR Registry Credentials als GraphQL-Mutation erstellen (`saveRegistryAuth`)
 - VPS Disk: `docker system prune -af` gibt ~26GB zurück
+
+## 🎹 amypatch — AMYboard Natural-Language Patch Deployment (25.07.2026)
+
+**Status:** 🔄 Infrastruktur-Setup (Phase 0)
+**Repo:** `projects/amypatch/` (Git)
+**Zweck:** Sound auf Deutsch beschreiben → Code generieren → via TCP auf AMYboard deployen
+
+### Entscheidungen (25.07.2026)
+1. **TCP FILEWRITE** — remote.py erweitert um Datei-Upload-Protokoll
+2. **Wählbare Boards** — `amypatch board1 ...` / `amypatch board2 ...`
+3. **Kein Default-Board** — bei fehlender Angabe → Nachfrage an User
+4. **PatchDoc-Pipeline** — amytool wiederverwenden (Prompt → PatchPlan JSON → compileToSketch → Python)
+5. **Skill im Projekt-Repo** — `projects/amypatch/SKILL.md`
+
+### Architektur
+```
+User (Telegram) → OpenClaw Skill → LLM (Prompt→PatchDoc) → compileToSketch → TCP FILEWRITE → Board
+```
+
+### Board-Setup
+- **Board 1:** 192.168.178.89 (Valhalla Shimmer, vor Reset)
+- **Board 2:** 192.168.178.94 (fresh reset)
+- **WLAN:** FRITZ!Box 7590 IB / K13#wlan2023
+- **TCP Port:** 2323 (remote.py)
+- **WireGuard:** wg-amy (VPS 185.217.126.72 → FritzBox 192.168.178.204)
+
+### Dateien auf Board
+| Pfad | Zweck |
+|------|-------|
+| `boot.py` | Safe-Start Bootstrap |
+| `current/remote.py` | WLAN + TCP Server (mit FILEWRITE) |
+| `current/sketch.py` | Der Patch (wird von amypatch überschrieben) |
+
+### Nächste Schritte
+1. Bastian lädt Dateien via Thonny auf Boards
+2. IP-Adressen rausfinden
+3. TCP-Verbindung vom VPS testen
+4. PatchDoc-Pipeline aus amytool extrahieren
+5. SKILL.md schreiben
+
+### Files
+- `projects/amypatch/board/remote.py` — TCP Server mit FILEWRITE
+- `projects/amypatch/board/boot.py` — Safe-Start Bootstrap
+- `projects/amypatch/board/sketch.py` — Test-Sketch (440Hz Sine)
+- `projects/amypatch/scripts/deploy.py` — Sketch-Upload via TCP
+- `projects/amypatch/scripts/test_connection.py` — Verbindungstest
+- `projects/amypatch/STATUS.md` — Detaillierter Projektstand
+
+---
 
 ## 📅 Scribe & AddBook — Google Drive Webhooks (29.06.2026)
 

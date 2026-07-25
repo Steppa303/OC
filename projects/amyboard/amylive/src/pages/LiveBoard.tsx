@@ -308,7 +308,10 @@ export function LiveBoard() {
   const connected = connState === 'connected'
   const log = useLogStore.getState()
 
-  const [viewState, setViewState] = useState<ViewState>(connected ? 'loading' : 'empty')
+  // Startzustand basierend auf vorhandenen Modulen (z.B. bei Rückkehr vom Dashboard)
+  const [viewState, setViewState] = useState<ViewState>(
+    modules.length > 0 ? 'ready' : 'empty'
+  )
   const [expandedModuleId, setExpandedModuleId] = useState<string | null>(null)
   const [showAddSheet, setShowAddSheet] = useState(false)
   const [showPatchSelector, setShowPatchSelector] = useState(false)
@@ -319,12 +322,12 @@ export function LiveBoard() {
   const [showDisconnected, setShowDisconnected] = useState(false)
   const chainRef = useRef<HTMLDivElement>(null)
 
-  // ── Auto-Load on Connect ────────────────────────────────────────────
+  // ── Auto-Load on Connect / Mount ────────────────────────────────────
   useEffect(() => {
     if (connState === 'connected' && viewState === 'empty') {
       handleLoadFromBoard()
     }
-  }, [connState])
+  }, [connState, viewState])
 
   const handleLoadFromBoard = useCallback(async () => {
     setViewState('loading')

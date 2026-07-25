@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Kaufvertrag – Kraftfahrzeug</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2.2cm 2.8cm;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #1a1a1a;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding-bottom: 0.6cm;
+    margin-bottom: 0.8cm;
+    border-bottom: 2.5pt solid #1a1a1a;
+  }
+  .header h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 0.15cm;
+  }
+  .header .sub {
+    font-size: 9.5pt;
+    color: #666;
+    letter-spacing: 0.3pt;
+  }
+
+  /* ── Section Titles ── */
+  h2 {
+    font-size: 10.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4pt;
+    color: #1a1a1a;
+    margin-top: 0.7cm;
+    margin-bottom: 0.35cm;
+    padding-bottom: 0.15cm;
+    border-bottom: 0.75pt solid #bbb;
+  }
+
+  /* ── Tables (Fahrzeugdaten, Parteien) ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.3cm;
+  }
+  table td {
+    padding: 0.12cm 0;
+    vertical-align: bottom;
+    font-size: 10.5pt;
+  }
+  table td:first-child {
+    width: 5cm;
+    color: #444;
+    font-size: 9.5pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2pt;
+    padding-right: 0.4cm;
+  }
+  .line {
+    border-bottom: 0.5pt dotted #999;
+    display: inline-block;
+    min-width: 7cm;
+    height: 1.3em;
+    vertical-align: bottom;
+  }
+  .line-sm { min-width: 3.5cm; }
+  .line-md { min-width: 5cm; }
+  .line-lg { min-width: 10cm; }
+  .spacer { height: 0.35cm; }
+
+  /* ── Clauses ── */
+  .clause {
+    margin-bottom: 0.45cm;
+    text-align: justify;
+    hyphens: auto;
+  }
+  .clause p {
+    margin: 0.08cm 0;
+  }
+  .§ {
+    font-weight: 700;
+    margin-right: 0.2cm;
+  }
+  .bold { font-weight: 700; }
+
+  /* ── Signature ── */
+  .sig-area {
+    margin-top: 1.8cm;
+    display: flex;
+    justify-content: space-between;
+    gap: 2cm;
+  }
+  .sig-box {
+    flex: 1;
+    text-align: center;
+  }
+  .sig-line {
+    border-top: 0.5pt solid #1a1a1a;
+    margin-top: 2.8cm;
+    padding-top: 0.25cm;
+    font-size: 8.5pt;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.3pt;
+  }
+
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 1.5cm;
+    font-size: 8pt;
+    color: #999;
+    text-align: center;
+    border-top: 0.5pt solid #ddd;
+    padding-top: 0.3cm;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Kaufvertrag</h1>
+  <div class="sub">Kraftfahrzeug · Privatkauf</div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>1 · Vertragsparteien</h2>
+<table>
+  <tr><td>Verkäufer</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+  <tr><td>Anschrift</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+  <tr><td>Geburtsdatum</td><td><span class="line line-sm">&nbsp;</span></td></tr>
+  <tr><td class="spacer" colspan="2"></td></tr>
+  <tr><td>Käufer</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+  <tr><td>Anschrift</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+  <tr><td>Geburtsdatum</td><td><span class="line line-sm">&nbsp;</span></td></tr>
+</table>
+
+<!-- ─────────────────────────────────────── -->
+<h2>2 · Fahrzeugdaten</h2>
+<table>
+  <tr><td>Marke / Modell</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+  <tr><td>Fahrzeug-Ident.-Nr.</td><td><span class="line line-md">&nbsp;</span></td></tr>
+  <tr><td>Erstzulassung</td><td><span class="line line-sm">&nbsp;</span></td></tr>
+  <tr><td>Kilometerstand</td><td><span class="line line-sm">&nbsp;</span>&thinsp;km</td></tr>
+  <tr><td>Kennzeichen</td><td><span class="line line-md">&nbsp;</span></td></tr>
+  <tr><td>TÜV / AU gültig bis</td><td><span class="line line-sm">&nbsp;</span></td></tr>
+  <tr><td>Zubehör / Hinweise</td><td><span class="line line-lg">&nbsp;</span></td></tr>
+</table>
+
+<!-- ─────────────────────────────────────── -->
+<h2>3 · Kaufpreis und Zahlung</h2>
+
+<div class="clause">
+  <p><span class="§">§ 1</span> Der Kaufpreis beträgt <span class="line line-sm">&nbsp;</span>&thinsp;€ (in Worten: <span class="line line-lg">&nbsp;</span>&thinsp;Euro).</p>
+</div>
+<div class="clause">
+  <p><span class="§">§ 2</span> Der Kaufpreis ist bei Übergabe in bar zu zahlen.</p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>4 · Übergabe</h2>
+
+<div class="clause">
+  <p><span class="§">§ 3</span> Die Übergabe erfolgt am <span class="line line-sm">&nbsp;</span>&thinsp;in <span class="line line-md">&nbsp;</span>. Mit der Übergabe geht die Gefahr des zufälligen Untergangs auf den Käufer über.</p>
+</div>
+<div class="clause">
+  <p><span class="§">§ 4</span> Der Verkäufer händigt bei Übergabe aus: Zulassungsbescheinigung Teil I + II, letzte TÜV-Bescheinigung sowie alle vorhandenen Schlüssel.</p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>5 · Zustand des Fahrzeugs</h2>
+
+<div class="clause">
+  <p><span class="§">§ 5</span> Der Verkäufer versichert, dass ihm keine verheimlichten Mängel bekannt sind. Bekannte Mängel und Besonderheiten:</p>
+  <p style="margin-top:0.2cm;"><span class="line line-lg">&nbsp;</span></p>
+  <p><span class="line line-lg">&nbsp;</span></p>
+  <p><span class="line line-lg">&nbsp;</span></p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>6 · Haftungsausschluss</h2>
+
+<div class="clause">
+  <p><span class="§">§ 6</span> Das Fahrzeug wird <span class="bold">„gekauft wie besehen"</span> übergeben. Die gesetzliche Sachmängelhaftung des Verkäufers wird — soweit gesetzlich zulässig — <span class="bold">vollständig ausgeschlossen</span>.</p>
+  <p>Dieser Ausschluss gilt <span class="bold">nicht</span> für Ansprüche aus vorsätzlicher oder grob fahrlässiger Pflichtverletzung sowie für die Verletzung von Leben, Körper oder Gesundheit.</p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>7 · Eigentum und Ummeldung</h2>
+
+<div class="clause">
+  <p><span class="§">§ 7</span> Der Verkäufer sichert zu, alleiniger Eigentümer zu sein. Das Fahrzeug ist frei von Rechten Dritter.</p>
+</div>
+<div class="clause">
+  <p><span class="§">§ 8</span> Der Käufer verpflichtet sich zur unverzüglichen Ummeldung. Bis dahin haftet er für alle verkehrsbezogenen Verbindlichkeiten.</p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<h2>8 · Schlussbestimmungen</h2>
+
+<div class="clause">
+  <p><span class="§">§ 9</span> Änderungen bedürfen der Schriftform. Es gilt deutsches Recht. Sollte eine Bestimmung unwirksam sein, bleibt die Wirksamkeit der übrigen unberührt.</p>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+
+<div class="sig-area">
+  <div class="sig-box">
+    <div class="sig-line">Ort, Datum · Unterschrift Verkäufer</div>
+  </div>
+  <div class="sig-box">
+    <div class="sig-line">Ort, Datum · Unterschrift Käufer</div>
+  </div>
+</div>
+
+</body>
+</html>

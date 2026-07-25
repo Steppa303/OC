@@ -1,0 +1,123 @@
+.status-dot-connected {
+  background: var(--ok);
+}
+
+.status-dot-connecting {
+  background: var(--warn);
+}
+
+.status-dot-error {
+  background: var(--danger);
+}
+
+.status-dot-disconnected {
+  background: var(--text-dim);
+}
+
+.board-connect-btn {
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: var(--bg-panel-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.board-connect-btn:disabled {
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.board-menu-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.board-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  min-width: 200px;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+
+.board-menu li {
+  margin: 0;
+}
+
+.board-menu button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.board-menu button:hover {
+  background: var(--bg-panel);
+}
+
+.board-traceback {
+  position: absolute;
+  top: 56px;
+  right: 12px;
+  z-index: 20;
+  width: min(480px, calc(100% - 24px));
+  background: var(--bg-panel);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.board-traceback-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--danger);
+  border-bottom: 1px solid var(--border-panel);
+}
+
+.board-traceback-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.board-traceback-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.board-traceback-head button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.board-traceback-body {
+  margin: 0;
+  padding: 10px 12px;
+  max-height: 240px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}

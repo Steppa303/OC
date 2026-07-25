@@ -1,0 +1,117 @@
+.generate-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-panel);
+}
+
+.generate-input {
+  display: flex;
+  gap: 8px;
+}
+
+.generate-prompt {
+  flex: 1;
+  padding: 6px 10px;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  font-family: var(--font-ui);
+}
+
+.generate-prompt:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.generate-btn {
+  padding: 6px 14px;
+  background: var(--accent);
+  color: var(--bg-app);
+  border: none;
+  border-radius: var(--radius-control);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.generate-btn:disabled {
+  background: var(--bg-panel-raised);
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.generate-trace {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.generate-trace li {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.trace-stage {
+  min-width: 120px;
+}
+
+.trace-ok .trace-mark {
+  color: var(--ok);
+}
+
+.trace-fail .trace-mark {
+  color: var(--danger);
+}
+
+.trace-detail {
+  color: var(--text-dim);
+}
+
+.generate-error {
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.generate-result {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.generate-notes {
+  margin: 0;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.generate-vote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.generate-vote button {
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-control);
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.generate-vote button.voted {
+  border-color: var(--accent);
+  background: var(--bg-app);
+}
