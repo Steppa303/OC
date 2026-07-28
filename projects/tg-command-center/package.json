@@ -1,0 +1,9 @@
+{
+  "name": "infinite-canvas",
+  "private": true,
+  "scripts": {
+    "build": "cd client && npm run build",
+    "start": "cd server && node index.js",
+    "dev": "concurrently \"cd server && node --watch index.js\" \"cd client && npm run dev\""
+  }
+}

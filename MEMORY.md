@@ -1,6 +1,91 @@
 # MEMORY.md - Meine Langzeit-Erinnerungen
 
-_Letzte Aktualisierung: 2026-07-25 ~21:40_
+_Letzte Aktualisierung: 2026-07-28 ~10:50_
+
+---
+
+## 🎨 Infinite Canvas — canvas.steppa.online (28.07.2026)
+
+**Status:** ✅ Live
+**URL:** `canvas.steppa.online`
+**PM2:** `tg-command-center` (Port 3721)
+**Repo:** `projects/tg-command-center/`
+**Handover:** `projects/tg-command-center/HANDOVER.md`
+
+### Stack
+- Frontend: React 18 + Zustand + Framer Motion + TailwindCSS + Vite
+- Backend: Express + better-sqlite3 (WAL) + Multer
+- Deploy: PM2 + Caddy (reverse_proxy localhost:3721)
+
+### Features (27.07.2026)
+- Infinite Pan & Zoom (Maus + Touch/Pinch)
+- Text-Cards (Titel, Content, 7 Farben)
+- Bild-Upload (Drag & Drop, max 10MB)
+- Drag & Drop mit DOM-Ref-Fix (kein Flicker)
+- Multi-Select (Shift+Click, Rubberband, Ctrl+A)
+- Undo/Redo (50 Snapshots)
+- Snap-to-Grid (24px)
+- Context Menu (Rechtsklick)
+- Pin, Duplicate, Color-Change, Delete
+- Export als JSON
+- Telegram WebApp Integration (Haptic Feedback)
+- Framer Motion Animationen (Cards, Menu, Toolbar)
+- Responsive (Mobile Toolbar unten, Touch-Targets)
+
+### Tech Debt
+- Kein Auth
+- Kein WebSocket (kein Multi-User Realtime)
+- SQLite Single-Writer
+- Kein Image-Resize
+
+---
+
+## 🎨 Infinite Canvas — canvas.steppa.online (28.07.2026)
+
+**Status:** ✅ Live
+**URL:** `canvas.steppa.online`
+**PM2:** `tg-command-center` (Port 3721)
+**Repo:** `projects/tg-command-center/`
+**Handover:** `projects/tg-command-center/HANDOVER.md`
+
+### Stack
+- Frontend: React 18 + Zustand + Framer Motion + TailwindCSS + Vite
+- Backend: Express + better-sqlite3 (WAL) + Multer
+- Deploy: PM2 + Caddy (reverse_proxy localhost:3721)
+
+### Features (27.07.2026)
+- Infinite Pan & Zoom (Maus + Touch/Pinch)
+- Text-Cards (Titel, Content, 7 Farben)
+- Bild-Upload (Drag & Drop, max 10MB)
+- Drag & Drop mit DOM-Ref-Fix (kein Flicker)
+- Multi-Select (Shift+Click, Rubberband, Ctrl+A)
+- Undo/Redo (50 Snapshots)
+- Snap-to-Grid (24px)
+- Context Menu (Rechtsklick)
+- Pin, Duplicate, Color-Change, Delete
+- Export als JSON
+- Telegram WebApp Integration (Haptic Feedback)
+- Framer Motion Animationen (Cards, Menu, Toolbar)
+- Responsive (Mobile Toolbar unten, Touch-Targets)
+
+### Bug Fixes (28.07.2026)
+- **Position-Reset bei Klick:** 5px Drag-Threshold + requestAnimationFrame DOM-Cleanup
+- **EditModal Restyle:** Glassmorphism, Icons, Focus-Glow, Gradient-Buttons
+- **Bilder-Upload:** Server-seitig OK, Flow getestet
+
+### Tech Debt
+- Kein Auth
+- Kein WebSocket (kein Multi-User Realtime)
+- SQLite Single-Writer
+- Kein Image-Resize
+
+---
+
+## 📱 Telegram Inline-Buttons — DEAKTIVIERT (25.07.2026)
+
+**Entscheidung (Bastian):** TUI/Inline-Buttons Skill komplett deaktiviert und entfernt.
+**Grund:** Wird nicht mehr gewünscht.
+**Entfernt aus:** AGENTS.md (TUI-Sektion), TOOLS.md (Telegram-Buttons-Sektion), MEMORY.md (dieser Eintrag)
 
 ---
 
