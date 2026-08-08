@@ -17,14 +17,14 @@ const useStore = create((set, get) => ({
     hiphop: 10,
   },
 
-  // Genre scope: global or per-track
-  genreScope: 'global', // 'global' | 'drums' | 'bass' | 'synth'
+  // Active tab for card-based UI
+  activeTab: 'global', // 'global' | 'drums' | 'bass' | 'synth'
 
-  // Per-track genre weights (same shape as genres)
-  trackGenres: {
-    drums: { techno: 40, house: 15, acid: 20, trance: 5, dnb: 10, hiphop: 10 },
-    bass:  { techno: 40, house: 15, acid: 20, trance: 5, dnb: 10, hiphop: 10 },
-    synth: { techno: 40, house: 15, acid: 20, trance: 5, dnb: 10, hiphop: 10 },
+  // Per-track genre overrides — null = synced to Global, otherwise object with same shape as genres
+  trackGenreOverrides: {
+    drums: null,
+    bass: null,
+    synth: null,
   },
 
   // Mood (0-100)
@@ -75,7 +75,8 @@ const useStore = create((set, get) => ({
   trackParams: {
     drums: {
       density: null, complexity: null, groove: null,
-      kickWeight: 100, snareWeight: 100, hihatWeight: 100, clapWeight: 100, percWeight: 100,
+      kickWeight: 100, snareWeight: 100, loTomWeight: 100, midTomWeight: 100, hiTomWeight: 100,
+      rimWeight: 100, clapWeight: 100, chhWeight: 100, ohhWeight: 100, crashWeight: 100, rideWeight: 100,
     },
     bass: {
       density: null, complexity: null, groove: null,
@@ -114,18 +115,28 @@ const useStore = create((set, get) => ({
     }
   }),
 
-  // Actions — Genre Scope
-  setGenreScope: (scope) => set({ genreScope: scope }),
+  // Actions — Active Tab
+  setActiveTab: (tab) => set({ activeTab: tab }),
 
-  // Actions — Per-track genre weights
-  setTrackGenreWeight: (track, genre, value) => set(state => ({
-    trackGenres: {
-      ...state.trackGenres,
-      [track]: { ...state.trackGenres[track], [genre]: Math.max(0, Math.min(100, value)) },
-    },
-    mutationCount: { drums: 0, bass: 0, synth: 0 },
-    patternDirty: true,
-  })),
+  // Actions — Track Genre Sync & Overrides
+  setTrackSync: (track, synced) => set(state => {
+    if (synced) {
+      // Re-sync: discard local overrides
+      const overrides = { ...state.trackGenreOverrides, [track]: null }
+      return { trackGenreOverrides: overrides, patternDirty: true }
+    }
+    // Un-sync: copy global values as starting point
+    const overrides = { ...state.trackGenreOverrides, [track]: { ...state.genres } }
+    return { trackGenreOverrides: overrides, mutationCount: { drums: 0, bass: 0, synth: 0 }, patternDirty: true }
+  }),
+  setTrackGenreOverride: (track, genre, value) => set(state => {
+    const current = state.trackGenreOverrides[track] || { ...state.genres }
+    const overrides = {
+      ...state.trackGenreOverrides,
+      [track]: { ...current, [genre]: Math.max(0, Math.min(100, value)) },
+    }
+    return { trackGenreOverrides: overrides, mutationCount: { drums: 0, bass: 0, synth: 0 }, patternDirty: true }
+  }),
 
   // Actions — Mutate & Next Pattern
   mutateTrack: (track) => set(state => {
@@ -223,12 +234,13 @@ const useStore = create((set, get) => ({
       name,
       timestamp: Date.now(),
       genres: { ...state.genres },
-      genreScope: state.genreScope,
-      trackGenres: {
-        drums: { ...state.trackGenres.drums },
-        bass: { ...state.trackGenres.bass },
-        synth: { ...state.trackGenres.synth },
-      },
+      trackGenreOverrides: state.trackGenreOverrides
+        ? {
+            drums: state.trackGenreOverrides.drums ? { ...state.trackGenreOverrides.drums } : null,
+            bass: state.trackGenreOverrides.bass ? { ...state.trackGenreOverrides.bass } : null,
+            synth: state.trackGenreOverrides.synth ? { ...state.trackGenreOverrides.synth } : null,
+          }
+        : { drums: null, bass: null, synth: null },
       mood: { ...state.mood },
       swingMode: state.swingMode,
       swingAmount: state.swingAmount,
@@ -261,14 +273,22 @@ const useStore = create((set, get) => ({
       }
       return next
     })()
-    set({
-      genres: { ...preset.genres },
-      genreScope: preset.genreScope || 'global',
-      trackGenres: preset.trackGenres ? {
+    // Migrate trackGenreOverrides from old presets (no override = null = synced)
+    let trackGenreOverrides = preset.trackGenreOverrides || null
+    if (!trackGenreOverrides && preset.trackGenres) {
+      // Legacy preset: migrate trackGenres → trackGenreOverrides (all unsynced)
+      trackGenreOverrides = {
         drums: { ...preset.trackGenres.drums },
         bass: { ...preset.trackGenres.bass },
         synth: { ...preset.trackGenres.synth },
-      } : get().trackGenres,
+      }
+    }
+    if (!trackGenreOverrides) {
+      trackGenreOverrides = { drums: null, bass: null, synth: null }
+    }
+    set({
+      genres: { ...preset.genres },
+      trackGenreOverrides,
       mood: { ...preset.mood },
       swingMode: preset.swingMode,
       swingAmount: preset.swingAmount,

@@ -158,11 +158,17 @@ export function mixTrack(genreWeights, trackType, seed, drumWeights) {
 
   if (trackType === 'drums') {
     return {
-      kick:  mixDrumPattern(nw, 'kick', seed, drumWeights),
-      snare: mixDrumPattern(nw, 'snare', seed, drumWeights),
-      hihat: mixDrumPattern(nw, 'hihat', seed, drumWeights),
-      clap:  mixDrumPattern(nw, 'clap', seed, drumWeights),
-      perc:  mixDrumPattern(nw, 'perc', seed, drumWeights),
+      kick:   mixDrumPattern(nw, 'kick', seed, drumWeights),
+      snare:  mixDrumPattern(nw, 'snare', seed, drumWeights),
+      loTom:  mixDrumPattern(nw, 'loTom', seed, drumWeights),
+      midTom: mixDrumPattern(nw, 'midTom', seed, drumWeights),
+      hiTom:  mixDrumPattern(nw, 'hiTom', seed, drumWeights),
+      rim:    mixDrumPattern(nw, 'rim', seed, drumWeights),
+      clap:   mixDrumPattern(nw, 'clap', seed, drumWeights),
+      chh:    mixDrumPattern(nw, 'chh', seed, drumWeights),
+      ohh:    mixDrumPattern(nw, 'ohh', seed, drumWeights),
+      crash:  mixDrumPattern(nw, 'crash', seed, drumWeights),
+      ride:   mixDrumPattern(nw, 'ride', seed, drumWeights),
     };
   }
 

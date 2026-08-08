@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Geist:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(24, 32, 40, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .canvas-grid {
+            background-image: radial-gradient(circle at 1px 1px, rgba(136, 146, 155, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .ai-glow {
+            box-shadow: 0 0 20px -5px rgba(36, 161, 222, 0.3);
+        }
+        .progress-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00daf3, transparent);
+            background-size: 200% 100%;
+            animation: move-gradient 2s linear infinite;
+        }
+        @keyframes move-gradient {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#0c141c",
+                        "surface-bright": "#323a43",
+                        "on-secondary-fixed-variant": "#384957",
+                        "primary-fixed-dim": "#86cfff",
+                        "on-background": "#dbe3ee",
+                        "on-secondary-fixed": "#0b1d2a",
+                        "on-primary-container": "#00344c",
+                        "tertiary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed": "#001f24",
+                        "surface-container": "#182028",
+                        "primary-fixed": "#c8e6ff",
+                        "primary": "#86cfff",
+                        "on-surface-variant": "#bec8d1",
+                        "tertiary-container": "#00a7ba",
+                        "outline": "#88929b",
+                        "surface": "#0c141c",
+                        "outline-variant": "#3e4850",
+                        "surface-container-lowest": "#070f16",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#141c24",
+                        "on-error": "#690005",
+                        "on-secondary": "#213240",
+                        "secondary-fixed-dim": "#b7c9da",
+                        "inverse-primary": "#00658f",
+                        "on-primary-fixed-variant": "#004c6d",
+                        "secondary": "#b7c9da",
+                        "secondary-fixed": "#d3e5f6",
+                        "surface-variant": "#2e363e",
+                        "surface-container-highest": "#2e363e",
+                        "surface-container-high": "#232b33",
+                        "on-primary-fixed": "#001e2e",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#a9bacb",
+                        "tertiary-fixed-dim": "#00daf3",
+                        "on-tertiary-container": "#00363d",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dbe3ee",
+                        "background": "#0c141c",
+                        "primary-container": "#24a1de",
+                        "surface-tint": "#86cfff",
+                        "inverse-surface": "#dbe3ee",
+                        "on-tertiary": "#00363d",
+                        "inverse-on-surface": "#29313a",
+                        "on-primary": "#00344c",
+                        "secondary-container": "#3a4b59",
+                        "on-tertiary-fixed-variant": "#004f58",
+                        "tertiary": "#00daf3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "gutter": "16px",
+                        "canvas-grid": "24px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "code-snippet": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-snippet": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen selection:bg-primary-container/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm transition-all duration-200">
+<div class="flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of a modern tech user, minimalist aesthetic, soft studio lighting with cool blue and slate gray tones. The person has a neutral, intellectual expression, perfectly centered for a UI profile avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPKQBBXokZXs8VcqybZuicBtrpjZ1Ou0sT8JpeoCzqJR6Rb-wjAh_7Rw46LFYFfUS9x3eAqJU-oRggBHkcQ1xFzRFZz_NV8YWLXTNPbT75sMkqHj-f89rph820LZbgHF6gqwiMkrkjZkfh-20n5KGpiOCN_aWVnyqr4MO7RQwN5s5qbEmDcT2LYK-rv-GGjefiIngbHmzfuD-xt448HqZU7xzB8s8eMCKzdmtK-EF9RT8CW_4aXcrkQku0tQlhm5ePdCb_PTqDVlI"/>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Workspace</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/10 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/10 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-32 min-h-screen canvas-grid relative overflow-x-hidden">
+<!-- Background Animation -->
+<div class="absolute inset-0 pointer-events-none opacity-20">
+
+</div>
+<!-- Sticky Filter Header -->
+<div class="px-margin-mobile mb-6">
+<div class="flex items-center justify-between mb-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Assets</h1>
+<button class="flex items-center gap-1 text-primary font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[18px]">add</span> NEW
+                </button>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="px-5 py-2 rounded-full bg-primary-container text-on-primary-container font-label-caps text-label-caps whitespace-nowrap shadow-sm">All</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant border border-outline-variant/20 font-label-caps text-label-caps whitespace-nowrap transition-all hover:bg-surface-bright/20">AI Results</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant border border-outline-variant/20 font-label-caps text-label-caps whitespace-nowrap transition-all hover:bg-surface-bright/20">Uploads</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant border border-outline-variant/20 font-label-caps text-label-caps whitespace-nowrap transition-all hover:bg-surface-bright/20">Links</button>
+</div>
+</div>
+<!-- Asset Grid -->
+<div class="px-margin-mobile grid grid-cols-2 gap-4">
+<!-- AI Asset Card -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300 hover:scale-[1.02] ai-glow">
+<div class="progress-line w-full"></div>
+<div class="aspect-square relative">
+<img class="w-full h-full object-cover" data-alt="A high-tech digital generative art piece showing abstract neural network connections in neon cyan and telegram blue over a dark charcoal background. The style is hyper-modern and fluid, evoking artificial intelligence and complex data structures in a sleek tech workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjh92pdKErAvzLWMIDpsQldsbb7xn8xmw9gRWdptm2yJjwaaEzohtCfLYETcJXoOn4IYJSVRVRYwzMqLkwI1u4cG6kWBOvJegU6kkl_mdrF6PLEwO810AVbwiys7uMuWYEFftP7Fzf2BYjEuYFfa1JPFh1IuLoKXqm7ccMK_YZpllYeFaQF8sgARDRy5ejZ4X4FVpxAy5j_YElJy3EResyCWFTTvMqQpAhvzoXUKDAoPMyXAf-EBIt1w659agJeowkKvyGr_iAx6I"/>
+<div class="absolute top-2 left-2 bg-primary-container/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold text-on-primary-container">AI GEN</div>
+</div>
+<div class="p-3">
+<p class="font-label-caps text-label-caps text-on-surface truncate">Neural_Flux_v2.png</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] text-on-surface-variant font-code-snippet">4.2 MB</span>
+<span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Uploaded Card -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300 hover:scale-[1.02]">
+<div class="aspect-square relative">
+<img class="w-full h-full object-cover" data-alt="A minimalist architectural photograph of a brutalist concrete building against a deep navy night sky. The lighting is sharp and dramatic, highlighting clean lines and geometric shadows. The overall aesthetic is intellectual, corporate, and modern, fitting for a professional asset library." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCii0WiJkuT5upAcsLik_BMH--Ha1j1AFjjY2GzdF3PmomQXoMa-_BZw8d1nFshVz587l2Cf95iRGz5AX5rl_yZOXVQYSp0DR60NPV7cDcXqNfEBUK2fdUgff0q_vHChH4ubJB56AjaMWLxVCQ919HeAK2zTb1-YXi2b3N5QuInUucbVIpkMzxY_iQw6wE9ADbkRD-X87gE8JgE9CGKG7LZnBO0vShUdNER_z5OK9_v9zsig_eqnZ7WwfLLSUHsNYRlifN0MMaXcYw"/>
+</div>
+<div class="p-3">
+<p class="font-label-caps text-label-caps text-on-surface truncate">Office_Concept.jpg</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] text-on-surface-variant font-code-snippet">1.8 MB</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">file_upload</span>
+</div>
+</div>
+</div>
+<!-- Document Card -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300 hover:scale-[1.02]">
+<div class="aspect-square bg-surface-container-highest flex items-center justify-center p-8">
+<span class="material-symbols-outlined text-[48px] text-tertiary">description</span>
+</div>
+<div class="p-3">
+<p class="font-label-caps text-label-caps text-on-surface truncate">Project_Specs.pdf</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] text-on-surface-variant font-code-snippet">842 KB</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">description</span>
+</div>
+</div>
+</div>
+<!-- AI Result Video -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300 hover:scale-[1.02] ai-glow">
+<div class="aspect-square relative">
+<img class="w-full h-full object-cover" data-alt="A dynamic motion graphic frame featuring swirling liquid metallic textures in obsidian and electric blue. The composition is fluid and organic, with soft reflections of light creating a sense of depth and luxury. Cinematic lighting and a dark moody atmosphere define the visual." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU8hTv8uhRRna4bS2mbNE5iIn9JlbuQSsr3qCa99g_iMBMFKu1hTwW7qEChvzj-YH9FHGi1FWX9pzgnMUsM_EuWaP9fRagn0z0nXLkX1mgtmZdSTtd5DI1DR3Lkq6d9VUMvgYasWlz8lJSb4IVySE9YnYern-4DV6DdT29mygyZhx61hVUlkGp1FYJyPys_CD8L9CUCjoNdBrTePDtR-VJyrS7IN9DmHaNz5pZ8NQsV1XLDrsiB2UqhXSc2CTZKhdqULTwYljOWjY"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-colors">
+<span class="material-symbols-outlined text-[32px] text-white opacity-80" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-surface-dim/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] text-white">0:12</div>
+</div>
+<div class="p-3">
+<p class="font-label-caps text-label-caps text-on-surface truncate">Motion_Gradient.mp4</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] text-on-surface-variant font-code-snippet">12.5 MB</span>
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+</div>
+</div>
+<!-- Link Asset -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300 hover:scale-[1.02]">
+<div class="aspect-square bg-secondary-container/30 flex flex-col items-center justify-center p-4">
+<span class="material-symbols-outlined text-[32px] text-secondary mb-2">link</span>
+<span class="text-[10px] text-center text-on-secondary-container px-2">https://github.com/archive/workspace-v1</span>
+</div>
+<div class="p-3">
+<p class="font-label-caps text-label-caps text-on-surface truncate">Legacy Repo</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[10px] text-on-surface-variant font-code-snippet">LINK</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">open_in_new</span>
+</div>
+</div>
+</div>
+<!-- New Asset Placeholder -->
+<div class="rounded-xl border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center aspect-square transition-all hover:bg-surface-bright/5 active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-[32px] text-outline-variant mb-2">add_circle</span>
+<span class="font-label-caps text-label-caps text-outline-variant">UPLOAD</span>
+</div>
+</div>
+<!-- Floating Prompt Bar (as per Style Guidance) -->
+<div class="fixed bottom-24 left-margin-mobile right-margin-mobile z-40">
+<div class="glass-card rounded-full flex items-center px-4 py-2 shadow-2xl border-primary/20">
+<span class="material-symbols-outlined text-primary mr-3">auto_awesome</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 w-full text-body-sm font-body-sm" placeholder="Search or ask AI about your assets..." type="text"/>
+<button class="bg-primary p-1.5 rounded-full text-on-primary ml-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant/10 rounded-t-xl shadow-lg transition-all duration-300">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-6 px-4">
+<!-- Canvas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Canvas</span>
+</button>
+<!-- Prompt -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-caps text-label-caps">Prompt</span>
+</button>
+<!-- Assets (ACTIVE) -->
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 transition-transform duration-300 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-caps text-label-caps">Assets</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</button>
+</div>
+</nav>
+<script>
+        // Micro-interaction: Scale down header on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('h-14');
+                header.classList.remove('h-16');
+                header.classList.add('bg-surface-dim/95');
+            } else {
+                header.classList.add('h-16');
+                header.classList.remove('h-14');
+                header.classList.remove('bg-surface-dim/95');
+            }
+        });
+
+        // Filter chip selection logic
+        const chips = document.querySelectorAll('.flex.gap-2.overflow-x-auto button');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary-container', 'text-on-primary-container');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                chip.classList.add('bg-primary-container', 'text-on-primary-container');
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

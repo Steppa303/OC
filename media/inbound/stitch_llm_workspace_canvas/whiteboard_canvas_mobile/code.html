@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Nexus | Whiteboard Canvas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Execution -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#0c141c",
+                    "surface-bright": "#323a43",
+                    "on-secondary-fixed-variant": "#384957",
+                    "primary-fixed-dim": "#86cfff",
+                    "on-background": "#dbe3ee",
+                    "on-secondary-fixed": "#0b1d2a",
+                    "on-primary-container": "#00344c",
+                    "tertiary-fixed": "#9cf0ff",
+                    "on-tertiary-fixed": "#001f24",
+                    "surface-container": "#182028",
+                    "primary-fixed": "#c8e6ff",
+                    "primary": "#86cfff",
+                    "on-surface-variant": "#bec8d1",
+                    "tertiary-container": "#00a7ba",
+                    "outline": "#88929b",
+                    "surface": "#0c141c",
+                    "outline-variant": "#3e4850",
+                    "surface-container-lowest": "#070f16",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#141c24",
+                    "on-error": "#690005",
+                    "on-secondary": "#213240",
+                    "secondary-fixed-dim": "#b7c9da",
+                    "inverse-primary": "#00658f",
+                    "on-primary-fixed-variant": "#004c6d",
+                    "secondary": "#b7c9da",
+                    "secondary-fixed": "#d3e5f6",
+                    "surface-variant": "#2e363e",
+                    "surface-container-highest": "#2e363e",
+                    "surface-container-high": "#232b33",
+                    "on-primary-fixed": "#001e2e",
+                    "error-container": "#93000a",
+                    "on-secondary-container": "#a9bacb",
+                    "tertiary-fixed-dim": "#00daf3",
+                    "on-tertiary-container": "#00363d",
+                    "error": "#ffb4ab",
+                    "on-surface": "#dbe3ee",
+                    "background": "#0c141c",
+                    "primary-container": "#24a1de",
+                    "surface-tint": "#86cfff",
+                    "inverse-surface": "#dbe3ee",
+                    "on-tertiary": "#00363d",
+                    "inverse-on-surface": "#29313a",
+                    "on-primary": "#00344c",
+                    "secondary-container": "#3a4b59",
+                    "on-tertiary-fixed-variant": "#004f58",
+                    "tertiary": "#00daf3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "32px",
+                    "gutter": "16px",
+                    "canvas-grid": "24px",
+                    "unit": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "headline-lg": ["Geist"],
+                    "headline-xl": ["Geist"],
+                    "code-snippet": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-snippet": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0c141c;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Canvas Dot Grid */
+        .canvas-grid {
+            background-image: radial-gradient(circle, #3e4850 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            backdrop-filter: blur(12px);
+            background-color: rgba(24, 32, 40, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .active-glow {
+            box-shadow: 0 0 20px rgba(36, 161, 222, 0.15);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .progress-indicator {
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, #00daf3, transparent);
+            background-size: 200% 100%;
+            animation: flow 2s infinite linear;
+        }
+
+        @keyframes flow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Hide scrollbars for a clean workspace feel */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional profile headshot of a creative technologist in a dimly lit studio environment. Soft cyan and deep slate rim lighting accentuates their features. The aesthetic is clean, modern corporate with a touch of cybernetic elegance, consistent with a high-end AI workspace interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb9aOirx9Er5c04R4_Td5jLK16nF_8EKieSO-L0wNyBP4cZNpMwAISCiv6q-ON4Mj0kvlQ293-UfEJpXLdkDB7nviIJk4JrWijgf2UdTmWYBSiobNAwnbkDDvWxrRdWPuE4TFQj8M5SZmMYusZbKC33QN1biywbLKoqv9R3jYXXCvm4Rj_fHias-OIJs6Qvvx5AAlPjRGljV_4mxlsDzoSHvmOIbkJFEH5jPKWsBBl8s_CQDBTcPAdI3Zks2ZGb1MnnqLq24xgp0A"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Project Nexus</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 active:scale-95 hover:bg-surface-bright/10 text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Infinite Canvas Area (Scrollable container) -->
+<main class="relative pt-20 pb-32 min-h-screen canvas-grid">
+<div class="px-margin-mobile flex flex-col gap-6 relative">
+<!-- AI Progress Indicator (Visible if processing) -->
+<div class="fixed top-16 left-0 w-full z-40">
+<div class="progress-indicator"></div>
+</div>
+<!-- Card 1: Text Result -->
+<article class="glass-card rounded-xl p-4 flex flex-col gap-3 transition-all duration-300 active:scale-[0.98]">
+<header class="flex justify-between items-center border-b border-outline-variant/10 pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">bolt</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Insight Engine</span>
+</div>
+<span class="font-label-caps text-label-caps text-outline">2m ago</span>
+</header>
+<div class="space-y-3">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                        The architectural transition to <span class="text-tertiary">Nexus V3</span> will reduce latency by 45% while maintaining fluid canvas synchronization across mobile devices.
+                    </p>
+</div>
+<footer class="flex items-center justify-end gap-4 pt-2">
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+</button>
+</footer>
+</article>
+<!-- Card 2: Image Asset -->
+<article class="glass-card rounded-xl p-0 overflow-hidden active-glow transition-all duration-300">
+<div class="relative h-48 w-full bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A sophisticated abstract architectural visualization of a data center of the future. Cool blue and cyan light streaks flow through transparent glass panels and sleek dark metal conduits. The composition is dynamic and cinematic, emphasizing agility and fluid intellectual space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxE9fcHTfvlj3VddKgZYb4tUFpqwsIhL0JqEstIcmb40qi0qRMWCahXPPqgOupkYN_ylT0ryo39iVWfJSWtaMAYi830bUg0cA93qUCadjedJ6cVrkLar5cvud-vpfylxy7wF5zMa86uMc2DDxBIcD0RLWbmlX1leeHQt6aAjsyYudwl91teBtD_121m8XPm7vk_NX5imXf2a7UXQYhxScVclNyTIAm34gvW5SWwcoabTURtZZr7L92ibcEq1kD1M3I0BuqqRegGxg"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-surface-dim/60 backdrop-blur-md rounded border border-white/10">
+<span class="font-label-caps text-label-caps text-primary text-[10px]">VISUAL_GEN_04</span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-2">
+<h3 class="font-body-sm text-body-sm font-semibold text-on-surface">Data Node Visualization</h3>
+<div class="flex gap-2">
+<button class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-lg font-label-caps text-label-caps flex-1 flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">download</span> Export
+                        </button>
+<button class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-lg font-label-caps text-label-caps transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">share</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3: File Attachment -->
+<article class="glass-card rounded-xl p-4 flex items-center gap-4">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-lg flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-body-sm text-body-sm font-semibold text-on-surface truncate">project_spec_v1.pdf</h4>
+<p class="font-label-caps text-label-caps text-on-surface-variant">2.4 MB • PDF Document</p>
+</div>
+<button class="text-on-surface-variant active:text-primary">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</article>
+<!-- Card 4: Code Snippet -->
+<article class="glass-card rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-outline">Tailwind Config</span>
+<span class="material-symbols-outlined text-sm text-outline">code</span>
+</div>
+<pre class="bg-surface-container-lowest p-3 rounded-lg overflow-x-auto border border-outline-variant/10"><code class="font-code-snippet text-code-snippet text-primary-fixed-dim">extend: {
+  colors: {
+    "surface-dim": "#0c141c",
+    "primary": "#86cfff"
+  }
+}</code></pre>
+</article>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-28 right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center z-[60] transition-all duration-300 active:scale-90 hover:shadow-[0_0_20px_rgba(36,161,222,0.4)]" id="fab">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-6 px-4 bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant/10 shadow-lg rounded-t-xl z-50">
+<!-- Canvas (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 transition-transform duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-0.5">Canvas</span>
+</a>
+<!-- Prompt -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 transition-transform duration-300 active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-caps text-label-caps mt-0.5">Prompt</span>
+</a>
+<!-- Assets -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 transition-transform duration-300 active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-label-caps text-label-caps mt-0.5">Assets</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 transition-transform duration-300 active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps mt-0.5">Settings</span>
+</a>
+</nav>
+<!-- Prompt Overlay (Hidden by default) -->
+<div class="fixed inset-0 bg-surface-dim/90 backdrop-blur-2xl z-[100] opacity-0 pointer-events-none transition-all duration-300 flex flex-col items-center justify-end pb-32 px-6" id="prompt-overlay">
+<div class="w-full max-w-md flex flex-col gap-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold text-center">New Insight</h2>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none rounded-full py-4 px-6 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/50 font-body-md shadow-xl" placeholder="Ask Nexus anything..." type="text"/>
+<button class="absolute right-3 top-2 w-10 h-10 bg-primary-container text-white rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</div>
+<div class="flex flex-wrap justify-center gap-2">
+<button class="px-4 py-2 rounded-full border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps">Summarize Workspace</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps">Extract Images</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps">Analyze Files</button>
+</div>
+<button class="mt-8 self-center text-on-surface-variant hover:text-primary flex flex-col items-center gap-1" id="close-prompt">
+<span class="material-symbols-outlined">keyboard_double_arrow_down</span>
+<span class="font-label-caps text-label-caps">Back to Canvas</span>
+</button>
+</div>
+</div>
+<script>
+        const fab = document.getElementById('fab');
+        const overlay = document.getElementById('prompt-overlay');
+        const closePrompt = document.getElementById('close-prompt');
+
+        fab.addEventListener('click', () => {
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            overlay.classList.add('opacity-100', 'pointer-events-auto');
+        });
+
+        closePrompt.addEventListener('click', () => {
+            overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        // Simple touch feedback/drag simulation for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98) translateY(2px)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1) translateY(0)';
+            });
+        });
+    </script>
+</body></html>

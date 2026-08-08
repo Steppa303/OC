@@ -25742,3 +25742,63 @@ requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetErro
 2026-07-25 21:30:06,476 INFO Found 0 w-termine files in folder
 2026-07-25 21:30:06,476 INFO No new w-termine files found
 2026-07-25 21:30:06,478 INFO === scribe_sync end ===
+2026-08-08 22:30:01,840 INFO === scribe_sync start ===
+2026-08-08 22:30:03,197 INFO MCP session initialized (id=a98ff589-4831-4787-a619-7dbd9064aefa)
+2026-08-08 22:30:04,637 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 22:30:06,093 INFO Found 0 w-termine files in folder
+2026-08-08 22:30:06,093 INFO No new w-termine files found
+2026-08-08 22:30:06,094 INFO === scribe_sync end ===
+2026-08-08 22:40:01,330 INFO === scribe_sync start ===
+2026-08-08 22:40:02,172 INFO MCP session initialized (id=eed10bfe-eb41-42f4-afc8-876aff280768)
+2026-08-08 22:40:03,614 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 22:40:04,707 INFO Found 0 w-termine files in folder
+2026-08-08 22:40:04,708 INFO No new w-termine files found
+2026-08-08 22:40:04,710 INFO === scribe_sync end ===
+2026-08-08 22:50:01,629 INFO === scribe_sync start ===
+2026-08-08 22:50:02,530 INFO MCP session initialized (id=6b796d8a-b081-4125-af80-cb4238eda986)
+2026-08-08 22:50:03,786 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 22:50:05,911 INFO Found 0 w-termine files in folder
+2026-08-08 22:50:05,911 INFO No new w-termine files found
+2026-08-08 22:50:05,912 INFO === scribe_sync end ===
+2026-08-08 23:00:01,747 INFO === scribe_sync start ===
+2026-08-08 23:00:03,944 INFO MCP session initialized (id=2d7455d1-b368-49a0-8b8e-838fac3706bb)
+2026-08-08 23:00:06,066 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:00:07,465 INFO Found 0 w-termine files in folder
+2026-08-08 23:00:07,466 INFO No new w-termine files found
+2026-08-08 23:00:07,467 INFO === scribe_sync end ===
+2026-08-08 23:10:01,430 INFO === scribe_sync start ===
+2026-08-08 23:10:02,484 INFO MCP session initialized (id=00f1047c-e0b1-46ad-b030-880e570aeac6)
+2026-08-08 23:10:04,191 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:10:05,454 INFO Found 0 w-termine files in folder
+2026-08-08 23:10:05,454 INFO No new w-termine files found
+2026-08-08 23:10:05,456 INFO === scribe_sync end ===
+2026-08-08 23:20:01,579 INFO === scribe_sync start ===
+2026-08-08 23:20:02,960 INFO MCP session initialized (id=e0f4e5fa-7b4f-431d-a991-bbe8c42a03f2)
+2026-08-08 23:20:04,434 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:20:05,542 INFO Found 0 w-termine files in folder
+2026-08-08 23:20:05,542 INFO No new w-termine files found
+2026-08-08 23:20:05,543 INFO === scribe_sync end ===
+2026-08-08 23:30:01,606 INFO === scribe_sync start ===
+2026-08-08 23:30:02,544 INFO MCP session initialized (id=ea944a40-bd41-4718-9deb-8f0fe5aedef5)
+2026-08-08 23:30:05,078 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:30:06,416 INFO Found 0 w-termine files in folder
+2026-08-08 23:30:06,417 INFO No new w-termine files found
+2026-08-08 23:30:06,418 INFO === scribe_sync end ===
+2026-08-08 23:40:01,971 INFO === scribe_sync start ===
+2026-08-08 23:40:02,887 INFO MCP session initialized (id=56b7c2e1-5715-4764-bc77-f890b545d39f)
+2026-08-08 23:40:04,521 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:40:05,625 INFO Found 0 w-termine files in folder
+2026-08-08 23:40:05,625 INFO No new w-termine files found
+2026-08-08 23:40:05,627 INFO === scribe_sync end ===
+2026-08-08 23:50:01,989 INFO === scribe_sync start ===
+2026-08-08 23:50:02,879 INFO MCP session initialized (id=24176d17-0d4e-4655-90b4-ad26cf043176)
+2026-08-08 23:50:04,242 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-08 23:50:05,391 INFO Found 0 w-termine files in folder
+2026-08-08 23:50:05,391 INFO No new w-termine files found
+2026-08-08 23:50:05,393 INFO === scribe_sync end ===
+2026-08-09 00:00:01,304 INFO === scribe_sync start ===
+2026-08-09 00:00:02,501 INFO MCP session initialized (id=62f366cb-79e4-4345-ae8e-b4f200c0626c)
+2026-08-09 00:00:04,615 INFO Found folder 'Kindle Scribe' (ID: 1C38JFsUTRYHHimqlQwpoRka0Zi1QJKq6)
+2026-08-09 00:00:06,191 INFO Found 0 w-termine files in folder
+2026-08-09 00:00:06,192 INFO No new w-termine files found
+2026-08-09 00:00:06,193 INFO === scribe_sync end ===

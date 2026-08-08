@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Geist:wght@600;700&family=JetBrains+Mono&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(20, 28, 36, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .canvas-grid {
+            background-image: radial-gradient(circle, rgba(136, 146, 155, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .ai-progress-glow {
+            box-shadow: 0 0 15px rgba(36, 161, 222, 0.3);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3e4850;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#0c141c",
+                        "surface-bright": "#323a43",
+                        "on-secondary-fixed-variant": "#384957",
+                        "primary-fixed-dim": "#86cfff",
+                        "on-background": "#dbe3ee",
+                        "on-secondary-fixed": "#0b1d2a",
+                        "on-primary-container": "#00344c",
+                        "tertiary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed": "#001f24",
+                        "surface-container": "#182028",
+                        "primary-fixed": "#c8e6ff",
+                        "primary": "#86cfff",
+                        "on-surface-variant": "#bec8d1",
+                        "tertiary-container": "#00a7ba",
+                        "outline": "#88929b",
+                        "surface": "#0c141c",
+                        "outline-variant": "#3e4850",
+                        "surface-container-lowest": "#070f16",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#141c24",
+                        "on-error": "#690005",
+                        "on-secondary": "#213240",
+                        "secondary-fixed-dim": "#b7c9da",
+                        "inverse-primary": "#00658f",
+                        "on-primary-fixed-variant": "#004c6d",
+                        "secondary": "#b7c9da",
+                        "secondary-fixed": "#d3e5f6",
+                        "surface-variant": "#2e363e",
+                        "surface-container-highest": "#2e363e",
+                        "surface-container-high": "#232b33",
+                        "on-primary-fixed": "#001e2e",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#a9bacb",
+                        "tertiary-fixed-dim": "#00daf3",
+                        "on-tertiary-container": "#00363d",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dbe3ee",
+                        "background": "#0c141c",
+                        "primary-container": "#24a1de",
+                        "surface-tint": "#86cfff",
+                        "inverse-surface": "#dbe3ee",
+                        "on-tertiary": "#00363d",
+                        "inverse-on-surface": "#29313a",
+                        "on-primary": "#00344c",
+                        "secondary-container": "#3a4b59",
+                        "on-tertiary-fixed-variant": "#004f58",
+                        "tertiary": "#00daf3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "gutter": "16px",
+                        "canvas-grid": "24px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "code-snippet": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-snippet": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm transition-all duration-200 active:scale-95 flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Professional high-resolution headshot of a creative individual with soft studio lighting against a minimalist dark slate background. The portrait has a modern, agile aesthetic, reflecting a high-tech professional persona. Sharp focus on eyes, subtle warm highlights, and a clean, intellectual mood consistent with a high-end LLM workspace user profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXqR3_85rZGZMCJ6c1Vb8PGkjSlYNfTIlAEuo0zkKwLfZUnibLqRO5Ff4RunqDZnn9T1WWTfcOSsE0BP8ItWGUbGGhQH4qwLxgUazR4paMjG-oFJR0Ti4UHwbVhXKPO_sbxep38c9Oxmvkcn7wgfDoG3OymuWK4ebyeHEmKeC9dM3CUbmo6EruKB8cgQQNkLQckAKZ2WVFbNoGOcBVqOhVtruvG8sEdhfCOldcDVEql3zXIpWm-J7NKmDcc5752S5VR-hGtx4agVE"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary">Workspace</h1>
+</div>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-bright/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Main Canvas Context -->
+<main class="flex-1 mt-16 mb-20 overflow-y-auto canvas-grid relative flex flex-col p-margin-mobile gap-6">
+<!-- Welcome Message / Context -->
+<div class="mt-4 flex flex-col gap-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Hello, Jordan</h2>
+<p class="text-on-surface-variant font-body-md">What shall we build today?</p>
+</div>
+<!-- Chat History / Active Threads (As cards on canvas) -->
+<div class="flex flex-col gap-4">
+<!-- Pinned Card 1: AI Insight -->
+<div class="glass-card rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+<div class="h-0.5 w-full bg-tertiary ai-progress-glow"></div>
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">forum</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Telegram: Product Sync</span>
+</div>
+<span class="font-label-caps text-label-caps text-tertiary">GENESIS-4</span>
+</div>
+<p class="text-on-background font-body-md leading-relaxed mb-4">
+                        Based on the latest discussion in the Telegram thread, the team is leaning towards a decentralized architectural approach for the node scaling service.
+                    </p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-highest text-on-surface text-sm font-label-caps hover:bg-outline-variant transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                            REGENERATE
+                        </button>
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface-variant text-sm font-label-caps hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">archive</span>
+                            ARCHIVE
+                        </button>
+</div>
+</div>
+</div>
+<!-- Pinned Card 2: Code Snippet -->
+<div class="glass-card rounded-xl overflow-hidden transition-all hover:scale-[1.02]">
+<div class="p-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">code</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">LLM Generation</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/30 mb-4 overflow-x-auto">
+<pre class="font-code-snippet text-code-snippet text-primary-fixed-dim"><code>const agile_flow = () => {
+  return threads.map(t => t.sync());
+};</code></pre>
+</div>
+<button class="w-full py-2 rounded-lg bg-primary-container text-on-primary-container font-label-caps hover:brightness-110 transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                        MOVE TO CHAT
+                    </button>
+</div>
+</div>
+</div>
+<!-- Ghost Space for interaction -->
+<div class="h-32"></div>
+</main>
+<!-- Bottom Action Area (Floating Above Navigation) -->
+<div class="fixed bottom-24 left-0 w-full px-margin-mobile z-40">
+<!-- Model Selection Pills -->
+<div class="flex gap-2 overflow-x-auto pb-4 no-scrollbar justify-center">
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card border-primary/40 text-primary flex items-center gap-2 font-label-caps text-label-caps transition-all active:scale-95">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                GPT-4
+            </button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-on-surface-variant hover:text-on-surface border-outline-variant/40 flex items-center gap-2 font-label-caps text-label-caps transition-all active:scale-95">
+                CLAUDE 3.5
+            </button>
+<button class="flex-shrink-0 px-4 py-2 rounded-full glass-card text-on-surface-variant hover:text-on-surface border-outline-variant/40 flex items-center gap-2 font-label-caps text-label-caps transition-all active:scale-95">
+                GEMINI PRO
+            </button>
+</div>
+<!-- Input Bar (The Pill) -->
+<div class="glass-card rounded-full p-2 flex items-center gap-2 shadow-2xl border-primary/20 ring-4 ring-primary/5">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface font-body-md py-2" placeholder="Prompt your reality..." type="text"/>
+<button class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center shadow-lg transition-all active:scale-90 hover:brightness-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-6 px-4 bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant/10 shadow-lg rounded-t-xl z-50">
+<div class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 transition-transform duration-300 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Canvas</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-caps text-label-caps">Prompt</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-label-caps text-label-caps">Assets</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-300 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for input field focus
+        const promptInput = document.querySelector('input');
+        const inputContainer = promptInput.parentElement;
+        
+        promptInput.addEventListener('focus', () => {
+            inputContainer.classList.add('ring-primary/20', 'border-primary/50');
+            inputContainer.classList.remove('ring-primary/5', 'border-primary/20');
+        });
+        
+        promptInput.addEventListener('blur', () => {
+            inputContainer.classList.remove('ring-primary/20', 'border-primary/50');
+            inputContainer.classList.add('ring-primary/5', 'border-primary/20');
+        });
+
+        // Model switching logic
+        const modelButtons = document.querySelectorAll('.model-pill');
+        // (Just for demonstration in this UI draft)
+    </script>
+</body></html>

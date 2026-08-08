@@ -28,26 +28,19 @@ import GenreLibrary from './GenreLibrary.js';
  */
 function buildDrumSteps(rawDrums) {
   const steps = [];
+  // Priority order: kick > snare > clap > rim > chh > ohh > loTom > midTom > hiTom > crash > ride
+  const priority = ['kick', 'snare', 'clap', 'rim', 'chh', 'ohh', 'loTom', 'midTom', 'hiTom', 'crash', 'ride'];
+
   for (let i = 0; i < 16; i++) {
-    // Find the primary drum hit at this step (kick > snare > hihat > clap > perc)
     let note = 0;
     let active = false;
 
-    if (rawDrums.kick?.[i]) {
-      note = TEMPLATE_KEYS.kick;
-      active = true;
-    } else if (rawDrums.snare?.[i]) {
-      note = TEMPLATE_KEYS.snare;
-      active = true;
-    } else if (rawDrums.clap?.[i]) {
-      note = TEMPLATE_KEYS.clap;
-      active = true;
-    } else if (rawDrums.hihat?.[i]) {
-      note = TEMPLATE_KEYS.hihat;
-      active = true;
-    } else if (rawDrums.perc?.[i]) {
-      note = TEMPLATE_KEYS.perc;
-      active = true;
+    for (const key of priority) {
+      if (rawDrums[key]?.[i]) {
+        note = TEMPLATE_KEYS[key];
+        active = true;
+        break;
+      }
     }
 
     steps.push({
@@ -136,9 +129,15 @@ class PatternEngine {
           ? {
               kick: (trackParams?.drums?.kickWeight ?? 100),
               snare: (trackParams?.drums?.snareWeight ?? 100),
-              hihat: (trackParams?.drums?.hihatWeight ?? 100),
+              loTom: (trackParams?.drums?.loTomWeight ?? 100),
+              midTom: (trackParams?.drums?.midTomWeight ?? 100),
+              hiTom: (trackParams?.drums?.hiTomWeight ?? 100),
+              rim: (trackParams?.drums?.rimWeight ?? 100),
               clap: (trackParams?.drums?.clapWeight ?? 100),
-              perc: (trackParams?.drums?.percWeight ?? 100),
+              chh: (trackParams?.drums?.chhWeight ?? 100),
+              ohh: (trackParams?.drums?.ohhWeight ?? 100),
+              crash: (trackParams?.drums?.crashWeight ?? 100),
+              ride: (trackParams?.drums?.rideWeight ?? 100),
             }
           : undefined;
         raw[track] = mixTrack(trackGenreWeights?.[track] || genreWeights, track, trackSeed, drumWeights);
@@ -161,7 +160,10 @@ class PatternEngine {
       // applyMood expects ALL three tracks — build safe 3-track object
       // with empty defaults for non-current tracks to avoid "undefined.notes.map()" crashes
       const a16 = (n) => new Array(16).fill(n);
-      const emptyDrums = { kick: a16(0), snare: a16(0), hihat: a16(0), clap: a16(0), perc: a16(0) };
+      const emptyDrums = {
+        kick: a16(0), snare: a16(0), loTom: a16(0), midTom: a16(0), hiTom: a16(0),
+        rim: a16(0), clap: a16(0), chh: a16(0), ohh: a16(0), crash: a16(0), ride: a16(0)
+      };
       const emptyMelodic = { notes: a16(0), gate: a16(0) };
       const safePattern = {
         drums: track === 'drums' ? (raw[track] || emptyDrums) : emptyDrums,

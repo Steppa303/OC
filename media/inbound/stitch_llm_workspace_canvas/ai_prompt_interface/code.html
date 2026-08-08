@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workspace Alpha | Prompt Focus</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ffb4ab",
+                        "tertiary": "#00daf3",
+                        "surface-container-lowest": "#070f16",
+                        "surface-tint": "#86cfff",
+                        "primary": "#86cfff",
+                        "outline-variant": "#3e4850",
+                        "on-error": "#690005",
+                        "secondary": "#b7c9da",
+                        "surface-container-high": "#232b33",
+                        "primary-container": "#24a1de",
+                        "inverse-primary": "#00658f",
+                        "on-secondary": "#213240",
+                        "surface-dim": "#0c141c",
+                        "tertiary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed-variant": "#004f58",
+                        "background": "#0c141c",
+                        "tertiary-container": "#00a7ba",
+                        "error-container": "#93000a",
+                        "on-primary": "#00344c",
+                        "surface-container": "#182028",
+                        "on-primary-fixed-variant": "#004c6d",
+                        "on-secondary-fixed-variant": "#384957",
+                        "secondary-fixed-dim": "#b7c9da",
+                        "on-primary-fixed": "#001e2e",
+                        "inverse-surface": "#dbe3ee",
+                        "surface-bright": "#323a43",
+                        "secondary-fixed": "#d3e5f6",
+                        "inverse-on-surface": "#29313a",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2e363e",
+                        "on-tertiary-container": "#00363d",
+                        "surface-container-low": "#141c24",
+                        "tertiary-fixed-dim": "#00daf3",
+                        "on-secondary-container": "#a9bacb",
+                        "outline": "#88929b",
+                        "on-primary-container": "#00344c",
+                        "on-background": "#dbe3ee",
+                        "surface": "#0c141c",
+                        "on-surface-variant": "#bec8d1",
+                        "primary-fixed-dim": "#86cfff",
+                        "on-tertiary-fixed": "#001f24",
+                        "primary-fixed": "#c8e6ff",
+                        "on-surface": "#dbe3ee",
+                        "surface-container-highest": "#2e363e",
+                        "on-secondary-fixed": "#0b1d2a",
+                        "on-tertiary": "#00363d",
+                        "secondary-container": "#3a4b59"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "canvas-grid": "24px",
+                        "margin-mobile": "16px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "code-snippet": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-xl": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "code-snippet": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .canvas-dot-grid {
+            background-image: radial-gradient(circle, #3e4850 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .glass-panel {
+            background: rgba(20, 28, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .kinetic-blur {
+            animation: kinetic-drift 20s linear infinite;
+        }
+        @keyframes kinetic-drift {
+            from { background-position: 0 0; }
+            to { background-position: 480px 480px; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Infinite Canvas Background -->
+<div class="fixed inset-0 z-0 opacity-40 canvas-dot-grid kinetic-blur pointer-events-none"></div>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm flex justify-between items-center px-margin-desktop h-16 z-50">
+<div class="flex items-center gap-8">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">Workspace Alpha</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-body-md text-primary font-bold border-b-2 border-primary pb-1 transition-all" href="#">Board</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Threads</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Files</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<input class="bg-surface-variant/30 border-none rounded-full px-4 py-1.5 text-body-sm w-48 focus:w-64 focus:ring-1 focus:ring-primary transition-all duration-300" placeholder="Search workspace..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">group</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a user with a neutral background, high-resolution and clean lighting, integrated into a modern dark-themed software interface with subtle blue highlights. The image is circular and framed with a thin glowing cyan border." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxM_7YHWH6venoUVYN3O1JhCoXpbiz9LmuQqn7f1hIXoqFSQYoI41w93HR4phvmxxYB2Dl4l27o0NLb-XduiSUvKd6jSIlG2ulxcbsg-9Eya0yP88WlBqdIa5-HHw6DbOzmpkw43boftbonkvtPvqJh-CS4CON4GBkvAeLjijtcY9Qt37PhGSAbMCkKfo3RU-FRyHQPhJTSz0OcfZStJAayZqN7IxtzXfumyXDNYNy2hajTJcNgzxBqXT3So2ZiS2qvx5qHNyIrG4"/>
+</div>
+</div>
+</header>
+<!-- Sidebar: Projects/Whiteboard Context -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-lg border-r border-outline-variant/10 shadow-xl flex flex-col py-6 px-4 z-40 mt-16 transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-[18px] text-on-surface font-bold leading-tight">Project Nexus</h2>
+<p class="text-label-caps text-on-surface-variant opacity-70">12 Members Active</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Main Canvas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">tactic</span>
+<span class="font-body-md">Strategy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-body-md">Research</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-body-md">Assets</span>
+</a>
+</nav>
+<button class="mt-4 w-full py-3 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+            New Board
+        </button>
+<div class="mt-auto border-t border-outline-variant/10 pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md">Account</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined text-error">logout</span>
+<span class="font-body-md text-error">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas Area (Dimmed Whiteboard View) -->
+<main class="ml-[280px] mr-[320px] pt-16 h-screen relative flex items-center justify-center">
+<!-- Background Elements (Simulated Canvas Content) -->
+<div class="absolute inset-0 z-0 opacity-20 flex items-center justify-center pointer-events-none">
+<div class="flex gap-8 items-start">
+<div class="glass-panel p-6 rounded-2xl w-64 h-48 border-tertiary/20">
+<div class="flex gap-2 mb-2"><div class="w-3 h-3 rounded-full bg-tertiary"></div><div class="h-2 w-20 bg-outline-variant rounded"></div></div>
+<div class="space-y-2">
+<div class="h-1.5 w-full bg-outline-variant/20 rounded"></div>
+<div class="h-1.5 w-3/4 bg-outline-variant/20 rounded"></div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl w-80 h-64 border-primary/20 mt-12 shadow-[0_0_40px_rgba(36,161,222,0.1)]">
+<div class="h-4 w-1/2 bg-primary/20 rounded mb-4"></div>
+<div class="space-y-3">
+<div class="h-2 w-full bg-outline-variant/20 rounded"></div>
+<div class="h-2 w-full bg-outline-variant/20 rounded"></div>
+<div class="h-2 w-5/6 bg-outline-variant/20 rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Focused Prompt Interface -->
+<div class="z-10 w-full max-w-4xl px-8 flex flex-col items-center">
+<div class="w-full glass-panel rounded-[32px] p-2 shadow-2xl transition-all duration-500 scale-100 hover:shadow-primary/5">
+<!-- Prompt Expanded Area -->
+<div class="px-6 pt-6 pb-4">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-label-caps text-on-surface-variant uppercase tracking-widest">Active Reasoning</span>
+</div>
+<textarea class="w-full bg-transparent border-none text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface focus:ring-0 resize-none min-h-[160px] placeholder:text-outline-variant/50" placeholder="Ask Alpha anything... (Type '/' for commands)"></textarea>
+</div>
+<!-- Model Selection Strip -->
+<div class="flex items-center justify-between border-t border-outline-variant/10 px-6 py-4 bg-surface-container-high/40 rounded-b-[24px]">
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary font-bold text-body-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            GPT-4o
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-variant/50 text-on-surface-variant hover:bg-surface-variant transition-colors text-body-sm">
+<span class="material-symbols-outlined text-[18px]">temp_preferences_custom</span>
+                            Claude 3.5
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-variant/50 text-on-surface-variant hover:bg-surface-variant transition-colors text-body-sm">
+<span class="material-symbols-outlined text-[18px]">token</span>
+                            Gemini 1.5
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-variant/50 text-on-surface-variant hover:bg-surface-variant transition-colors text-body-sm">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+                            Llama 3
+                        </button>
+</div>
+<div class="flex items-center gap-3 ml-4">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-full transition-all">attach_file</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-bold flex items-center gap-2 hover:shadow-[0_0_20px_rgba(36,161,222,0.4)] transition-all active:scale-90">
+                            Send
+                            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Suggestions -->
+<div class="mt-8 flex flex-wrap justify-center gap-3">
+<button class="px-4 py-2 rounded-xl bg-surface-container/50 border border-outline-variant/10 text-body-sm text-on-surface-variant hover:text-tertiary hover:border-tertiary/50 transition-all">"Draft a technical roadmap for Nexus..."</button>
+<button class="px-4 py-2 rounded-xl bg-surface-container/50 border border-outline-variant/10 text-body-sm text-on-surface-variant hover:text-tertiary hover:border-tertiary/50 transition-all">"Analyze the latest Telegram thread history"</button>
+<button class="px-4 py-2 rounded-xl bg-surface-container/50 border border-outline-variant/10 text-body-sm text-on-surface-variant hover:text-tertiary hover:border-tertiary/50 transition-all">"Optimize this code snippet for React"</button>
+</div>
+</div>
+</main>
+<!-- Sidebar: Chat History (Right) -->
+<aside class="fixed right-0 top-16 h-[calc(100vh-64px)] w-[320px] bg-surface-container/90 backdrop-blur-xl border-l border-outline-variant/10 z-30 flex flex-col">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-label-caps text-on-surface uppercase tracking-widest font-bold">History</h3>
+<button class="material-symbols-outlined text-on-surface-variant text-[20px]">search</button>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-4 space-y-4 no-scrollbar">
+<!-- Today Section -->
+<div>
+<p class="text-[10px] text-outline uppercase tracking-tighter mb-3 px-2">Today</p>
+<div class="space-y-2">
+<button class="w-full text-left p-3 rounded-xl hover:bg-surface-variant/30 group transition-all">
+<p class="text-body-sm text-on-surface font-medium line-clamp-1">Productivity Analysis v2</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline">2h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline/40"></span>
+<span class="text-[10px] text-primary">GPT-4o</span>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-xl bg-primary-container/10 border border-primary/20 group transition-all">
+<p class="text-body-sm text-primary font-bold line-clamp-1">Current: Interface Prototyping</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-primary/70">Active Now</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span class="text-[10px] text-primary">GPT-4o</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Yesterday Section -->
+<div>
+<p class="text-[10px] text-outline uppercase tracking-tighter mb-3 px-2">Yesterday</p>
+<div class="space-y-2">
+<button class="w-full text-left p-3 rounded-xl hover:bg-surface-variant/30 group transition-all opacity-80">
+<p class="text-body-sm text-on-surface font-medium line-clamp-1">Onboarding Flow Script</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline">22h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline/40"></span>
+<span class="text-[10px] text-outline">Claude 3</span>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-xl hover:bg-surface-variant/30 group transition-all opacity-80">
+<p class="text-body-sm text-on-surface font-medium line-clamp-1">Vector DB Architecture</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline">24h ago</span>
+<span class="w-1 h-1 rounded-full bg-outline/40"></span>
+<span class="text-[10px] text-outline">Gemini 1.5</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- History Footer -->
+<div class="p-4 bg-surface-container-high/50 border-t border-outline-variant/10">
+<button class="w-full py-2 flex items-center justify-center gap-2 text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+                View All Archives
+            </button>
+</div>
+</aside>
+<!-- Bottom Navigation Bar (Semantic for Focused View) -->
+<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center p-2 z-50 bg-surface-container-high/95 dark:bg-surface-container-highest/95 backdrop-blur-2xl rounded-full border border-outline-variant/20 shadow-[0_0_20px_rgba(36,161,222,0.2)]">
+<a class="bg-primary text-on-primary rounded-full px-6 py-2 flex items-center gap-2 transition-transform scale-105" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-caps uppercase">Prompt</span>
+</a>
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<span class="font-label-caps uppercase">Models</span>
+</a>
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span class="font-label-caps uppercase">History</span>
+</a>
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+<span class="font-label-caps uppercase">Canvas Settings</span>
+</a>
+</nav>
+<!-- Floating Atmosphere Elements -->
+<div class="fixed bottom-0 left-0 p-8 z-10 pointer-events-none">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<span class="text-label-caps text-tertiary opacity-70">LLM Stream: Stable</span>
+</div>
+<div class="text-[10px] text-outline-variant font-code-snippet">latency: 42ms | uptime: 99.9%</div>
+</div>
+</div>
+<script>
+        // Micro-interactions for the prompt area
+        const textarea = document.querySelector('textarea');
+        const container = textarea.parentElement.parentElement;
+
+        textarea.addEventListener('focus', () => {
+            container.classList.add('ring-2', 'ring-primary/20', 'border-primary/30');
+            container.style.transform = 'translateY(-4px)';
+        });
+
+        textarea.addEventListener('blur', () => {
+            container.classList.remove('ring-2', 'ring-primary/20', 'border-primary/30');
+            container.style.transform = 'translateY(0)';
+        });
+
+        // Model selector toggle interaction
+        const modelButtons = document.querySelectorAll('.overflow-x-auto button');
+        modelButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modelButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary', 'font-bold');
+                    b.classList.add('bg-surface-variant/50', 'text-on-surface-variant');
+                    const icon = b.querySelector('.material-symbols-outlined');
+                    if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                btn.classList.add('bg-primary', 'text-on-primary', 'font-bold');
+                btn.classList.remove('bg-surface-variant/50', 'text-on-surface-variant');
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if(icon) icon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

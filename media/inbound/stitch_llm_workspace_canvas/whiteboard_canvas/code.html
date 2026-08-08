@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workspace Alpha | Kinetic Blueprint</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ffb4ab",
+                    "tertiary": "#00daf3",
+                    "surface-container-lowest": "#070f16",
+                    "surface-tint": "#86cfff",
+                    "primary": "#86cfff",
+                    "outline-variant": "#3e4850",
+                    "on-error": "#690005",
+                    "secondary": "#b7c9da",
+                    "surface-container-high": "#232b33",
+                    "primary-container": "#24a1de",
+                    "inverse-primary": "#00658f",
+                    "on-secondary": "#213240",
+                    "surface-dim": "#0c141c",
+                    "tertiary-fixed": "#9cf0ff",
+                    "on-tertiary-fixed-variant": "#004f58",
+                    "background": "#0c141c",
+                    "tertiary-container": "#00a7ba",
+                    "error-container": "#93000a",
+                    "on-primary": "#00344c",
+                    "surface-container": "#182028",
+                    "on-primary-fixed-variant": "#004c6d",
+                    "on-secondary-fixed-variant": "#384957",
+                    "secondary-fixed-dim": "#b7c9da",
+                    "on-primary-fixed": "#001e2e",
+                    "inverse-surface": "#dbe3ee",
+                    "surface-bright": "#323a43",
+                    "secondary-fixed": "#d3e5f6",
+                    "inverse-on-surface": "#29313a",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#2e363e",
+                    "on-tertiary-container": "#00363d",
+                    "surface-container-low": "#141c24",
+                    "tertiary-fixed-dim": "#00daf3",
+                    "on-secondary-container": "#a9bacb",
+                    "outline": "#88929b",
+                    "on-primary-container": "#00344c",
+                    "on-background": "#dbe3ee",
+                    "surface": "#0c141c",
+                    "on-surface-variant": "#bec8d1",
+                    "primary-fixed-dim": "#86cfff",
+                    "on-tertiary-fixed": "#001f24",
+                    "primary-fixed": "#c8e6ff",
+                    "on-surface": "#dbe3ee",
+                    "surface-container-highest": "#2e363e",
+                    "on-secondary-fixed": "#0b1d2a",
+                    "on-tertiary": "#00363d",
+                    "secondary-container": "#3a4b59"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "32px",
+                    "canvas-grid": "24px",
+                    "margin-mobile": "16px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "code-snippet": ["JetBrains Mono"],
+                    "label-caps": ["Inter"],
+                    "headline-xl": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-snippet": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0c141c;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .infinite-grid {
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(136, 146, 155, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .active-glow {
+            box-shadow: 0 0 25px rgba(36, 161, 222, 0.15);
+        }
+
+        .node-handle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #24a1de;
+            position: absolute;
+            cursor: crosshair;
+        }
+
+        .node-left { left: -5px; top: 50%; transform: translateY(-50%); }
+        .node-right { right: -5px; top: 50%; transform: translateY(-50%); }
+
+        .progress-strip {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00daf3, transparent);
+            animation: slide 2s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .canvas-container {
+            cursor: grab;
+        }
+        .canvas-container:active {
+            cursor: grabbing;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm flex justify-between items-center px-margin-desktop h-16 w-full z-50">
+<div class="flex items-center gap-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Workspace Alpha</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Board</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Threads</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Files</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">group</span>
+</button>
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a young creative professional with a friendly expression. The background is a clean, minimalist blue gradient reflecting a corporate modern aesthetic. The lighting is soft and cinematic, emphasizing high-quality digital workspace vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpHAc_7cG-d91Fzd_uY0vhzrVUtvYhYUEjZl5Uh9en0_n6LxvKpoM2juJBUJRgIeTQ0KkgvNgb0T3rp_E1w8oJcRN4mLZqWJzD7PrdBGnUpvxHiz-iZKsnFK-uOxwkOl5RzPPUsjydrRSDLgDOSKx1e937_YS8J623H3eIMMbQky1yYKBxqPhbL3Pdh266sZ7zu323wq9vNhGdyx58TCVDhkRQuqHXr27S3F_YEi6zBrAfizQo04fDmwxAr91UyWFwtG3eMpyMxE4"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-lg border-r border-outline-variant/10 shadow-xl flex flex-col py-20 px-4 z-40">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">layers</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Project Nexus</h2>
+</div>
+<p class="text-on-surface-variant font-body-sm text-body-sm px-1">12 Members Active</p>
+</div>
+<nav class="flex-1 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold transition-all">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Main Canvas</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">tactic</span>
+<span class="font-body-md text-body-md">Strategy</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">search</span>
+<span class="font-body-md text-body-md">Research</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-body-md text-body-md">Assets</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md text-body-md">Archive</span>
+</button>
+</nav>
+<button class="mt-4 mx-2 py-3 bg-primary text-on-primary font-bold rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+            New Board
+        </button>
+<div class="mt-auto border-t border-outline-variant/10 pt-4 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Account</span>
+</button>
+<button class="w-full flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Canvas Area -->
+<main class="ml-[280px] mt-16 h-[calc(100vh-64px)] w-[calc(100vw-280px)] overflow-hidden relative canvas-container">
+<div class="infinite-grid absolute inset-0 w-[5000px] h-[5000px] transition-transform duration-75 ease-out" id="canvas" style="transform: translate(-500px, -500px);">
+<!-- Pinned Card: AI Text Response -->
+<div class="absolute top-[600px] left-[800px] w-[420px] glass-card active-glow rounded-xl overflow-hidden flex flex-col group transition-all duration-300">
+<div class="progress-strip opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary scale-90">psychology</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">SOURCE: PROJECT_STRATEGY_BOT</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-sm">push_pin</span></button>
+</div>
+<div class="p-5">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                        To align the kinetic blueprint with user expectations, we should prioritize low-latency interactions and visual feedback loops. The "infinite canvas" shouldn't just be a space—it should feel like a living, breathing digital extension of the mind. By mapping Telegram-style threading to card connections, we create a non-linear but coherent information flow.
+                    </p>
+</div>
+<div class="p-3 bg-surface-variant/20 flex gap-2 border-t border-outline-variant/10">
+<button class="flex-1 py-2 text-label-caps font-label-caps bg-primary-container/20 text-primary rounded-lg hover:bg-primary-container/40 transition-colors">REGENERATE</button>
+<button class="px-3 py-2 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-colors"><span class="material-symbols-outlined text-sm">open_in_new</span></button>
+</div>
+<div class="node-handle node-right"></div>
+</div>
+<!-- Pinned Card: Image Generation -->
+<div class="absolute top-[650px] left-[1300px] w-[340px] glass-card rounded-xl overflow-hidden flex flex-col group transition-all duration-300">
+<div class="p-4 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary scale-90">palette</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">GENERATED ASSET</span>
+</div>
+</div>
+<div class="w-full aspect-square bg-surface-container-high relative">
+<img class="w-full h-full object-cover" data-alt="A highly detailed 3D technical blueprint of a futuristic architectural structure. The design uses glowing neon blue lines on a dark slate background, creating a high-tech kinetic aesthetic. Sharp angles, semi-transparent layers, and floating data nodes emphasize a professional AI workspace style. The mood is precise, intellectual, and fluid." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6FEg7Pi-D5-KbuvljufmUDvHnuM0kc66WhUxjPdkUWBnIvMSgRBmL9GwzrL33aoUKVRddeFcILfK5dGImrVpwddbi8pSSk4ApSwGAPv0ItLEN3gTj16vBd6G5uIX81Y7igkSf9ZLFX_10NZBBcmC7dF8wSoG8smYkmmuG9pGEJi36iAMelz2RuNcJ8JWE1P1OsSNacjaT7WcOhMP6-0XE4U0O240OgOgWiTLPJL3z7_-XuJQidcgqdLr5KylTyYXMwe0tmjPkV3A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<span class="text-label-caps text-on-surface text-[10px]">PROMPT: /GENERATE KINETIC BLUEPRINT STRUCTURE</span>
+</div>
+</div>
+<div class="p-3 bg-surface-variant/20 flex gap-2">
+<button class="flex-1 py-2 text-label-caps font-label-caps text-on-surface-variant border border-outline-variant/30 rounded-lg hover:bg-surface-variant/50 transition-colors">DOWNLOAD</button>
+</div>
+<div class="node-handle node-left"></div>
+</div>
+<!-- Pinned Card: Link Preview -->
+<div class="absolute top-[950px] left-[900px] w-[300px] glass-card rounded-xl overflow-hidden transition-all duration-300">
+<div class="h-32 w-full bg-surface-container-highest">
+<div class="w-full h-full bg-cover bg-center opacity-70" data-alt="A wide panoramic shot of a modern, glass-walled office overlooking a futuristic city at dusk. Deep blue and purple tones dominate the sky, with glowing orange lights from the city below. The image has a clean, wide-angle lens feel, perfect for a high-end technology website preview." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-chKcW-1vLbgV3w054v-dCNyNwpbH16jLOxuZQiVWv5Sn83WnUJ54ybO8Jy0NnT4VHXhYYRdTCizo0tGIm_cksnCvn5CzO1upohB-WMR9bIVKve2IyCHGVxHUl3YxUWdXhbOFhcqOvTr1SOE0PI5OR3vfKcrpZ8QJJRimoHybeY3LhXcCA50BzqqmXdvylNjcKdVjszsDHFdsfMlpZh5lfnoUphSOOl8AVGxDzeuW1tDXAJFMNiT3IYH5_z57iJ6veMR_W5PhJJ0')"></div>
+</div>
+<div class="p-4">
+<h4 class="font-body-md text-body-md font-bold text-on-surface mb-1">Architecture Trends 2024</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Exploring the intersection of AI-driven design and sustainable building materials...</p>
+<div class="mt-3 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm">link</span>
+<span class="text-[11px] font-medium tracking-wide">ARCHDAILY.COM</span>
+</div>
+</div>
+</div>
+<!-- Pinned Card: PDF Attachment -->
+<div class="absolute top-[850px] left-[1250px] w-[260px] glass-card rounded-xl p-4 flex items-center gap-4 transition-all duration-300 hover:active-glow cursor-pointer">
+<div class="w-12 h-12 bg-error/10 text-error rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">picture_as_pdf</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-body-sm text-body-sm font-bold text-on-surface truncate">Q3_Roadmap.pdf</h4>
+<p class="text-[11px] text-on-surface-variant">4.2 MB • Updated 2h ago</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</div>
+<!-- Decorative Connections (Visual Only) -->
+<svg class="absolute inset-0 pointer-events-none" height="5000" width="5000">
+<path d="M 1220 750 C 1260 750, 1260 750, 1300 750" fill="transparent" opacity="0.4" stroke="#24a1de" stroke-dasharray="4 4" stroke-width="2"></path>
+<path d="M 1220 750 L 1260 850" fill="transparent" opacity="0.2" stroke="#24a1de" stroke-width="1"></path>
+</svg>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center p-2 z-50 bg-surface-container-high/95 dark:bg-surface-container-highest/95 backdrop-blur-2xl rounded-full w-auto min-w-[500px] border border-outline-variant/20 shadow-[0_0_20px_rgba(36,161,222,0.2)]">
+<div class="flex-1 flex items-center gap-2 px-4">
+<span class="material-symbols-outlined text-on-surface-variant">psychology</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface w-full placeholder:text-on-surface-variant/50 font-body-md text-body-md" placeholder="Ask AI anything..." type="text"/>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<button class="bg-primary text-on-primary rounded-full px-6 py-2 flex items-center gap-2 font-label-caps text-label-caps transition-transform active:scale-95">
+<span class="material-symbols-outlined scale-75">send</span>
+                SEND
+            </button>
+</div>
+<div class="mx-2 h-6 w-px bg-outline-variant/30"></div>
+<div class="flex items-center">
+<button class="text-on-surface-variant px-4 py-2 flex items-center gap-2 font-label-caps text-label-caps hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant px-4 py-2 flex items-center gap-2 font-label-caps text-label-caps hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined">layers</span>
+</button>
+</div>
+</nav>
+<!-- Micro-Interactions Script -->
+<script>
+        const canvas = document.getElementById('canvas');
+        const main = document.querySelector('main');
+        
+        let isDragging = false;
+        let startX, startY;
+        let scrollLeft, scrollTop;
+        let currentTranslateX = -500;
+        let currentTranslateY = -500;
+
+        main.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX;
+            startY = e.pageY;
+            main.classList.add('grabbing');
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            main.classList.remove('grabbing');
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const dx = e.pageX - startX;
+            const dy = e.pageY - startY;
+            
+            currentTranslateX += dx;
+            currentTranslateY += dy;
+            
+            canvas.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+            
+            startX = e.pageX;
+            startY = e.pageY;
+        });
+
+        // Hover effect for grid movement
+        canvas.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardCenterX = rect.left + rect.width / 2;
+                const cardCenterY = rect.top + rect.height / 2;
+                
+                const dist = Math.hypot(e.clientX - cardCenterX, e.clientY - cardCenterY);
+                if(dist < 300) {
+                    const intensity = (1 - dist / 300) * 5;
+                    const moveX = (e.clientX - cardCenterX) / 50 * intensity;
+                    const moveY = (e.clientY - cardCenterY) / 50 * intensity;
+                    card.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                } else {
+                    card.style.transform = `translate(0, 0)`;
+                }
+            });
+        });
+
+        // Simple zoom (scroll)
+        let scale = 1;
+        main.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            scale += e.deltaY * -0.001;
+            scale = Math.min(Math.max(.5, scale), 2);
+            // This would need more complex origin math for a real app, keeping simple for UI demo
+            canvas.style.scale = scale;
+        }, { passive: false });
+    </script>
+</body></html>

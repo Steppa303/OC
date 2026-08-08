@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workspace Alpha | Media &amp; Asset Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        @layer base {
+            body {
+                @apply bg-background text-on-background font-body-md antialiased overflow-hidden;
+            }
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-panel {
+            background: rgba(20, 28, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .canvas-grid {
+            background-image: radial-gradient(circle, rgba(134, 207, 255, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .kinetic-border {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kinetic-border::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #86cfff, transparent);
+            animation: kinetic-flow 3s linear infinite;
+        }
+
+        @keyframes kinetic-flow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            @apply bg-outline-variant/30 rounded-full;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ffb4ab",
+                        "tertiary": "#00daf3",
+                        "surface-container-lowest": "#070f16",
+                        "surface-tint": "#86cfff",
+                        "primary": "#86cfff",
+                        "outline-variant": "#3e4850",
+                        "on-error": "#690005",
+                        "secondary": "#b7c9da",
+                        "surface-container-high": "#232b33",
+                        "primary-container": "#24a1de",
+                        "inverse-primary": "#00658f",
+                        "on-secondary": "#213240",
+                        "surface-dim": "#0c141c",
+                        "tertiary-fixed": "#9cf0ff",
+                        "on-tertiary-fixed-variant": "#004f58",
+                        "background": "#0c141c",
+                        "tertiary-container": "#00a7ba",
+                        "error-container": "#93000a",
+                        "on-primary": "#00344c",
+                        "surface-container": "#182028",
+                        "on-primary-fixed-variant": "#004c6d",
+                        "on-secondary-fixed-variant": "#384957",
+                        "secondary-fixed-dim": "#b7c9da",
+                        "on-primary-fixed": "#001e2e",
+                        "inverse-surface": "#dbe3ee",
+                        "surface-bright": "#323a43",
+                        "secondary-fixed": "#d3e5f6",
+                        "inverse-on-surface": "#29313a",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2e363e",
+                        "on-tertiary-container": "#00363d",
+                        "surface-container-low": "#141c24",
+                        "tertiary-fixed-dim": "#00daf3",
+                        "on-secondary-container": "#a9bacb",
+                        "outline": "#88929b",
+                        "on-primary-container": "#00344c",
+                        "on-background": "#dbe3ee",
+                        "surface": "#0c141c",
+                        "on-surface-variant": "#bec8d1",
+                        "primary-fixed-dim": "#86cfff",
+                        "on-tertiary-fixed": "#001f24",
+                        "primary-fixed": "#c8e6ff",
+                        "on-surface": "#dbe3ee",
+                        "surface-container-highest": "#2e363e",
+                        "on-secondary-fixed": "#0b1d2a",
+                        "on-tertiary": "#00363d",
+                        "secondary-container": "#3a4b59"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "canvas-grid": "24px",
+                        "margin-mobile": "16px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "code-snippet": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-xl": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "code-snippet": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex h-screen w-full canvas-grid">
+<!-- TopAppBar Execution -->
+<header class="fixed top-0 w-full bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm z-50 flex justify-between items-center px-margin-desktop h-16">
+<div class="flex items-center gap-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Workspace Alpha</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200" href="#">Board</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200" href="#">Threads</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 active:scale-95 duration-200" href="#">Files</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-sm w-64 focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search workspace..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">group</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-primary/20 flex items-center justify-center border border-primary/30">
+<img class="w-full h-full object-cover" data-alt="A professional user profile avatar in a minimalist tech aesthetic, featuring soft cinematic lighting, a neutral gray background, and sharp focus. The style is modern corporate with a hint of digital flair, utilizing a cool color palette of muted blues and silvers to match the workspace theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe2XpyNyA8BiH0mhpD5mP2wOSHYxeWcRiJKoi5bxp-8ytz2c1ton_mZUgTeuTjnEPYTSJxtWRADligvFlSxn0Q87S27lk3ftvx5ULDujEvzJ6yhONO-KL5r9VejM_RfjM4yHUBawV7NyddNzTRriWfMsXW0p6cHbxGYYsJNQ0zwFhPW_tqzCh8p6UgDP242e0bQD4jFaj6nvuw8DegrosRL8_NJSben4up-CWoPjrKOf5PySjnkPgj94-9-9rh-6DauK9nsab6ij4"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar Execution -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface-container-low/90 dark:bg-surface-container-lowest/90 backdrop-blur-lg border-r border-outline-variant/10 shadow-xl flex flex-col py-6 px-4 z-40 pt-20">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">hub</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface text-[18px]">Project Nexus</h2>
+<p class="text-on-surface-variant text-[12px]">12 Members Active</p>
+</div>
+</div>
+<button class="w-full py-3 mb-6 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">add</span>
+            New Board
+        </button>
+<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Main Canvas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">tactic</span>
+<span class="font-body-md text-body-md">Strategy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold transition-all" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-body-md text-body-md">Assets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-body-md text-body-md">Research</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md text-body-md">Archive</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/10 pt-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Account</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all text-error" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[280px] mt-16 p-margin-desktop overflow-y-auto custom-scrollbar relative">
+<!-- Animated Background Element -->
+<div class="absolute inset-0 -z-10 opacity-30">
+
+</div>
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Header & Filter Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-primary">Media &amp; Assets</h2>
+<p class="text-on-surface-variant mt-2">Manage your workspace files, AI generations, and external links.</p>
+</div>
+<div class="flex flex-wrap items-center gap-2 bg-surface-container-low p-1.5 rounded-2xl border border-outline-variant/10">
+<button class="px-6 py-2 rounded-xl bg-primary-container text-on-primary-container text-body-sm font-bold shadow-sm transition-all">All Files</button>
+<button class="px-6 py-2 rounded-xl hover:bg-surface-variant/50 text-on-surface-variant text-body-sm transition-all">AI Results</button>
+<button class="px-6 py-2 rounded-xl hover:bg-surface-variant/50 text-on-surface-variant text-body-sm transition-all">Uploads</button>
+<button class="px-6 py-2 rounded-xl hover:bg-surface-variant/50 text-on-surface-variant text-body-sm transition-all">Links</button>
+</div>
+</div>
+<!-- Kinetic Blueprint Asset Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-24">
+<!-- Asset Card 1 (Image/AI) -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300 kinetic-border">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A futuristic kinetic blueprint of a theoretical spacecraft engine, rendered in vibrant neon blue lines on a deep obsidian digital canvas. The aesthetic is clean and intellectual, featuring technical annotations in a sans-serif font. The image feels fluid and agile, with glowing cyan nodes connecting various mechanical parts in a high-tech diagram." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj55t7DTsLWb54jB2mUV9nnHqj9-R3Ov6wH3VDj7HiVniYuF_ltvP75ztodr0hbnSQ_UNKOVXz6EYR2aNTGkr2Gc78UdAS_6AE_OhpIvUG1-BO5GUqfWV0OwvwHvyAtm5k1etWIUTKF02aNF7X8YYrVxJhIQgJnRIlzen9o2kO727ZD0Mc-DrgoGjwcsvKeHbXfELJMy4BOFCw0MqwZY5zRZXfkWdWdm1EmfQEaj1C0GWXcdxF-34gb7kVTjStOBfLmP1JAqsDTek"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent opacity-60"></div>
+<span class="absolute top-3 left-3 bg-tertiary-container/80 text-on-tertiary-container text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">AI RESULT</span>
+<div class="absolute bottom-3 right-3 flex gap-2 translate-y-10 group-hover:translate-y-0 transition-transform">
+<button class="w-8 h-8 rounded-lg bg-surface/90 text-primary flex items-center justify-center border border-primary/20 hover:bg-primary hover:text-on-primary transition-all shadow-lg">
+<span class="material-symbols-outlined text-[18px]">push_pin</span>
+</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface truncate">Space-Engine-Draft-01.png</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Image • 4.2 MB</span>
+<span class="font-code-snippet opacity-60">Oct 24, 2023</span>
+</div>
+</div>
+</div>
+<!-- Asset Card 2 (Video) -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300 kinetic-border">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container-high flex items-center justify-center">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A cinematic 3D abstract visualization of fluid digital data streams flowing through a crystalline grid. The style is agile and intellectual, with deep navy and electric blue tones. Soft light glows from within the structures, creating an atmosphere of effortless clarity. Professional workspace lighting highlights the intricate patterns of the data flow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcdotk-jHv8lmLmHgSkISSXjl6EMHHsfc8Ejaeeaq4ibMCzCs-mQAVoN_AYkfhI_5IRBrSaFVPGFsEICyW9laZXo2h5oHIac968NKN9e2BjivtHJrnWRRTvZIic4AmpgRdJ5IH9cVTS9dikbIDCH5kSnUzL47AFlJYTrsfKydpAaZOr7lTXtV1FDN4BSNHI0vXrmG_wZ7n6tENAEtLH630plQpmihrignwaSSBk7dTDGnoIaTUnzRlBAYnnLPsXAgW3xS7zjYKsTA"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-12 h-12 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center backdrop-blur-md group-hover:bg-primary group-hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<span class="absolute top-3 left-3 bg-surface-variant/80 text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">UPLOAD</span>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface truncate">Customer_Interview_Final.mp4</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Video • 128 MB</span>
+<span class="font-code-snippet opacity-60">Oct 23, 2023</span>
+</div>
+</div>
+</div>
+<!-- Asset Card 3 (Document/Link) -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container-high p-8 flex flex-col justify-center gap-4">
+<div class="w-16 h-16 rounded-2xl bg-secondary-container flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl">description</span>
+</div>
+<div class="space-y-1">
+<div class="h-2 w-32 bg-outline-variant/30 rounded-full"></div>
+<div class="h-2 w-24 bg-outline-variant/20 rounded-full"></div>
+</div>
+<span class="absolute top-3 left-3 bg-surface-variant/80 text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">LINK</span>
+</div>
+<div class="p-4 border-t border-outline-variant/10">
+<h3 class="font-body-md font-bold text-on-surface truncate">Q4_Strategy_Brief.pdf</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Document • 1.1 MB</span>
+<span class="font-code-snippet opacity-60">Oct 22, 2023</span>
+</div>
+</div>
+</div>
+<!-- Asset Card 4 (AI Progress - Generative) -->
+<div class="glass-panel rounded-2xl overflow-hidden group border border-primary/20 bg-primary/5 transition-all duration-300 relative">
+<div class="absolute top-0 left-0 w-full h-[2px] bg-tertiary overflow-hidden">
+<div class="h-full bg-white animate-[kinetic-flow_2s_linear_infinite]"></div>
+</div>
+<div class="relative h-48 w-full overflow-hidden flex items-center justify-center bg-surface-container-high/50">
+<div class="text-center p-6">
+<div class="animate-pulse mb-3">
+<span class="material-symbols-outlined text-primary text-4xl">psychology</span>
+</div>
+<p class="text-label-caps text-primary uppercase tracking-widest font-bold">Generating Asset</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container">
+<h3 class="font-body-md font-bold text-on-surface truncate">Quantum_Node_Diagram...</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span class="text-tertiary">Processing 84%</span>
+<span class="font-code-snippet opacity-60">Just now</span>
+</div>
+</div>
+</div>
+<!-- Repeat Items to fill grid -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A modern abstract architectural photography shot focusing on the intersection of glass and steel in a futuristic skyscraper. The lighting is bright and airy with a light-mode aesthetic, featuring a crisp blue sky reflected in the windows. The composition is geometric and minimal, emphasizing structured productivity and professional clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbR7vGS-aJ1UaYmhWSsxPBO9l1LgpUc9OgVGcITjZbljnChwr7vjrpKOva8YyT-cfovQ6eaQL03TQMWW4iTCKYohaPiZkDYSY6EZzK4q0bnfDtYC2z897lJZOT4m1KTiLLgK4t2Ifj-NxgJQggEsIk7pEKDgcF9eSRIzjkw29BTXzCfj-GHtQjGMPS8H3vs5fpycXfvQzezcXTNzxoIlsYlIl-Lnl9GrrGFcrBTG_18-rOweuqDe3KiMAoCeYKBChum9pNICJ23E0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent opacity-60"></div>
+<span class="absolute top-3 left-3 bg-surface-variant/80 text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">UPLOAD</span>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface truncate">Site_Reference_Shot.jpg</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Image • 2.8 MB</span>
+<span class="font-code-snippet opacity-60">Oct 21, 2023</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300 kinetic-border">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container-high p-6">
+<div class="w-full h-full border-2 border-dashed border-outline-variant/30 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-outline-variant text-3xl">add_circle</span>
+</div>
+<span class="absolute top-3 left-3 bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">DROP HERE</span>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface/50">Upload New File</h3>
+<p class="text-[12px] text-on-surface-variant/50 mt-1">Drag and drop or click to browse</p>
+</div>
+</div>
+<!-- Asset Card (Link/Social) -->
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container-high flex items-center justify-center p-8">
+<div class="absolute inset-0 opacity-10">
+
+</div>
+<div class="z-10 bg-[#24a1de] p-4 rounded-full shadow-lg text-white">
+<span class="material-symbols-outlined text-3xl">send</span>
+</div>
+<span class="absolute top-3 left-3 bg-surface-variant/80 text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">TELEGRAM</span>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface truncate">Community_Feedback_Loop</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Link • t.me/alpha_ws</span>
+<span class="font-code-snippet opacity-60">Oct 20, 2023</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl overflow-hidden group hover:shadow-[0_0_20px_rgba(36,161,222,0.15)] transition-all duration-300">
+<div class="relative h-48 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A clean, minimalist UI design component library visualization. It features a collection of buttons, toggles, and form elements arranged in an aesthetically pleasing bento-style grid. The color palette is strictly professional, using shades of gray, white, and a single accent of corporate blue. The lighting is flat and even, perfect for a modern design system reference." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe8_t3_sjQXMz9lJ0p_clPk0jCABuSc54NZar0EVA8GFfdpYuH7b5V0oKSMRevt61iW05pWnYeMR5_F-JPPvPn2Spa9yJMAWDOHFkUXaDiVJV-vvoJWSE5oqY_WewsSQcaK7MHY8QCzDi5p39wHCPEHED3F8OFCgF8k72F8KgDjTyyOZ7n5_HB54ZjMQ35tERFC0enJUegl-5KTBth8EqMf8JcSD3eZuk8IJ3f-7ThAPIoPkr3iwSqVyIHOm0xqyvWlCsbOKKJD_Y"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent opacity-60"></div>
+<span class="absolute top-3 left-3 bg-tertiary-container/80 text-on-tertiary-container text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md">AI RESULT</span>
+</div>
+<div class="p-4">
+<h3 class="font-body-md font-bold text-on-surface truncate">UI_Component_Library_Gen.png</h3>
+<div class="flex items-center justify-between mt-2 text-[12px] text-on-surface-variant">
+<span>Image • 1.4 MB</span>
+<span class="font-code-snippet opacity-60">Oct 19, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Execution -->
+<footer class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center p-2 z-50 bg-surface-container-high/95 dark:bg-surface-container-highest/95 backdrop-blur-2xl rounded-full border border-outline-variant/20 shadow-[0_0_20px_rgba(36,161,222,0.2)]">
+<div class="flex items-center">
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-transform hover:scale-105" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-caps text-label-caps">Prompt</span>
+</a>
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-transform hover:scale-105" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-label-caps">Models</span>
+</a>
+<a class="text-on-surface-variant px-4 py-2 flex items-center gap-2 hover:text-tertiary transition-transform hover:scale-105" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</a>
+<div class="w-[2px] h-6 bg-outline-variant/20 mx-2"></div>
+<a class="bg-primary text-on-primary rounded-full px-6 py-2 flex items-center gap-2 transition-transform scale-105 shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-label-caps text-label-caps">Canvas Settings</span>
+</a>
+</div>
+</footer>
+<script>
+        // Micro-interactions for the asset cards
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const img = card.querySelector('img');
+                if(img) img.style.transform = 'scale(1.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                const img = card.querySelector('img');
+                if(img) img.style.transform = 'scale(1.0)';
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.classList.add('w-80');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.classList.remove('w-80');
+        });
+    </script>
+</body></html>
