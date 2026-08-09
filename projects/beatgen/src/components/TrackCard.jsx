@@ -8,7 +8,7 @@ import NoteRangePanel from './NoteRangePanel'
 import GenreSliders from './GenreSliders'
 
 const TRACK_CONFIG = {
-  drums: { label: 'Drums', icon: '🥁', color: '#f43f5e' },
+  drums: { label: 'Drums', icon: '🥁', color: '#ef4444' },
   bass:  { label: 'Bass',  icon: '🎸', color: '#3b82f6' },
   synth: { label: 'Synth', icon: '🎹', color: '#a855f7' },
 }
@@ -45,13 +45,12 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
       key={`track-card-${track}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="space-y-4"
+      className="space-y-3"
     >
       {/* Card: Track Controls (Mute/Solo/Volume/Channel/Mutate/Next) */}
       <div
-        className="rounded-2xl p-4 backdrop-blur-sm space-y-3"
+        className="rounded-2xl p-5 backdrop-blur-sm space-y-3"
         style={{
           background: `${config.color}08`,
           border: `1px solid ${config.color}20`,
@@ -91,6 +90,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
                   ? 'text-white bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]'
                   : 'bg-black/30 text-zinc-500 hover:text-white border border-white/5'
               }`}
+              aria-label={`Mute ${config.label}`}
             >M</motion.button>
 
             {/* Solo */}
@@ -102,6 +102,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
                   ? 'text-white bg-amber-500 shadow-[0_0_10px_rgba(234,179,8,0.4)]'
                   : 'bg-black/30 text-zinc-500 hover:text-white border border-white/5'
               }`}
+              aria-label={`Solo ${config.label}`}
             >S</motion.button>
 
             {/* 🎲 Mutate */}
@@ -132,78 +133,35 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
 
       {/* Card: Genre Sync */}
       <div
-        className="rounded-2xl p-4 backdrop-blur-sm space-y-3"
+        className="rounded-2xl p-5 backdrop-blur-sm"
         style={{
           background: `${config.color}06`,
           border: `1px solid ${config.color}15`,
         }}
       >
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
-            <span>🎭</span> Genre Mix
-          </h2>
-          {/* Sync Toggle */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setTrackSync(track, !isSynced)}
-            className={`
-              flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
-              transition-all border
-              ${isSynced
-                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                : 'bg-zinc-700/50 text-zinc-400 border-zinc-600/30'
-              }
-            `}
-          >
-            <span>{isSynced ? '🔗' : '🔓'}</span>
-            <span>{isSynced ? 'Synced' : 'Custom'}</span>
-          </motion.button>
-        </div>
-
-        <AnimatePresence mode="wait">
-          {isSynced ? (
-            <motion.div
-              key="synced-info"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="text-xs text-zinc-500 italic py-2"
-            >
-              Following Global Mix — toggle &quot;Custom&quot; to set per-track genre weights
-            </motion.div>
-          ) : (
-            <motion.div
-              key="unsynced-sliders"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-3"
-            >
-              <GenreSliders
-                values={overrideValues || genres}
-                onChange={(genre, value) => setTrackGenreOverride(track, genre, value)}
-              />
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setTrackSync(track, true)}
-                className="w-full py-2 rounded-lg text-xs font-medium text-zinc-400 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-              >
-                ↺ Reset to Global
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-3 flex items-center gap-2">
+          <span>🎭</span> Genre Mix
+        </h2>
+        <GenreSliders
+          values={overrideValues || genres}
+          onChange={(genre, value) => setTrackGenreOverride(track, genre, value)}
+          syncMode={isSynced}
+          onToggleSync={() => setTrackSync(track, !isSynced)}
+          onResetSync={() => setTrackSync(track, true)}
+          trackColor={config.color}
+          showSyncToggle={true}
+        />
       </div>
 
       {/* Card: Track Parameters */}
       <div
-        className="rounded-2xl p-4 backdrop-blur-sm space-y-3"
+        className="rounded-2xl p-5 backdrop-blur-sm space-y-4"
         style={{
           background: `${config.color}06`,
           border: `1px solid ${config.color}15`,
         }}
       >
-        <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted mb-1 flex items-center gap-2">
           <span>🎛️</span> Parameters
         </h2>
 

@@ -9,7 +9,7 @@ const SLIDER_CONFIG = [
 
 const TrackParamSliders = memo(({ track, params = {}, globalMood = {}, onChange, onReset, color }) => {
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {SLIDER_CONFIG.map(({ key, label, color: defaultColor, min, max, step }) => {
         const inherited = params[key] == null
         const fallbackValue = key === 'octave' ? 0 : (globalMood[key] ?? 50)
@@ -26,7 +26,7 @@ const TrackParamSliders = memo(({ track, params = {}, globalMood = {}, onChange,
             {/* Slider track */}
             <div className="flex-1 relative">
               <div
-                className="w-full h-2 rounded-full overflow-hidden"
+                className="w-full h-3 rounded-full overflow-hidden"
                 style={{ background: 'rgba(255,255,255,0.06)' }}
               >
                 <motion.div

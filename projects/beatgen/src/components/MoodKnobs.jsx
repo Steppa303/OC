@@ -44,7 +44,7 @@ const MoodKnobs = () => {
         <span>🎛️</span> Global Mood (Master)
       </h2>
 
-      <div className="grid grid-cols-3 gap-x-4 gap-y-3">
+      <div className="grid grid-cols-3 gap-x-5 gap-y-4">
         {MOOD_CONFIG.map(({ key, label, color, icon }) => (
           <motion.div
             key={key}
@@ -57,7 +57,7 @@ const MoodKnobs = () => {
               value={mood[key]}
               onChange={(v) => setMood(key, v)}
               color={color}
-              size={64}
+              size={72}
             />
           </motion.div>
         ))}

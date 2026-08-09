@@ -21,7 +21,7 @@ const VolumeSlider = ({ value = 100, onChange, color = '#8b5cf6' }) => {
       {/* Slider track */}
       <div className="relative flex-1 min-w-0">
         <div
-          className="w-full h-2 rounded-full overflow-hidden"
+          className="w-full h-3 rounded-full overflow-hidden"
           style={{ background: 'rgba(255,255,255,0.06)' }}
         >
           <motion.div

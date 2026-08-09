@@ -195,7 +195,7 @@ const Knob = ({
       </motion.div>
 
       {/* Label */}
-      <span className="text-[10px] uppercase tracking-wider text-muted whitespace-nowrap">
+      <span className="text-[11px] uppercase tracking-wider text-muted whitespace-nowrap">
         {label}
       </span>
     </div>

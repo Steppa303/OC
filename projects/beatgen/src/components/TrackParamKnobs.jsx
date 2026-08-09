@@ -20,7 +20,7 @@ const knobVariants = {
 
 const TrackParamKnobs = memo(({ track, params = {}, globalMood = {}, onChange, onReset, color }) => {
   return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+    <div className="grid grid-cols-3 gap-x-4 gap-y-2">
       {KNOB_CONFIG.map(({ key, label, color: defaultColor, icon }) => (
         <motion.div
           key={key}
@@ -36,7 +36,7 @@ const TrackParamKnobs = memo(({ track, params = {}, globalMood = {}, onChange, o
             onReset={() => onReset?.(key)}
             onChange={(v) => onChange?.(key, v)}
             color={color || defaultColor}
-            size={56}
+            size={64}
           />
         </motion.div>
       ))}

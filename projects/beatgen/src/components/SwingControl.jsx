@@ -85,7 +85,7 @@ const SwingControl = () => {
             animate={{ opacity: 1, x: 0, height: 'auto' }}
             exit={{ opacity: 0, x: -15, height: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="space-y-2"
+            className="space-y-3"
           >
             {Object.entries(trackSwing).map(([track, amount]) => (
               <SwingSlider
@@ -110,7 +110,7 @@ const SwingSlider = ({ value, onChange, color, label, icon }) => (
     <span className="text-xs font-medium w-14 text-gray-300">{label}</span>
     <div className="flex-1 relative">
       <div
-        className="w-full h-2 rounded-full overflow-hidden"
+        className="w-full h-3 rounded-full overflow-hidden"
         style={{ background: 'rgba(255,255,255,0.06)' }}
       >
         <motion.div

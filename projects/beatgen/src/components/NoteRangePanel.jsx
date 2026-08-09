@@ -21,8 +21,8 @@ const NoteRangePanel = memo(({ track, params = {}, onChange, onChordModeChange, 
   const chordMode = params.chordMode ?? 'off'
 
   return (
-    <div className="space-y-2">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">
+    <div className="space-y-3">
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-1">
         🎵 Note Range
       </div>
 
@@ -31,7 +31,7 @@ const NoteRangePanel = memo(({ track, params = {}, onChange, onChordModeChange, 
         <span className="text-xs font-medium w-20 text-gray-300">Range Low</span>
         <div className="flex-1 relative">
           <div
-            className="w-full h-2 rounded-full overflow-hidden"
+            className="w-full h-3 rounded-full overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.06)' }}
           >
             <motion.div
@@ -70,7 +70,7 @@ const NoteRangePanel = memo(({ track, params = {}, onChange, onChordModeChange, 
         <span className="text-xs font-medium w-20 text-gray-300">Range High</span>
         <div className="flex-1 relative">
           <div
-            className="w-full h-2 rounded-full overflow-hidden"
+            className="w-full h-3 rounded-full overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.06)' }}
           >
             <motion.div
@@ -109,7 +109,7 @@ const NoteRangePanel = memo(({ track, params = {}, onChange, onChordModeChange, 
         <span className="text-xs font-medium w-20 text-gray-300">Gate Time</span>
         <div className="flex-1 relative">
           <div
-            className="w-full h-2 rounded-full overflow-hidden"
+            className="w-full h-3 rounded-full overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.06)' }}
           >
             <motion.div
