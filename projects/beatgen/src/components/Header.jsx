@@ -108,7 +108,7 @@ const Header = memo(() => {
         {!midiConnected && (
           <button
             onClick={midiInitFailed && webMidiSupported ? handleConnectMidi : toggleSettings}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-full text-[9px] font-semibold uppercase tracking-wider transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[10px] font-semibold uppercase tracking-wider transition-colors"
             style={{
               background: !webMidiSupported ? 'rgba(100,116,139,0.15)' : midiInitFailed ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)',
               color: !webMidiSupported ? '#64748b' : midiInitFailed ? '#f59e0b' : '#ef4444',

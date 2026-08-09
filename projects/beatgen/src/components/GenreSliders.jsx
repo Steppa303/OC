@@ -43,7 +43,7 @@ const GenreSliders = ({
             whileTap={{ scale: 0.95 }}
             onClick={onToggleSync}
             className={`
-              flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
+              flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium
               transition-all border
               ${syncMode
                 ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'

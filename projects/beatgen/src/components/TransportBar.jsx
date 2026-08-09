@@ -183,7 +183,7 @@ const TransportBar = () => {
             <button
               onClick={() => setBpm(bpm + 1)}
               disabled={isExternalMode || externalTransportActive}
-              className={`w-9 h-6 flex items-center justify-center text-xs transition-colors rounded ${
+              className={`w-11 h-8 flex items-center justify-center text-sm transition-colors rounded ${
                 (isExternalMode || externalTransportActive) ? 'text-white/20 cursor-not-allowed' : 'text-muted hover:text-white'
               }`}
               aria-label="BPM up"
@@ -193,7 +193,7 @@ const TransportBar = () => {
             <button
               onClick={() => setBpm(bpm - 1)}
               disabled={isExternalMode || externalTransportActive}
-              className={`w-9 h-6 flex items-center justify-center text-xs transition-colors rounded ${
+              className={`w-11 h-8 flex items-center justify-center text-sm transition-colors rounded ${
                 (isExternalMode || externalTransportActive) ? 'text-white/20 cursor-not-allowed' : 'text-muted hover:text-white'
               }`}
               aria-label="BPM down"

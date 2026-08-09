@@ -68,13 +68,13 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
               <select
                 value={trackState.channel}
                 onChange={(e) => setTrackChannel(track, Number(e.target.value))}
-                className="appearance-none bg-black/30 text-[10px] text-zinc-400 rounded-md pl-2 pr-5 py-1 border border-white/10 outline-none focus:border-accent/50 transition-colors cursor-pointer"
+                className="appearance-none bg-black/30 text-xs text-zinc-400 rounded-lg pl-3 pr-6 py-2 border border-white/10 outline-none focus:border-accent/50 transition-colors cursor-pointer"
               >
                 {Array.from({ length: 16 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>Ch{i + 1}</option>
                 ))}
               </select>
-              <svg className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <svg className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </div>
@@ -85,7 +85,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => toggleMute(track)}
-              className={`w-7 h-7 rounded-md text-[10px] font-bold transition-all flex items-center justify-center ${
+              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                 trackState.muted
                   ? 'text-white bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]'
                   : 'bg-black/30 text-zinc-500 hover:text-white border border-white/5'
@@ -97,7 +97,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => toggleSolo(track)}
-              className={`w-7 h-7 rounded-md text-[10px] font-bold transition-all flex items-center justify-center ${
+              className={`w-10 h-10 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                 trackState.solo
                   ? 'text-white bg-amber-500 shadow-[0_0_10px_rgba(234,179,8,0.4)]'
                   : 'bg-black/30 text-zinc-500 hover:text-white border border-white/5'
@@ -109,7 +109,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={() => onMutateTrack?.(track)}
-              className="w-7 h-7 rounded-md bg-black/30 text-zinc-500 hover:text-white flex items-center justify-center border border-white/5 transition-colors"
+              className="w-10 h-10 rounded-lg text-base bg-black/30 text-zinc-500 hover:text-white flex items-center justify-center border border-white/5 transition-colors"
               title={`Mutate ${config.label}`}
             >🎲</motion.button>
 
@@ -117,7 +117,7 @@ const TrackCard = ({ track, onMutateTrack, onNextPattern }) => {
             <motion.button
               whileTap={{ scale: 0.85 }}
               onClick={onNextPattern}
-              className="w-7 h-7 rounded-md bg-black/30 text-zinc-500 hover:text-white flex items-center justify-center border border-white/5 transition-colors"
+              className="w-10 h-10 rounded-lg text-base bg-black/30 text-zinc-500 hover:text-white flex items-center justify-center border border-white/5 transition-colors"
               title="Next pattern (all tracks)"
             >🔄</motion.button>
           </div>

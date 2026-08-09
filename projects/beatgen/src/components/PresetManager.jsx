@@ -149,7 +149,7 @@ const PresetManager = () => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowSaveInput(!showSaveInput)}
-                  className="px-3 py-1.5 rounded-lg bg-accent/20 border border-accent/40 text-accent text-xs font-semibold hover:bg-accent/30 transition-colors"
+                  className="px-4 py-2.5 rounded-lg bg-accent/20 border border-accent/40 text-accent text-xs font-semibold hover:bg-accent/30 transition-colors"
                 >
                   {showSaveInput ? '✕ Cancel' : '+ Save Current'}
                 </motion.button>
@@ -305,7 +305,7 @@ const PresetManager = () => {
                             e.stopPropagation()
                             deletePreset(preset.id)
                           }}
-                          className="w-8 h-8 flex items-center justify-center text-muted hover:text-drums transition-colors rounded-lg hover:bg-drums/10 flex-shrink-0"
+                          className="w-10 h-10 flex items-center justify-center text-muted hover:text-drums transition-colors rounded-lg hover:bg-drums/10 flex-shrink-0"
                           aria-label="Delete preset"
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

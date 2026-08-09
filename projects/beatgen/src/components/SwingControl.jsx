@@ -50,7 +50,7 @@ const SwingControl = () => {
             <button
               key={mode}
               onClick={() => setSwingMode(mode)}
-              className={`relative z-10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded-full transition-colors min-w-[60px] ${
+              className={`relative z-10 px-5 py-2 text-xs font-semibold uppercase tracking-wider rounded-full transition-colors min-w-[64px] ${
                 swingMode === mode ? 'text-white' : 'text-muted hover:text-gray-300'
               }`}
             >
