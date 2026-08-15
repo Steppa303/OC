@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "macrostack-backend"
+version = "0.1.0"
+description = "MacroStack Backend — Fokus-Stacking API"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "pydantic==2.10.4",
+    "pydantic-settings==2.7.1",
+    "python-multipart==0.0.20",
+    "redis==5.2.1",
+    "rq==2.0.0",
+    "numpy==1.26.4",
+    "opencv-python-headless==4.10.0.84",
+    "Pillow==11.1.0",
+    "exifread==3.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "macrostack*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

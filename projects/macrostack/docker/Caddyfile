@@ -1,0 +1,7 @@
+macrostack.steppa.online {
+    encode gzip
+
+    reverse_proxy /api/* localhost:3723
+    reverse_proxy /ws/* localhost:3723
+    reverse_proxy localhost:3722
+}
