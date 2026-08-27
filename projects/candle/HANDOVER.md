@@ -137,12 +137,34 @@ pm2 logs candle
 
 Optimierungen für minimalen Lag auf dem Kindle Scribe:
 
-1. **rAF-Batching** — `pointermove`-Events sammeln Punkte nur in einem Array. `requestAnimationFrame` zeichnet einmal pro Frame alle gesammelten Punkte. Verhindert Überlastung des Kindle-Prozessors bei 100+ Events/sec.
-2. **Single-Path-Drawing** — Pro Frame: 1x `beginPath()`, alle `lineTo()` in einer Schleife, 1x `stroke()`. Vorher: 5 Canvas-Calls pro Punkt.
-3. **Frame-übergreifende Pfad-Kontinuität** — `lastDrawnPointRef` merkt sich den letzten gezeichneten Punkt. Beim nächsten Frame wird mit `moveTo()` von dort weitergemacht, statt bei null anzufangen. Verhindert Lücken zwischen Frames.
-4. **Fixed lineWidth** — wird nur bei `pointerdown` gesetzt, nicht bei jedem Punkt. Vermeidet State-Changes pro Event.
-5. **1:1 Pixel-Mapping auf Kindle** — Erkennt Kindle-User-Agent, setzt DPR auf 1 (kein unnötiges Scaling). Auf normalen Screens wird DPR beibehalten.
-6. **`willReadFrequently: false`** — Canvas-Context-Hint für bessere Performance.
+1. **rAF-Batching** — `pointermove`-Events sammeln Punkte nur in einem Array. `requestAnimationFrame` zeichnet einmal pro Frame alle gesammelten Punkte.
+2. **Single-Path-Drawing** — Pro Frame: 1x `beginPath()`, alle `lineTo()` in einer Schleife, 1x `stroke()`.
+3. **Fixed lineWidth** — wird nur bei `pointerdown` gesetzt, nicht bei jedem Punkt.
+4. **1:1 Pixel-Mapping auf Kindle** — Erkennt Kindle-User-Agent, setzt DPR auf 1.
+
+### Zwei-Canvas-System mit Post-Processing Smoothing (27.08.2026)
+
+**Architektur:**
+- **Background-Canvas** — alle abgeschlossenen Striche (geglättet oder raw)
+- **Foreground-Canvas** — aktiver Strich (raw, in Echtzeit, kein Smoothing)
+
+**Workflow:**
+1. User zeichnet → raw auf Foreground (kein Lag, lineTo, sofort sichtbar)
+2. Pen-Up → Catmull-Rom Smoothing über den GESAMTEN Strich → auf Background gerendert
+3. Foreground wird geleert (kein Ghosting)
+4. Toggle-Button `◉ Glatt` / `○ Raw` in der Toolbar
+
+**Smoothing-Algorithmus:** Catmull-Rom mit Hermite-Basis und Tangent-Clamping
+- `TENSION = 0.4` (niedriger = weniger Overshoot)
+- `CLAMP_FACTOR = 4.0` (max Tangent-Länge = 4× Segmentlänge)
+- Verhindert Overshoot bei scharfen Ecken (z.B. Diamant-Formen)
+- `STEPS = 8` (Zwischenpunkte pro Segment)
+
+**Dateien:**
+- `client/src/hooks/useCanvas.ts` — Zwei-Canvas-Logik, Catmull-Rom Smoothing
+- `client/src/components/Canvas.tsx` — Rendert zwei übereinanderliegende Canvas-Elemente
+- `client/src/components/Toolbar.tsx` — Smoothing Toggle Button
+- `client/src/App.tsx` — `smoothingEnabled` State, Props an Canvas/Toolbar
 
 ## Bekannte Probleme / TODO
 
@@ -150,8 +172,9 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 - [ ] Export als PNG/PDF
 - [ ] Multi-User Support
 - [ ] Canvas-Größe an Scribe-Auflösung anpassen (300 DPI)
-- [ ] Weitere Lag-Optimierungen testen (OffscreenCanvas, WebWorker?)
+- [ ] Smoothing-Parameter feintunen (TENSION, CLAMP_FACTOR, STEPS)
+- [ ] Versatz-Problem bei KI-Zeichnungen (Koordinaten-Mismatch)
 
 ---
 
-_Stand: 2026-08-27 15:11. Getestet auf Kindle Scribe._
+_Stand: 2026-08-27 17:14. Getestet auf Kindle Scribe._

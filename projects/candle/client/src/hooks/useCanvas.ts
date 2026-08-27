@@ -84,11 +84,13 @@ export function useCanvas(options: UseCanvasOptions = {}) {
     };
   }, []);
 
-  // Catmull-Rom spline: generate smooth points from raw points
+  // Catmull-Rom spline with tangent clamping to prevent overshoot at sharp corners
   const catmullRomSmooth = useCallback((raw: Array<{ x: number; y: number }>, steps = 8): Array<{ x: number; y: number }> => {
-    if (raw.length < 3) return raw; // need at least 3 points for spline
+    if (raw.length < 3) return raw;
 
     const result: Array<{ x: number; y: number }> = [];
+    const TENSION = 0.4; // 0.5 = standard Catmull-Rom, lower = less overshoot
+    const CLAMP_FACTOR = 4.0; // max tangent length as multiple of segment length
 
     for (let i = 0; i < raw.length - 1; i++) {
       const p0 = raw[Math.max(0, i - 1)];
@@ -96,23 +98,44 @@ export function useCanvas(options: UseCanvasOptions = {}) {
       const p2 = raw[i + 1];
       const p3 = raw[Math.min(raw.length - 1, i + 2)];
 
+      // Segment length
+      const segLen = Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+      const maxTangent = segLen * CLAMP_FACTOR;
+
+      // Tangents at p1 and p2 (Catmull-Rom style)
+      let t1x = TENSION * (p2.x - p0.x);
+      let t1y = TENSION * (p2.y - p0.y);
+      let t2x = TENSION * (p3.x - p1.x);
+      let t2y = TENSION * (p3.y - p1.y);
+
+      // Clamp tangent magnitudes to prevent overshoot
+      const t1Len = Math.sqrt(t1x * t1x + t1y * t1y);
+      if (t1Len > maxTangent) {
+        const scale = maxTangent / t1Len;
+        t1x *= scale;
+        t1y *= scale;
+      }
+      const t2Len = Math.sqrt(t2x * t2x + t2y * t2y);
+      if (t2Len > maxTangent) {
+        const scale = maxTangent / t2Len;
+        t2x *= scale;
+        t2y *= scale;
+      }
+
+      // Hermite basis functions
       for (let t = 0; t < steps; t++) {
         const s = t / steps;
         const s2 = s * s;
         const s3 = s2 * s;
 
-        const x = 0.5 * (
-          (2 * p1.x) +
-          (-p0.x + p2.x) * s +
-          (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * s2 +
-          (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * s3
-        );
-        const y = 0.5 * (
-          (2 * p1.y) +
-          (-p0.y + p2.y) * s +
-          (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * s2 +
-          (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * s3
-        );
+        // Hermite basis
+        const h00 = 2 * s3 - 3 * s2 + 1;
+        const h10 = s3 - 2 * s2 + s;
+        const h01 = -2 * s3 + 3 * s2;
+        const h11 = s3 - s2;
+
+        const x = h00 * p1.x + h10 * t1x + h01 * p2.x + h11 * t2x;
+        const y = h00 * p1.y + h10 * t1y + h01 * p2.y + h11 * t2y;
 
         result.push({ x, y });
       }
