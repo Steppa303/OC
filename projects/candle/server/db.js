@@ -26,6 +26,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     session_id TEXT NOT NULL,
     canvas_snapshot TEXT NOT NULL,
+    canvas_after_ai TEXT,
     ai_response_text TEXT,
     ai_response_drawing TEXT,
     created_at INTEGER DEFAULT (unixepoch()),
@@ -34,6 +35,14 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_interactions_session ON interactions(session_id);
 `);
+
+// Migration: add canvas_after_ai column if missing
+try {
+  db.prepare('SELECT canvas_after_ai FROM interactions LIMIT 1').get();
+} catch {
+  db.exec('ALTER TABLE interactions ADD COLUMN canvas_after_ai TEXT');
+  console.log('[DB] Migration: added canvas_after_ai column');
+}
 
 // CRUD Functions
 
@@ -60,12 +69,12 @@ function updateSession(id, name) {
   return getSession(id);
 }
 
-function addInteraction(sessionId, canvasSnapshot, aiResponseText, aiResponseDrawing) {
+function addInteraction(sessionId, canvasSnapshot, aiResponseText, aiResponseDrawing, canvasAfterAi = null) {
   const stmt = db.prepare(`
-    INSERT INTO interactions (session_id, canvas_snapshot, ai_response_text, ai_response_drawing)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO interactions (session_id, canvas_snapshot, ai_response_text, ai_response_drawing, canvas_after_ai)
+    VALUES (?, ?, ?, ?, ?)
   `);
-  const result = stmt.run(sessionId, canvasSnapshot, aiResponseText, aiResponseDrawing);
+  const result = stmt.run(sessionId, canvasSnapshot, aiResponseText, aiResponseDrawing, canvasAfterAi);
   
   // Update session timestamp
   db.prepare('UPDATE sessions SET updated_at = unixepoch() WHERE id = ?').run(sessionId);
@@ -77,6 +86,10 @@ function getInteractions(sessionId) {
   return db.prepare('SELECT * FROM interactions WHERE session_id = ? ORDER BY created_at ASC').all(sessionId);
 }
 
+function updateInteractionCanvasAfterAi(interactionId, canvasAfterAi) {
+  db.prepare('UPDATE interactions SET canvas_after_ai = ? WHERE id = ?').run(canvasAfterAi, interactionId);
+}
+
 module.exports = {
   db,
   createSession,
@@ -85,5 +98,6 @@ module.exports = {
   deleteSession,
   updateSession,
   addInteraction,
-  getInteractions
+  getInteractions,
+  updateInteractionCanvasAfterAi
 };

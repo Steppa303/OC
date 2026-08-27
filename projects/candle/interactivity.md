@@ -1,7 +1,7 @@
 # 🕯️ Candle — Interaktivitäts-Features
 
 **Datum:** 2026-08-27
-**Status:** Planung
+**Status:** Implementiert (27.08.2026)
 **Features:**5 (Export ausgeschlossen)
 
 ---

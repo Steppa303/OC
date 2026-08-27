@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 
 interface UseSocketOptions {
   onThinking?: () => void;
-  onResponse?: (data: { text: string; drawing: any[] | null; interactionId: number }) => void;
+  onResponse?: (data: { text: string; drawing: any[] | null; interactionId: number; isProaktiv?: boolean }) => void;
   onError?: (data: { message: string }) => void;
   onSessionCreated?: (data: { session: any }) => void;
   onSessionHistory?: (data: { session: any; interactions: any[] }) => void;
@@ -75,8 +75,8 @@ export function useSocket(options: UseSocketOptions = {}) {
   }, []);
 
   // Send functions
-  const sendStrokeComplete = useCallback((sessionId: string, canvasPng: string, canvasWidth: number, canvasHeight: number) => {
-    socketRef.current?.emit('stroke:complete', { sessionId, canvasPng, canvasWidth, canvasHeight });
+  const sendStrokeComplete = useCallback((sessionId: string, canvasPng: string, canvasWidth: number, canvasHeight: number, contentInfo?: { bounds: { x: number; y: number; width: number; height: number }; avgObjectSize: number; contentDensity: number }) => {
+    socketRef.current?.emit('stroke:complete', { sessionId, canvasPng, canvasWidth, canvasHeight, contentInfo });
   }, []);
 
   const sendSessionNew = useCallback((name?: string) => {
@@ -91,11 +91,26 @@ export function useSocket(options: UseSocketOptions = {}) {
     socketRef.current?.emit('session:delete', { sessionId });
   }, []);
 
+  const sendCanvasAfterAi = useCallback((interactionId: number, canvasPng: string) => {
+    socketRef.current?.emit('canvas:after-ai', { interactionId, canvasPng });
+  }, []);
+
+  const sendTapResponse = useCallback((sessionId: string, x: number, y: number, canvasPng: string) => {
+    socketRef.current?.emit('tap:response', { sessionId, x, y, canvasPng });
+  }, []);
+
+  const sendProaktiv = useCallback((sessionId: string) => {
+    socketRef.current?.emit('ki:proaktiv', { sessionId });
+  }, []);
+
   return {
     socket: socketRef.current,
     sendStrokeComplete,
     sendSessionNew,
     sendSessionSwitch,
-    sendSessionDelete
+    sendSessionDelete,
+    sendCanvasAfterAi,
+    sendTapResponse,
+    sendProaktiv
   };
 }

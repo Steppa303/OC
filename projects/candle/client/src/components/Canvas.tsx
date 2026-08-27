@@ -8,6 +8,10 @@ interface CanvasProps {
   drawingCommands: any[] | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
   smoothingEnabled: boolean;
+  smoothingValue?: number;
+  isTapMode?: boolean;
+  onTapResponse?: (x: number, y: number, canvasPng: string) => void;
+  onAIDrawingComplete?: (canvasPng: string) => void;
 }
 
 export function Canvas({ 
@@ -16,7 +20,11 @@ export function Canvas({
   onStrokeComplete,
   drawingCommands,
   onCanvasReady,
-  smoothingEnabled
+  smoothingEnabled,
+  smoothingValue,
+  isTapMode = false,
+  onTapResponse,
+  onAIDrawingComplete
 }: CanvasProps) {
   const {
     bgCanvasRef,
@@ -25,20 +33,31 @@ export function Canvas({
     continueStroke,
     endStroke,
     clearCanvas,
-    renderAIDrawing
+    renderAIDrawing,
+    exportPNG,
+    isAnimating
   } = useCanvas({
     strokeColor,
     strokeWidth,
     onStrokeComplete,
-    smoothingEnabled
+    smoothingEnabled,
+    smoothingValue
   });
 
-  // Render AI drawing when commands change
+  // Render AI drawing when commands change (animated)
   React.useEffect(() => {
     if (drawingCommands && drawingCommands.length > 0) {
-      renderAIDrawing(drawingCommands);
+      let cancelled = false;
+      renderAIDrawing(drawingCommands).then(() => {
+        // After animation completes, export canvas PNG for conversational memory
+        if (!cancelled && onAIDrawingComplete) {
+          const png = exportPNG();
+          if (png) onAIDrawingComplete(png);
+        }
+      });
+      return () => { cancelled = true; };
     }
-  }, [drawingCommands, renderAIDrawing]);
+  }, [drawingCommands, renderAIDrawing, onAIDrawingComplete, exportPNG]);
 
   // Expose bg canvas ref to parent
   React.useEffect(() => {
@@ -47,13 +66,36 @@ export function Canvas({
     }
   }, [bgCanvasRef, onCanvasReady]);
 
+  // Tap handler for tap mode
+  const handleTap = React.useCallback((e: React.PointerEvent) => {
+    if (!isTapMode || !onTapResponse) return;
+    const canvas = bgCanvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const png = canvas.toDataURL('image/png');
+    onTapResponse(x, y, png);
+  }, [isTapMode, onTapResponse, bgCanvasRef]);
+
   // Touch event handlers (fallback for Kindle Scribe)
   const handleTouchStart = React.useCallback((e: React.TouchEvent) => {
     e.preventDefault();
     const touch = e.touches[0];
     if (!touch) return;
+    if (isTapMode && onTapResponse) {
+      const canvas = bgCanvasRef.current;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        const png = canvas.toDataURL('image/png');
+        onTapResponse(x, y, png);
+      }
+      return;
+    }
     startStroke({ clientX: touch.clientX, clientY: touch.clientY } as any);
-  }, [startStroke]);
+  }, [startStroke, isTapMode, onTapResponse, bgCanvasRef]);
 
   const handleTouchMove = React.useCallback((e: React.TouchEvent) => {
     e.preventDefault();
@@ -75,18 +117,25 @@ export function Canvas({
         className="absolute inset-0 w-full h-full"
         style={{ touchAction: 'none' }}
       />
+      {/* Tap mode indicator */}
+      {isTapMode && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 text-sm z-50 pointer-events-none">
+          👆 Tippe auf die Zeichnung
+        </div>
+      )}
+
       {/* Foreground canvas: active stroke (raw, real-time) */}
       <canvas
         ref={fgCanvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ touchAction: 'none' }}
-        onPointerDown={startStroke}
-        onPointerMove={continueStroke}
-        onPointerUp={endStroke}
-        onPointerLeave={endStroke}
+        style={{ touchAction: 'none', cursor: isTapMode ? 'crosshair' : 'default' }}
+        onPointerDown={isTapMode ? handleTap : startStroke}
+        onPointerMove={isTapMode ? undefined : continueStroke}
+        onPointerUp={isTapMode ? undefined : endStroke}
+        onPointerLeave={isTapMode ? undefined : endStroke}
         onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchMove={isTapMode ? undefined : handleTouchMove}
+        onTouchEnd={isTapMode ? undefined : handleTouchEnd}
       />
     </div>
   );

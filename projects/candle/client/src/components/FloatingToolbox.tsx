@@ -6,6 +6,7 @@ import { SubMenu } from './SubMenu';
 import { BrushSizePicker } from './BrushSizePicker';
 import { SmoothingSlider } from './SmoothingSlider';
 import { ColorPicker } from './ColorPicker';
+import { ProaktivPicker } from './ProaktivPicker';
 
 interface FloatingToolboxProps {
   strokeColor: string;
@@ -14,9 +15,15 @@ interface FloatingToolboxProps {
   onWidthChange: (width: number) => void;
   smoothingValue: number;
   onSmoothingValueChange: (value: number) => void;
+  aiEnabled: boolean;
+  onAiToggle: () => void;
+  proaktivDelay: number;
+  onProaktivDelayChange: (delay: number) => void;
 }
 
-type SubmenuType = 'brush' | 'smoothing' | 'color' | null;
+type SubmenuType = 'brush' | 'smoothing' | 'color' | 'proaktiv' | null;
+
+type MenuItemId = SubmenuType | 'ai';
 
 export function FloatingToolbox({
   strokeColor,
@@ -25,6 +32,10 @@ export function FloatingToolbox({
   onWidthChange,
   smoothingValue,
   onSmoothingValueChange,
+  aiEnabled,
+  onAiToggle,
+  proaktivDelay,
+  onProaktivDelayChange,
 }: FloatingToolboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<SubmenuType>(null);
@@ -45,8 +56,12 @@ export function FloatingToolbox({
   }, []);
 
   const handleSelect = useCallback((id: string) => {
+    if (id === 'ai') {
+      onAiToggle();
+      return;
+    }
     setActiveSubmenu((prev) => (prev === id ? null : id as SubmenuType));
-  }, []);
+  }, [onAiToggle]);
 
   const handleDragStart = useCallback(() => {
     setIsDragging(true);
@@ -109,8 +124,30 @@ export function FloatingToolbox({
           </svg>
         ),
       },
+      {
+        id: 'proaktiv',
+        label: 'KI Initiativ',
+        active: activeSubmenu === 'proaktiv',
+        icon: (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
+            <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="bold" fill="currentColor">⚡</text>
+          </svg>
+        ),
+      },
+      {
+        id: 'ai',
+        label: aiEnabled ? 'KI AN' : 'KI AUS',
+        active: aiEnabled,
+        icon: (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
+            <text x="12" y="16" textAnchor="middle" fontSize="12" fontWeight="bold" fill="currentColor">AI</text>
+          </svg>
+        ),
+      },
     ],
-    [activeSubmenu, strokeColor]
+    [activeSubmenu, strokeColor, aiEnabled]
   );
 
   // Calculate submenu anchor position
@@ -168,6 +205,17 @@ export function FloatingToolbox({
           onClose={() => setActiveSubmenu(null)}
         >
           <ColorPicker value={strokeColor} onChange={onColorChange} />
+        </SubMenu>
+      )}
+
+      {isOpen && activeSubmenu === 'proaktiv' && (
+        <SubMenu
+          position={toolbarPosition}
+          anchorPosition={fabPosition}
+          anchorTop={submenuAnchorTop}
+          onClose={() => setActiveSubmenu(null)}
+        >
+          <ProaktivPicker value={proaktivDelay} onChange={onProaktivDelayChange} />
         </SubMenu>
       )}
     </>

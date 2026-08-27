@@ -174,14 +174,14 @@ User zeichnet → Pen-Up → debounce
 ## Offene Fragen
 
 1. **Grid-Sichtbarkeit:** Soll das Grid im finalen Rendering sichtbar sein (als Hilfslinien) oder nur temporär für den Export?
-   - Vorschlag: Nur temporär für Export, nicht sichtbar für User
+   - ✅ Nur temporär für Export (implemented)
 
 2. **Content-Info Granularität:** Reicht Bounding Box + Größe, oder brauchen wir mehr (z.B. einzelne Objekte)?
-   - Vorschlag: Erstmal Bounding Box + Größe, bei Bedarf erweitern
+   - ✅ Bounding Box + Größe + Dichte (implemented)
 
 3. **Proportions-Prompt:** Soll der Prompt fest Proportionen vorgeben (1:2:2) oder flexibel bleiben?
-   - Vorschlag: Flexibel, aber mit Richtlinien
+   - ✅ Flexibel mit Richtlinien (implemented)
 
 ---
 
-_Stand: 2026-08-27 18:29. Noch nicht implementiert._
+_Stand: 2026-08-27 18:55. ✅ Alle drei Maßnahmen implementiert & deployed._

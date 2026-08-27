@@ -67,7 +67,7 @@ Die **untere Toolbar** (`Toolbar.tsx`) bleibt komplett wie sie ist:
 | 2 | Glättung | → Submenu mit Slider öffnen | Wellenlinie (~) |
 | 3 | Farbwähler | → Submenu mit Farbfeldern öffnen | Kreis (aktuelle Farbe gefüllt) |
 | — | Trennlinie | — | Dünne horizontale Linie |
-| 4 | *(Platz für zukünftige Tools)* | — | — |
+| 4 | KI AN/AUS | → Toggle (kein Submenu) | Kreis mit "AI" Text |
 
 - **Aktives Element:** Invertiert dargestellt (weiß auf schwarz)
 - **Schließen:** Tap auf Collapse-Button oder Tap außerhalb
@@ -172,8 +172,10 @@ App.tsx
 │   ├── onColorChange
 │   ├── strokeWidth
 │   ├── onWidthChange
-│   ├── smoothingValue (neu!)
-│   └── onSmoothingValueChange (neu!)
+│   ├── smoothingValue
+│   ├── onSmoothingValueChange
+│   ├── aiEnabled (neu!)
+│   └── onAiToggle (neu!)
 ├── Toolbar (unten, unverändert)
 │   ├── sessionName, onSessionClick
 │   ├── strokeColor, onColorChange
@@ -183,7 +185,7 @@ App.tsx
 │   ├── smoothingEnabled, onSmoothingChange
 │   └── DebounceSlider
 └── Canvas
-    └── smoothingValue (neu!) → wird an useCanvas übergeben
+    └── smoothingValue → wird an useCanvas übergeben
 ```
 
 ### State-Management
@@ -196,7 +198,8 @@ FloatingToolbox (internal state):
 
 App.tsx (erweitert):
 ├── smoothingValue: number       — 0.0 bis 1.0 (Default: 0.4)
-└── smoothingEnabled: boolean    — Toggle (bestehend)
+├── smoothingEnabled: boolean    — Toggle (bestehend)
+└── aiEnabled: boolean           — KI AN/AUS (Default: true)
 ```
 
 ---
@@ -253,11 +256,34 @@ const TENSION = smoothingValue; // Props aus App.tsx, Default 0.4
 - [x] App.css — Styles für FAB/Toolbar/Submenu
 - [x] Build testen — `cd client && npm run build` ✅
 - [x] Deploy — `./deploy.sh` ✅ (27.08.2026 18:00)
+- [x] FAB-Background fix (schwarzer Kreis) ✅ (27.08.2026 18:28)
+- [x] AI-Toggle Button ✅ (27.08.2026 18:33)
+- [x] SmoothingSlider → TENSION-Steuerung ✅ (27.08.2026 18:25)
 - [ ] Kindle Scribe testen
 
 ---
 
-## 9. Offene Fragen
+## 9. AI-Toggle (27.08.2026)
+
+**Status:** ✅ Deployed
+
+In der Floating Toolbox gibt es einen AI-Button als letztes Element (durch Trennlinie abgetrennt).
+
+**Verhalten:**
+- **AI AN** (schwarz/aktiv) → Striche werden an Server geschickt, KI antwortet
+- **AI AUS** (weiß) → Strich wird nur gezeichnet, kein `stroke:complete` an Server
+- Banner "KI AUS — Nur Zeichnen" wird oben angezeigt wenn deaktiviert
+- Toggle bei Klick (kein Submenu)
+
+**Implementation:**
+- `aiEnabled` State in App.tsx (Default: true)
+- `handleStrokeComplete` prüft `aiEnabled` vor `sendStrokeComplete`
+- FloatingToolbox: `aiEnabled` + `onAiToggle` Props
+- `handleSelect` in FloatingToolbox: bei id='ai' → `onAiToggle()` statt Submenu
+
+**Icon:** Kreis mit "AI" Text (SVG)
+
+## 10. Offene Fragen
 
 - [ ] Welche weiteren Tools sollen in die Toolbar? (Radierer? Formen? Lasso?)
 - [ ] Soll die Toolbar bei FAB-Drag mitwandern oder schließen?
@@ -266,4 +292,4 @@ const TENSION = smoothingValue; // Props aus App.tsx, Default 0.4
 
 ---
 
-_Plan erstellt: 2026-08-27 17:22. Deployed: 2026-08-27 18:00._
+_Plan erstellt: 2026-08-27 17:22. Deployed: 2026-08-27 18:00. AI-Toggle + Smoothing-Fix: 2026-08-27 18:33._

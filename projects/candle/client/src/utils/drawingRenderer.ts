@@ -179,6 +179,81 @@ export function renderDrawingCommands(
   ctx.restore();
 }
 
+/**
+ * Render AI drawing commands sequentially with animation delay.
+ * Each command is drawn one by one, creating a "drawing in progress" effect.
+ */
+export async function renderDrawingCommandsAnimated(
+  ctx: CanvasRenderingContext2D,
+  commands: any[],
+  options: {
+    delayPerCommand?: number;
+    onProgress?: (current: number, total: number) => void;
+    signal?: AbortSignal;
+    bgCanvas?: HTMLCanvasElement;
+  } = {}
+): Promise<void> {
+  const { delayPerCommand = 80, onProgress, signal, bgCanvas } = options;
+
+  if (!Array.isArray(commands) || commands.length === 0) return;
+
+  // Compute content bounds once for all commands
+  let bounds: ContentBounds | null = null;
+  const hasRelative = commands.some((cmd: any) => cmd.position);
+  if (hasRelative && bgCanvas) {
+    bounds = detectContentBounds(bgCanvas);
+  }
+
+  ctx.save();
+
+  for (let i = 0; i < commands.length; i++) {
+    if (signal?.aborted) break;
+
+    const cmd = commands[i];
+    try {
+      let resolvedCmd = cmd;
+      if (cmd.position && bounds) {
+        const { offsetX, offsetY } = resolvePosition(cmd, bounds);
+        resolvedCmd = applyOffset(cmd, offsetX, offsetY);
+      }
+
+      switch (resolvedCmd.type) {
+        case 'line':
+          drawLine(ctx, resolvedCmd);
+          break;
+        case 'circle':
+          drawCircle(ctx, resolvedCmd);
+          break;
+        case 'path':
+          drawPath(ctx, resolvedCmd);
+          break;
+        case 'text':
+          drawText(ctx, resolvedCmd);
+          break;
+        default:
+          console.warn('Unknown drawing command type:', resolvedCmd.type);
+      }
+    } catch (error) {
+      console.error('Error rendering drawing command:', error, cmd);
+    }
+
+    onProgress?.(i + 1, commands.length);
+
+    // Delay between commands (skip delay after last command)
+    if (i < commands.length - 1 && !signal?.aborted) {
+      await new Promise<void>((resolve) => {
+        const timer = setTimeout(resolve, delayPerCommand);
+        signal?.addEventListener('abort', () => {
+          clearTimeout(timer);
+          resolve();
+        }, { once: true });
+      });
+    }
+  }
+
+  ctx.restore();
+}
+
 function drawLine(ctx: CanvasRenderingContext2D, cmd: any) {
   const { x1, y1, x2, y2, color, width } = cmd;
 

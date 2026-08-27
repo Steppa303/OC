@@ -92,18 +92,20 @@ Regeln:
 
 /**
  * Analyze a canvas image using Google Gemini Vision API
+ * Feature 1: Sends 2 images (current + previous AI canvas) + structured history
  */
-async function analyzeCanvas(canvasPng, previousInteractions = [], canvasDimensions = null) {
+async function analyzeCanvas(canvasPng, previousInteractions = [], canvasDimensions = null, contentInfo = null) {
   try {
     const base64Data = canvasPng.replace(/^data:image\/png;base64,/, '');
 
-    // Build context from previous interactions
+    // Build structured conversation history
     let context = '';
     if (previousInteractions.length > 0) {
-      const lastFew = previousInteractions.slice(-3);
-      context = '\n\nVorherige Interaktionen:\n' + lastFew.map((inter, i) =>
-        `${i + 1}. User hat gemalt → KI-Antwort: "${inter.ai_response_text || 'Keine Text-Antwort'}"`
-      ).join('\n');
+      const lastFew = previousInteractions.slice(-5);
+      context = '\n\nBisherige Interaktionen (chronologisch):\n' + lastFew.map((inter, i) => {
+        const num = previousInteractions.length - lastFew.length + i + 1;
+        return `${num}. User malte → Du antwortest: "${inter.ai_response_text || 'Keine Text-Antwort'}"`;
+      }).join('\n');
     }
 
     // Add canvas dimensions to context
@@ -112,26 +114,69 @@ async function analyzeCanvas(canvasPng, previousInteractions = [], canvasDimensi
       dimensionContext = `\n\nCanvas-Größe: ${canvasDimensions.width} × ${canvasDimensions.height} Pixel (CSS-Pixel, was der User sieht).`;
     }
 
+    // Add content analysis info for proportional drawing
+    let contentContext = '';
+    if (contentInfo) {
+      const { bounds, avgObjectSize, contentDensity } = contentInfo;
+      contentContext = `
+
+Content-Analyse:
+- Bounding Box: x=${bounds.x}, y=${bounds.y}, width=${bounds.width}, height=${bounds.height}
+- Durchschnittliche Objekt-Größe: ${avgObjectSize.toFixed(1)}px
+- Content-Dichte: ${(contentDensity * 100).toFixed(1)}% des Canvas ist bemalt
+
+Proportions-Regeln:
+- Miss die Größe des bestehenden Content und orientiere dich daran!
+- Zeichne NICHT zu klein: Mindestens 30% der durchschnittlichen Content-Größe (${(avgObjectSize * 0.3).toFixed(0)}px)
+- Zeichne NICHT zu groß: Maximal 200% der durchschnittlichen Content-Größe (${(avgObjectSize * 2).toFixed(0)}px)
+- Passe deine Zeichnung an die bestehenden Proportionen an`;
+    }
+
     if (!GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
+    // Build parts array: system prompt, optional previous canvas image, current canvas
+    const parts = [];
+
+    // System prompt with all context
+    parts.push({ text: SYSTEM_PROMPT + dimensionContext + contentContext + context });
+
+    // Previous AI canvas as reference image (Feature 1: Conversational Memory)
+    if (previousInteractions.length > 0) {
+      const lastInteraction = previousInteractions[previousInteractions.length - 1];
+      if (lastInteraction.canvas_after_ai) {
+        parts.push({
+          text: 'Das ist der Canvas-Zustand NACH deiner letzten Antwort (zur Referenz, damit du siehst was du bereits gezeichnet hast):'
+        });
+        parts.push({
+          inlineData: {
+            mimeType: 'image/png',
+            data: lastInteraction.canvas_after_ai.replace(/^data:image\/png;base64,/, '')
+          }
+        });
+      }
+    }
+
+    // Current canvas
+    parts.push({ text: 'Das ist der aktuelle Canvas-Zustand (nach dem neuesten Strich des Users):' });
+    parts.push({
+      inlineData: {
+        mimeType: 'image/png',
+        data: base64Data
+      }
+    });
+
+    parts.push({ text: 'Analysiere das Bild und antworte im JSON-Format.' });
+
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{
-          parts: [
-            { text: SYSTEM_PROMPT + dimensionContext + context + '\n\nAnalysiere dieses Bild und antworte im JSON-Format.' },
-            {
-              inlineData: {
-                mimeType: 'image/png',
-                data: base64Data
-              }
-            }
-          ]
+          parts
         }],
         generationConfig: {
           temperature: 0.7,
@@ -217,11 +262,211 @@ function parseAIResponse(content) {
     console.error('[AI] JSON parse failed:', parseError.message);
     console.error('[AI] Raw:', content.substring(0, 300));
 
+    // Try to extract a clean text response from non-JSON content
+    let fallbackText = '';
+
+    // Try to find a "text" field in partial JSON
+    const textMatch = content.match(/"text"\s*:\s*"([^"]+)"/);
+    if (textMatch) {
+      fallbackText = textMatch[1];
+    } else {
+      // Strip markdown code blocks, thinking tags, and trim
+      let cleaned = content
+        .replace(/<thinking>[\s\S]*?<\/thinking>/g, '')
+        .replace(/```(?:json)?\s*/g, '')
+        .replace(/```/g, '')
+        .trim();
+
+      // If it looks like conversational text (not JSON), use it directly
+      if (!cleaned.startsWith('{') && !cleaned.startsWith('[')) {
+        fallbackText = cleaned;
+      } else {
+        // Last resort: generic message
+        fallbackText = 'Ich habe das Bild analysiert, aber keine strukturierte Antwort erstellt.';
+      }
+    }
+
+    // Cap at 200 chars
+    fallbackText = fallbackText.substring(0, 200);
+
     return {
-      text: content.substring(0, 200) || 'Ich habe das Bild analysiert, aber keine strukturierte Antwort erstellt.',
+      text: fallbackText || 'Ich habe das Bild analysiert, aber keine strukturierte Antwort erstellt.',
       drawing: null
     };
   }
 }
 
-module.exports = { analyzeCanvas };
+/**
+ * Analyze canvas with tap coordinates (Feature 5: Tap-Annotation)
+ */
+async function analyzeCanvasWithTap(canvasPng, tapPrompt, previousInteractions = [], canvasDimensions = null) {
+  try {
+    const base64Data = canvasPng.replace(/^data:image\/png;base64,/, '');
+
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY not configured');
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
+    const parts = [
+      { text: SYSTEM_PROMPT },
+      { text: tapPrompt },
+      {
+        inlineData: {
+          mimeType: 'image/png',
+          data: base64Data
+        }
+      },
+      { text: 'Analysiere das Bild und antworte im JSON-Format.' }
+    ];
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 4000
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Gemini API error: ${response.status} - ${error}`);
+    }
+
+    const result = await response.json();
+    const content = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    console.log('[AI] Tap response (full):', JSON.stringify(content).substring(0, 500));
+    return parseAIResponse(content);
+  } catch (error) {
+    console.error('[AI] Tap error:', error.message);
+    return {
+      text: 'Ich konnte die Position nicht analysieren. Versuche es nochmal!',
+      drawing: null
+    };
+  }
+}
+
+/**
+ * Build tap-specific prompt
+ */
+function buildTapPrompt(x, y, lastAiResponse) {
+  return `Der User hat auf den Canvas getippt bei Koordinaten (${x}, ${y}).
+
+Das ist vermutlich ein Verweis auf etwas das du gerade gezeichnet hast.
+Deine letzte Antwort war: "${lastAiResponse || 'Unbekannt'}"
+
+Mögliche Reaktionen:
+- Wenn der User auf ein Objekt tippt: Reagiere darauf (z.B. "Du meinst das Schwert? Soll ich es größer machen?")
+- Wenn der User auf eine leere Stelle tippt: "Was soll ich hier hin malen?"
+- Wenn der User auf Text tippt: Erkläre den Text genauer
+
+Antworte im gewohnten JSON-Format (text + drawing).`;
+}
+
+/**
+ * Proactive AI: KI initiiert eine Aktion nach Inaktivität (Feature 3)
+ */
+async function analyzeProaktiv(previousInteractions = []) {
+  try {
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY not configured');
+    }
+
+    const PROAKTIV_PROMPT = `Du bist auf einem digitalen Canvas. Der User hat sich seit einer Weile nicht gemeldet.
+
+Deine Aufgabe:
+1. Mache etwas Interessantes auf dem Canvas
+2. Zeichne etwas Kleines, Witziges oder Überraschendes
+3. Schreibe einen kurzen Text, der den User neugierig macht
+
+Ideen:
+- Male ein kleines Doodle in eine leere Ecke
+- Stelle eine Frage ("Was ist das?")
+- Starte ein Mini-Spiel ("Tic-Tac-Toe? Ich fange an!")
+- Kommentiere was der User gemalt hat
+- Zeichne ein kleines Tier oder Objekt
+
+Antwort-Format (JSON):
+{
+  "text": "Dein Text",
+  "drawing": [
+    { "type": "line", "x1": 0, "y1": 0, "x2": 0, "y2": 100, "position": "center", "anchor": "center" }
+  ]
+}
+
+Regeln:
+- Nutze IMMER position + anchor für jedes Drawing-Command
+- Antworte auf Deutsch
+- Zeichne mit Farbe #666666 und Strichstärke 2
+- Halte es kurz und interessant
+- WICHTIG: Antworte NUR mit dem JSON-Objekt`;
+
+    // Build context from previous interactions
+    let context = '';
+    if (previousInteractions.length > 0) {
+      const lastFew = previousInteractions.slice(-3);
+      context = '\n\nBisherige Interaktionen:\n' + lastFew.map((inter, i) => {
+        return `${i + 1}. User malte → Du antwortest: "${inter.ai_response_text || 'Keine Text-Antwort'}"`;
+      }).join('\n');
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
+    const parts = [
+      { text: PROAKTIV_PROMPT + context }
+    ];
+
+    // Include previous AI canvas as reference if available
+    if (previousInteractions.length > 0) {
+      const lastInteraction = previousInteractions[previousInteractions.length - 1];
+      if (lastInteraction.canvas_after_ai) {
+        parts.push({
+          text: 'Das ist der aktuelle Canvas-Zustand (zur Referenz):'
+        });
+        parts.push({
+          inlineData: {
+            mimeType: 'image/png',
+            data: lastInteraction.canvas_after_ai.replace(/^data:image\/png;base64,/, '')
+          }
+        });
+      }
+    }
+
+    parts.push({ text: 'Erstelle eine proaktive Aktion und antworte im JSON-Format.' });
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: {
+          temperature: 0.9,
+          maxOutputTokens: 2000
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Gemini API error: ${response.status} - ${error}`);
+    }
+
+    const result = await response.json();
+    const content = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    console.log('[AI] Proaktiv response (full):', JSON.stringify(content).substring(0, 500));
+    return parseAIResponse(content);
+  } catch (error) {
+    console.error('[AI] Proaktiv error:', error.message);
+    return {
+      text: 'Psst... ist jemand da? 🤔',
+      drawing: null
+    };
+  }
+}
+
+module.exports = { analyzeCanvas, analyzeCanvasWithTap, buildTapPrompt, analyzeProaktiv };

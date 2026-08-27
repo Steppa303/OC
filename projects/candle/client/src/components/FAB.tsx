@@ -16,6 +16,13 @@ export function FAB({ position, onPointerDown }: FABProps) {
         width: 48,
         height: 48,
         zIndex: 100,
+        backgroundColor: '#000000',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        touchAction: 'none',
       }}
       onPointerDown={onPointerDown}
     >
