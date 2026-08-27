@@ -38,7 +38,8 @@ Antwort-Format (JSON):
 Regeln:
 - Halte dich an den Stil des Users (Strichmännchen → Strichmännchen)
 - Zeichne nicht über den Content des Users
-- Positioniere deine Zeichnung neben/benach dem bestehenden Content
+- Positioniere deine Zeichnung relativ zum bestehenden Content (z.B. "neben dem Kreis", "unter dem Text", "rechts daneben")
+- Wenn du absolute Koordinaten verwendest, orientiere dich an der Canvas-Größe (wird im Prompt angegeben)
 - Antworte auf Deutsch
 - Zeichne mit Farbe #666666 und Strichstärke 2
 - WICHTIG: Antworte NUR mit dem JSON-Objekt, kein anderer Text
@@ -47,7 +48,7 @@ Regeln:
 /**
  * Analyze a canvas image using Google Gemini Vision API
  */
-async function analyzeCanvas(canvasPng, previousInteractions = []) {
+async function analyzeCanvas(canvasPng, previousInteractions = [], canvasDimensions = null) {
   try {
     const base64Data = canvasPng.replace(/^data:image\/png;base64,/, '');
 
@@ -58,6 +59,12 @@ async function analyzeCanvas(canvasPng, previousInteractions = []) {
       context = '\n\nVorherige Interaktionen:\n' + lastFew.map((inter, i) =>
         `${i + 1}. User hat gemalt → KI-Antwort: "${inter.ai_response_text || 'Keine Text-Antwort'}"`
       ).join('\n');
+    }
+
+    // Add canvas dimensions to context
+    let dimensionContext = '';
+    if (canvasDimensions) {
+      dimensionContext = `\n\nCanvas-Größe: ${canvasDimensions.width} × ${canvasDimensions.height} Pixel (CSS-Pixel, was der User sieht).`;
     }
 
     if (!GEMINI_API_KEY) {
@@ -72,7 +79,7 @@ async function analyzeCanvas(canvasPng, previousInteractions = []) {
       body: JSON.stringify({
         contents: [{
           parts: [
-            { text: SYSTEM_PROMPT + context + '\n\nAnalysiere dieses Bild und antworte im JSON-Format.' },
+            { text: SYSTEM_PROMPT + dimensionContext + context + '\n\nAnalysiere dieses Bild und antworte im JSON-Format.' },
             {
               inlineData: {
                 mimeType: 'image/png',

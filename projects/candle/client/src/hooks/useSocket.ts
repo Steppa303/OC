@@ -75,8 +75,8 @@ export function useSocket(options: UseSocketOptions = {}) {
   }, []);
 
   // Send functions
-  const sendStrokeComplete = useCallback((sessionId: string, canvasPng: string) => {
-    socketRef.current?.emit('stroke:complete', { sessionId, canvasPng });
+  const sendStrokeComplete = useCallback((sessionId: string, canvasPng: string, canvasWidth: number, canvasHeight: number) => {
+    socketRef.current?.emit('stroke:complete', { sessionId, canvasPng, canvasWidth, canvasHeight });
   }, []);
 
   const sendSessionNew = useCallback((name?: string) => {

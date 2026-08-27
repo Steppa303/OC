@@ -77,17 +77,17 @@ export default function App() {
   });
 
   // Handle stroke completion
-  const handleStrokeComplete = useCallback((canvasPng: string) => {
+  const handleStrokeComplete = useCallback((canvasPng: string, canvasWidth: number, canvasHeight: number) => {
     if (!currentSession) {
       // Auto-create session if none exists
       createSession().then((session) => {
         if (session) {
-          sendStrokeComplete(session.id, canvasPng);
+          sendStrokeComplete(session.id, canvasPng, canvasWidth, canvasHeight);
         }
       });
       return;
     }
-    sendStrokeComplete(currentSession.id, canvasPng);
+    sendStrokeComplete(currentSession.id, canvasPng, canvasWidth, canvasHeight);
   }, [currentSession, sendStrokeComplete, createSession]);
 
   // Handle new session

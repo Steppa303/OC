@@ -57,12 +57,16 @@ function setupSocketHandlers(io) {
     // Handle stroke completion (main AI interaction)
     socket.on('stroke:complete', async (data) => {
       try {
-        const { sessionId, canvasPng } = data;
+        const { sessionId, canvasPng, canvasWidth, canvasHeight } = data;
 
         if (!sessionId || !canvasPng) {
           socket.emit('ai:error', { message: 'Ungültige Daten: sessionId und canvasPng erforderlich.' });
           return;
         }
+
+        const canvasDimensions = (canvasWidth && canvasHeight)
+          ? { width: canvasWidth, height: canvasHeight }
+          : null;
 
         // Verify session exists
         const session = db.getSession(sessionId);
@@ -78,7 +82,7 @@ function setupSocketHandlers(io) {
         const previousInteractions = db.getInteractions(sessionId);
 
         // Analyze canvas with AI
-        const aiResponse = await ai.analyzeCanvas(canvasPng, previousInteractions);
+        const aiResponse = await ai.analyzeCanvas(canvasPng, previousInteractions, canvasDimensions);
 
         // Save interaction to database
         const interactionId = db.addInteraction(

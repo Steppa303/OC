@@ -4,7 +4,7 @@ import { useCanvas } from '../hooks/useCanvas';
 interface CanvasProps {
   strokeColor: string;
   strokeWidth: number;
-  onStrokeComplete: (canvasPng: string) => void;
+  onStrokeComplete: (canvasPng: string, canvasWidth: number, canvasHeight: number) => void;
   drawingCommands: any[] | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
   smoothingEnabled: boolean;

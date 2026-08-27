@@ -4,7 +4,7 @@ import { renderDrawingCommands } from '../utils/drawingRenderer';
 interface UseCanvasOptions {
   strokeColor?: string;
   strokeWidth?: number;
-  onStrokeComplete?: (canvasPng: string) => void;
+  onStrokeComplete?: (canvasPng: string, canvasWidth: number, canvasHeight: number) => void;
   smoothingEnabled?: boolean;
 }
 
@@ -247,7 +247,10 @@ export function useCanvas(options: UseCanvasOptions = {}) {
       const bgCanvas = bgCanvasRef.current;
       if (bgCanvas) {
         const png = bgCanvas.toDataURL('image/png');
-        options.onStrokeComplete?.(png);
+        const dpr = isEInk() ? 1 : (window.devicePixelRatio || 1);
+        const cssWidth = Math.round(bgCanvas.width / dpr);
+        const cssHeight = Math.round(bgCanvas.height / dpr);
+        options.onStrokeComplete?.(png, cssWidth, cssHeight);
       }
     }, debounceMs);
 
