@@ -38,14 +38,22 @@ projects/candle/
 │   │   ├── components/
 │   │   │   ├── Canvas.tsx         # Haupt-Canvas (Pointer + Touch Events)
 │   │   │   ├── TextOverlay.tsx    # KI-Text-Antworten
-│   │   │   ├── Toolbar.tsx        # Session-Controls, Farben, Debounce
+│   │   │   ├── Toolbar.tsx        # Untere Toolbar: Session, Löschen, Neu, Glatt-Toggle
 │   │   │   ├── SessionList.tsx    # Session-Auswahl
 │   │   │   ├── DebounceSlider.tsx # Debounce-Konfiguration
-│   │   │   └── ErrorBoundary.tsx  # Fehleranzeige
+│   │   │   ├── ErrorBoundary.tsx  # Fehleranzeige
+│   │   │   ├── FloatingToolbox.tsx # Floating Toolbox Orchestrator
+│   │   │   ├── FAB.tsx            # Floating Action Button (draggable)
+│   │   │   ├── VerticalToolbar.tsx # Vertikale Toolbar (neben FAB)
+│   │   │   ├── SubMenu.tsx        # Horizontales Submenu
+│   │   │   ├── BrushSizePicker.tsx # Stift-Dicke (5 Wellenlinien)
+│   │   │   ├── SmoothingSlider.tsx # Glättung-Slider (0.0-1.0)
+│   │   │   └── ColorPicker.tsx    # Farbwähler
 │   │   ├── hooks/
 │   │   │   ├── useCanvas.ts       # Drawing-Logic, Pen-Events, PNG-Export
 │   │   │   ├── useSocket.ts       # WebSocket-Client
-│   │   │   └── useSession.ts      # Session-Management
+│   │   │   ├── useSession.ts      # Session-Management
+│   │   │   └── useDrag.ts         # Drag + Tap Detection (FAB)
 │   │   ├── utils/
 │   │   │   └── drawingRenderer.ts # KI-Drawing-Commands Renderer
 │   │   ├── App.tsx
@@ -97,7 +105,9 @@ projects/candle/
 |-----------|---------|-------|--------------|
 | Debounce | 500ms | 200-3000ms | Verzögerung nach Pen-Up |
 | Stift-Farbe | #000000 | Farbwähler | Farbe des User-Stifts |
-| Stift-Dicke | 2px | 1-10px | Dicke des User-Stifts |
+| Stift-Dicke | 2px | 1-5px | Dicke des User-Stifts |
+| Glättung | 0.4 | 0.0-1.0 | Catmull-Rom Tension (0.0 = keine, 1.0 = max) |
+| Glättung AN/AUS | AN | Toggle | Smoothing ein/aus |
 | Text-Overlay Dauer | 8s | 3-15s | Wie lange KI-Text angezeigt wird |
 
 Alle Werte werden im `localStorage` gespeichert.
@@ -152,10 +162,11 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 1. User zeichnet → raw auf Foreground (kein Lag, lineTo, sofort sichtbar)
 2. Pen-Up → Catmull-Rom Smoothing über den GESAMTEN Strich → auf Background gerendert
 3. Foreground wird geleert (kein Ghosting)
-4. Toggle-Button `◉ Glatt` / `○ Raw` in der Toolbar
+4. Toggle-Button `◉ Glatt` / `○ Raw` in der unteren Toolbar
 
 **Smoothing-Algorithmus:** Catmull-Rom mit Hermite-Basis und Tangent-Clamping
-- `TENSION = 0.4` (niedriger = weniger Overshoot)
+- `TENSION` = dynamisch (0.0–1.0, per Slider in Floating Toolbox)
+- Default: `0.4`
 - `CLAMP_FACTOR = 4.0` (max Tangent-Länge = 4× Segmentlänge)
 - Verhindert Overshoot bei scharfen Ecken (z.B. Diamant-Formen)
 - `STEPS = 8` (Zwischenpunkte pro Segment)
@@ -163,8 +174,35 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 **Dateien:**
 - `client/src/hooks/useCanvas.ts` — Zwei-Canvas-Logik, Catmull-Rom Smoothing
 - `client/src/components/Canvas.tsx` — Rendert zwei übereinanderliegende Canvas-Elemente
-- `client/src/components/Toolbar.tsx` — Smoothing Toggle Button
-- `client/src/App.tsx` — `smoothingEnabled` State, Props an Canvas/Toolbar
+- `client/src/components/Toolbar.tsx` — Smoothing Toggle Button (unten)
+- `client/src/App.tsx` — `smoothingEnabled` + `smoothingValue` State
+
+### Floating Toolbox (27.08.2026)
+
+**Branch:** `feature/floating-toolbox`
+**Commit:** `feat: add floating toolbox with brush size, smoothing slider, color picker`
+**Status:** ✅ Deployed
+
+**Konzept:** Frei verschiebarer Floating Action Button (FAB) im reMarkable-Style. Öffnet bei Tap eine vertikale Toolbar mit Werkzeugen und Settings. Bestehende untere Toolbar bleibt unverändert.
+
+**Komponenten:**
+- `FAB.tsx` — Schwarzer Kreis 48px, weißes Stift-Icon, draggable (Pointer-Events)
+- `VerticalToolbar.tsx` — 56px breit, abgerundete Ecken, Collapse-Button, aktive Items invertiert
+- `SubMenu.tsx` — Horizontaler Container, schließt bei Tap außerhalb
+- `BrushSizePicker.tsx` — 5 quadratische Buttons mit Wellenlinien (1-5px)
+- `SmoothingSlider.tsx` — Horizontaler Slider 0.0-1.0, Step 0.05
+- `ColorPicker.tsx` — 3 Farbkreise (#000, #333, #666)
+- `FloatingToolbox.tsx` — Orchestrator: isOpen, activeSubmenu, FAB-Position
+- `useDrag.ts` — Pointer-Events Drag + Tap Detection (< 5px = Tap)
+
+**Drag vs. Tap:**
+- < 5px Bewegung = Tap → Toolbar öffnen/schließen
+- ≥ 5px = Drag → Button verschieben
+- Position wird in `localStorage` gespeichert
+
+**E-ink Regeln:** Keine Animationen, hoher Kontrast, 48px+ Touch-Targets, `touch-action: none`
+
+**Plan:** `projects/candle/toolbox.md`
 
 ## Bekannte Probleme / TODO
 
@@ -172,9 +210,11 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 - [ ] Export als PNG/PDF
 - [ ] Multi-User Support
 - [ ] Canvas-Größe an Scribe-Auflösung anpassen (300 DPI)
-- [ ] Smoothing-Parameter feintunen (TENSION, CLAMP_FACTOR, STEPS)
-- [ ] Versatz-Problem bei KI-Zeichnungen (Koordinaten-Mismatch)
+- [ ] Smoothing-Parameter feintunen (CLAMP_FACTOR, STEPS)
+- [ ] Weitere Floating Toolbox Tools (Radierer? Formen? Lasso?)
+- [ ] Branch `feature/floating-toolbox` auf `main` mergen
+- [ ] Branch `fix/versatz-koordinaten` löschen (enthalt in floating-toolbox)
 
 ---
 
-_Stand: 2026-08-27 17:14. Getestet auf Kindle Scribe._
+_Stand: 2026-08-27 18:00. Floating Toolbox deployed. Getestet auf Kindle Scribe._
