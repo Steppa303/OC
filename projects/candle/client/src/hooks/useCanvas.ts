@@ -275,8 +275,9 @@ export function useCanvas(options: UseCanvasOptions = {}) {
   // Render AI drawing on background canvas
   const renderAIDrawing = useCallback((drawingCommands: any[]) => {
     const bgCtx = bgCtxRef.current;
+    const bgCanvas = bgCanvasRef.current;
     if (!bgCtx || !drawingCommands) return;
-    renderDrawingCommands(bgCtx, drawingCommands);
+    renderDrawingCommands(bgCtx, drawingCommands, bgCanvas ?? undefined);
   }, []);
 
   // Export background canvas as PNG
