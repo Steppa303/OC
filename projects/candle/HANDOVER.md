@@ -427,8 +427,8 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 - [x] Animierte KI-Antworten (Feature 2) → deployed 27.08.2026
 - [x] KI initiiert manchmal (Feature 3) → deployed 27.08.2026
 - [ ] Modi-System (Feature 4)
-- [ ] Branch `feature/floating-toolbox` auf `main` mergen
-- [ ] Branch `fix/versatz-koordinaten` mergen
+- [x] Branch `feature/floating-toolbox` auf `main` mergen ✅ (27.08.2026)
+- [x] Branch `fix/versatz-koordinaten` mergen ✅ (27.08.2026)
 
 ### JSON-Fallback Fix (27.08.2026)
 

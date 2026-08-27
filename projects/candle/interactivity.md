@@ -1,8 +1,8 @@
 # 🕯️ Candle — Interaktivitäts-Features
 
 **Datum:** 2026-08-27
-**Status:** Implementiert (27.08.2026)
-**Features:**5 (Export ausgeschlossen)
+**Status:** Phase 1+2 implementiert (27.08.2026), Feature 4 (Modi-System) offen
+**Features:** 5 (Export ausgeschlossen)
 
 ---
 
