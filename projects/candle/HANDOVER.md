@@ -22,11 +22,14 @@ Eine für den Kindle Scribe optimierte Web-App mit einem Full-Screen Zeichen-Can
 
 ```
 Kindle Scribe (Browser)
-  → Pen-Up Event → debounce (konfigurierbar) → Canvas als PNG
+  → Pen-Up Event → debounce (konfigurierbar)
+  → Content-Detection (Bounding Box)
+  → Grid-Overlay auf Canvas (temporär)
+  → Canvas als PNG + Canvas-Dimensionen + Content-Info
   → WebSocket (Socket.io) → Backend (Port 3011)
-  → Gemini Vision API (Canvas-PNG → Analyse)
-  → Antwort: Text + Drawing-Commands
-  → WebSocket zurück → Canvas rendert Antwort
+  → Gemini Vision API (Canvas-PNG → Analyse, relative Positionierung)
+  → Antwort: Text + Drawing-Commands (mit position/anchor)
+  → WebSocket zurück → Position-Resolver → Canvas rendert Antwort
 ```
 
 ## Dateien
@@ -55,7 +58,8 @@ projects/candle/
 │   │   │   ├── useSession.ts      # Session-Management
 │   │   │   └── useDrag.ts         # Drag + Tap Detection (FAB)
 │   │   ├── utils/
-│   │   │   └── drawingRenderer.ts # KI-Drawing-Commands Renderer
+│   │   │   ├── drawingRenderer.ts # KI-Drawing-Commands Renderer (relativ + absolut)
+│   │   │   └── contentDetector.ts # Canvas-Content-Detection (Bounding Box)
 │   │   ├── App.tsx
 │   │   ├── App.css                # E-ink optimiertes CSS
 │   │   └── main.tsx               # Entry Point mit Error-Boundary
@@ -79,7 +83,7 @@ projects/candle/
 ### WebSocket Events (Socket.io)
 
 **Client → Server:**
-- `stroke:complete` — `{ sessionId, canvasPng }` — Pen-Up nach debounce
+- `stroke:complete` — `{ sessionId, canvasPng, canvasWidth, canvasHeight }` — Pen-Up nach debounce
 - `session:new` — `{ name? }` — Neue Session erstellen
 - `session:switch` — `{ sessionId }` — Session wechseln
 - `session:delete` — `{ sessionId }` — Session löschen
@@ -117,7 +121,60 @@ Alle Werte werden im `localStorage` gespeichert.
 - **Modell:** Google Gemini 2.5 Flash
 - **API Key:** `/root/.openclaw/workspace/.secrets/google-gemini.env`
 - **Prompt:** Analysiert Canvas-Bild, antwortet mit JSON (Text + Drawing-Commands)
-- **Drawing-Commands:** line, circle, path, text — gerendert auf Canvas
+- **Drawing-Commands:** line, circle, path, text — relativ oder absolut positioniert
+- **Relative Positionierung:** `position` (where) + `anchor` (reference point) + relative coords
+- **Canvas-Dimensionen:** Werden im Prompt mitgegeben (CSS-Pixel) (relativ oder absolut)
+
+### Relative Positionierung (27.08.2026)
+
+**Branch:** `fix/versatz-koordinaten`
+**Status:** ✅ Deployed
+
+**Problem:** Gemini schätzt absolute Koordinaten aus dem PNG → Versatz.
+
+**Lösung:** Gemini gibt relative Positionsbeschreibungen zurück. Client mappt auf echte Koordinaten.
+
+**Neues Response-Format:**
+```json
+{
+  "text": "Ich sehe einen Kopf. Ich zeichne den Körper!",
+  "drawing": [
+    { "type": "line", "x1": 0, "y1": 0, "x2": 0, "y2": 100, "position": "below", "anchor": "center" }
+  ]
+}
+```
+
+**Position-Werte:** `above`, `below`, `left_of`, `right_of`, `center`, `top_right`, `top_left`, `bottom_right`, `bottom_left`
+**Anchor-Werte:** `center` (default), `top`, `bottom`, `left`, `right`
+**Koordinaten:** Relativ zum Ankerpunkt (0,0 = Ankerpunkt)
+
+**Content-Detection:**
+- `contentDetector.ts` scannt Canvas-Pixel (jeder 4te für Performance)
+- Findet Bounding Box des bestehenden Contents
+- Gibt `{ x, y, width, height }` zurück
+- Leerer Canvas → gesamter Canvas als Bounds
+
+**Position-Resolver:**
+- `drawingRenderer.ts` → `resolvePosition()` mappt Position + Anchor auf Offset
+- 20px Gap zwischen bestehendem Content und neuer Zeichnung
+- Backwards-kompatibel: Commands ohne `position` werden absolut gerendert
+
+**Dateien:**
+- `server/ai.js` — Prompt: relative Positionierung + Canvas-Dimensionen
+- `client/src/utils/contentDetector.ts` — Content-Bounding-Box Detection
+- `client/src/utils/drawingRenderer.ts` — `resolvePosition()`, `applyOffset()`
+- `client/src/hooks/useCanvas.ts` — `renderAIDrawing` übergibt `bgCanvas`
+- `client/src/hooks/useSocket.ts` — Sendet `canvasWidth`, `canvasHeight`
+
+### Geplant: Grid-Overlay + Scale-Reference + Proportions (position.md)
+
+**Status:** 📝 Plan ausgearbeitet, noch nicht implementiert
+**Plan:** `projects/candle/position.md`
+
+Drei Maßnahmen:
+1. **Grid-Overlay** — Subtile Referenzpunkte (alle 100px) vor PNG-Export auf Canvas
+2. **Scale-Reference** — Content-Größen als Referenz im Prompt
+3. **Proportions-Prompt** — Kopf:Körper:Beine = 1:2:2, min 30%/max 200% der Content-Größe
 
 ## Deploy
 
@@ -212,9 +269,10 @@ Optimierungen für minimalen Lag auf dem Kindle Scribe:
 - [ ] Canvas-Größe an Scribe-Auflösung anpassen (300 DPI)
 - [ ] Smoothing-Parameter feintunen (CLAMP_FACTOR, STEPS)
 - [ ] Weitere Floating Toolbox Tools (Radierer? Formen? Lasso?)
+- [ ] Grid-Overlay + Scale-Reference + Proportions implementieren (position.md)
 - [ ] Branch `feature/floating-toolbox` auf `main` mergen
-- [ ] Branch `fix/versatz-koordinaten` löschen (enthalt in floating-toolbox)
+- [ ] Branch `fix/versatz-koordinaten` mergen
 
 ---
 
-_Stand: 2026-08-27 18:00. Floating Toolbox deployed. Getestet auf Kindle Scribe._
+_Stand: 2026-08-27 18:30. Relative Positionierung deployed. Grid/Scale/Proportions als Nächstes._
