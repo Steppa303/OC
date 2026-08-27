@@ -16,6 +16,7 @@ export default function App() {
   const [drawingCommands, setDrawingCommands] = useState<any[] | null>(null);
   const [showSessionList, setShowSessionList] = useState(false);
   const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(null);
+  const [smoothingEnabled, setSmoothingEnabled] = useState(true);
 
   // Session management
   const {
@@ -136,6 +137,7 @@ export default function App() {
         onStrokeComplete={handleStrokeComplete}
         drawingCommands={drawingCommands}
         onCanvasReady={handleCanvasReady}
+        smoothingEnabled={smoothingEnabled}
       />
 
       {/* Text overlay */}
@@ -156,6 +158,8 @@ export default function App() {
         onClear={handleClear}
         onNewSession={handleNewSession}
         isThinking={isThinking}
+        smoothingEnabled={smoothingEnabled}
+        onSmoothingChange={setSmoothingEnabled}
       />
 
       {/* Session list modal */}

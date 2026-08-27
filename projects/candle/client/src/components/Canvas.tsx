@@ -7,6 +7,7 @@ interface CanvasProps {
   onStrokeComplete: (canvasPng: string) => void;
   drawingCommands: any[] | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  smoothingEnabled: boolean;
 }
 
 export function Canvas({ 
@@ -14,10 +15,12 @@ export function Canvas({
   strokeWidth, 
   onStrokeComplete,
   drawingCommands,
-  onCanvasReady
+  onCanvasReady,
+  smoothingEnabled
 }: CanvasProps) {
   const {
-    canvasRef,
+    bgCanvasRef,
+    fgCanvasRef,
     startStroke,
     continueStroke,
     endStroke,
@@ -26,7 +29,8 @@ export function Canvas({
   } = useCanvas({
     strokeColor,
     strokeWidth,
-    onStrokeComplete
+    onStrokeComplete,
+    smoothingEnabled
   });
 
   // Render AI drawing when commands change
@@ -36,12 +40,12 @@ export function Canvas({
     }
   }, [drawingCommands, renderAIDrawing]);
 
-  // Expose canvas ref to parent
+  // Expose bg canvas ref to parent
   React.useEffect(() => {
-    if (canvasRef.current && onCanvasReady) {
-      onCanvasReady(canvasRef.current);
+    if (bgCanvasRef.current && onCanvasReady) {
+      onCanvasReady(bgCanvasRef.current);
     }
-  }, [canvasRef, onCanvasReady]);
+  }, [bgCanvasRef, onCanvasReady]);
 
   // Touch event handlers (fallback for Kindle Scribe)
   const handleTouchStart = React.useCallback((e: React.TouchEvent) => {
@@ -64,17 +68,26 @@ export function Canvas({
   }, [endStroke]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{ touchAction: 'none' }}
-      onPointerDown={startStroke}
-      onPointerMove={continueStroke}
-      onPointerUp={endStroke}
-      onPointerLeave={endStroke}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    />
+    <div className="absolute inset-0 w-full h-full">
+      {/* Background canvas: completed strokes (smoothed or raw) */}
+      <canvas
+        ref={bgCanvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ touchAction: 'none' }}
+      />
+      {/* Foreground canvas: active stroke (raw, real-time) */}
+      <canvas
+        ref={fgCanvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ touchAction: 'none' }}
+        onPointerDown={startStroke}
+        onPointerMove={continueStroke}
+        onPointerUp={endStroke}
+        onPointerLeave={endStroke}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      />
+    </div>
   );
 }

@@ -11,6 +11,8 @@ interface ToolbarProps {
   onClear: () => void;
   onNewSession: () => void;
   isThinking: boolean;
+  smoothingEnabled: boolean;
+  onSmoothingChange: (enabled: boolean) => void;
 }
 
 const COLORS = [
@@ -30,7 +32,9 @@ export function Toolbar({
   onWidthChange,
   onClear,
   onNewSession,
-  isThinking
+  isThinking,
+  smoothingEnabled,
+  onSmoothingChange
 }: ToolbarProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-black">
@@ -83,6 +87,17 @@ export function Toolbar({
             title="Canvas leeren"
           >
             Löschen
+          </button>
+
+          {/* Smoothing toggle */}
+          <button
+            onClick={() => onSmoothingChange(!smoothingEnabled)}
+            className={`px-3 py-2 text-sm border-2 border-black ${
+              smoothingEnabled ? 'bg-black text-white' : 'bg-white text-black'
+            }`}
+            title={smoothingEnabled ? 'Glättung AN' : 'Glättung AUS'}
+          >
+            {smoothingEnabled ? '◉ Glatt' : '○ Raw'}
           </button>
         </div>
 
